@@ -1,11 +1,11 @@
 // List of allowed origins
 const allowedOrigins = [
-  process.env.Server,
-  process.env.Client,
-  process.env.Azure,
-  process.env.Prod,
-  process.env.Local_API,
-  process.env.Local_Client
+  "https://strange-blue-battledress.cyclic.app",
+  "https://hospitofind.netlify.app",
+  "https://carefinder.azurewebsites.net",
+  "https://findhospitalsdev.netlify.app",
+  "http://localhost:5000",
+  "http://localhost:5173"
 ]
 
 export default allowedOrigins;
