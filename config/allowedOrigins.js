@@ -1,11 +1,10 @@
 const allowedOrigins = [
-  'http://localhost:5000',
+  "https://strange-blue-battledress.cyclic.app",
+  "https://hospitofind.netlify.app",
   'https://carefinder.azurewebsites.net',
-  'http://localhost:5173',
-  "https://findhospitals.netlify.app",
-  "https://www.findhospitals.netlify.app",
   "https://findhospitalsdev.netlify.app",
-  "https://hospitofind.netlify.app"
+  'http://localhost:5000',
+  'http://localhost:5173'
 ]
 
 export default allowedOrigins;
