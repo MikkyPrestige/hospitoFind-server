@@ -1,11 +1,11 @@
 // List of allowed origins
 const allowedOrigins = [
-  process.env.SERVER_ORIGIN,
-  process.env.CLIENT_ORIGIN,
-  process.env.AZURE_ORIGIN,
-  process.env.PROD_ORIGIN,
-  process.env.LOCALHOST_API,
-  process.env.LOCALHOST_CLIENT,
+  process.env.Server,
+  process.env.Client,
+  process.env.Azure,
+  process.env.Prod,
+  process.env.Local_API,
+  process.env.Local_Client
 ]
 
 export default allowedOrigins;
