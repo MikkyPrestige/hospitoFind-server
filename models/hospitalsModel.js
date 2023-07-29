@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const hospitalSchema = new Schema({
+  id: {
+    type: String,
+  },
   name: {
     type: String,
     required: true,
