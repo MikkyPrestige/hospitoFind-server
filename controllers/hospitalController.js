@@ -115,15 +115,17 @@ const shareHospitals = asyncHandler(async (req, res) => {
   const shareableLink = new ShareableLink({
     linkId,
     hospitals: searchedHospitals.map(hospital => ({
+      id: hospital.id,
       name: hospital.name,
       address: {
         street: hospital.address.street,
         city: hospital.address.city,
         state: hospital.address.state
       },
-      phone: hospital.phone,
+      phone: hospital.phoneNumber,
       website: hospital.website,
       email: hospital.email,
+      photoUrl: hospital.photoUrl,
       type: hospital.type,
       services: hospital.services,
       comments: hospital.comments,
@@ -156,7 +158,9 @@ const getSharedHospitals = asyncHandler(async (req, res) => {
 // @route GET /hospitals/export
 // @access Public
 const exportHospitals = asyncHandler(async (req, res) => {
-  const { city, state } = req.body.searchParams;
+  const { city, state } = req.query;
+
+  console.log(city, state)
 
   const query = {};
   if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
@@ -176,9 +180,10 @@ const exportHospitals = asyncHandler(async (req, res) => {
     'address.street': hospital.address.street,
     'address.city': hospital.address.city,
     'address.state': hospital.address.state,
-    phone: hospital.phone,
+    phone: hospital.phoneNumber,
     website: hospital.website,
     email: hospital.email,
+    photoUrl: hospital.photoUrl,
     type: hospital.type,
     services: hospital.services.join(", "),
     comments: hospital.comments.join(", "),
@@ -195,6 +200,7 @@ const exportHospitals = asyncHandler(async (req, res) => {
       { id: 'phone', title: 'Phone' },
       { id: 'website', title: 'Website' },
       { id: 'email', title: 'Email' },
+      { id: 'photoUrl', title: 'PhotoUrl' },
       { id: 'type', title: 'Type' },
       { id: 'services', title: 'Services' },
       { id: 'comments', title: 'Comments' },
@@ -220,6 +226,7 @@ const addHospital = asyncHandler(async (req, res) => {
     phoneNumber,
     website,
     email,
+    photoUrl,
     type,
     services,
     comments,
@@ -241,6 +248,7 @@ const addHospital = asyncHandler(async (req, res) => {
     phoneNumber,
     website,
     email,
+    photoUrl,
     type,
     services,
     comments,
@@ -265,6 +273,7 @@ const updateHospital = asyncHandler(async (req, res) => {
     phoneNumber,
     website,
     email,
+    photoUrl,
     type,
     services,
     comments,
@@ -286,12 +295,12 @@ const updateHospital = asyncHandler(async (req, res) => {
     res.status(400).json({ message: 'Hospital already exists' })
   }
   // update hospital
-  // The hospital fees are highly subsidized without quality compromise
   hospital.name = name;
   hospital.address = address;
   hospital.phoneNumber = phoneNumber;
   hospital.website = website;
   hospital.email = email;
+  hospital.photoUrl = photoUrl;
   hospital.type = type;
   hospital.services = services;
   hospital.comments = comments;

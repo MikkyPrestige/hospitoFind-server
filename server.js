@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 import cors from "cors";
+import bodyParser from "body-parser";
 import corsOptions from "./config/corsOptions.js";
 import connectDB from "./config/db.js";
 import { logger, logEvents } from "./middleware/logger.js";
@@ -23,6 +24,8 @@ connectDB();
 // Init Middleware
 app.use(logger);
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/", express.static("public"))
 app.use("/", express.static("public/views"));
