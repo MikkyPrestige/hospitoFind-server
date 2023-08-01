@@ -96,17 +96,16 @@ const searchHospitals = asyncHandler(async (req, res) => {
 // @route POST /hospitals/share
 // @access Public
 const shareHospitals = asyncHandler(async (req, res) => {
-  const { city, state, cityState, name } = req.body.searchParams;
+  const { address, city, state } = req.body.searchParams;
   const query = {};
-  if (city) query['address.city'] = { $regex: new RegExp(city, 'i') };
-  if (state) query['address.state'] = { $regex: new RegExp(state, 'i') };
-  if (cityState) {
+  if (address) {
     query['$or'] = [
-      { 'address.city': { $regex: new RegExp(cityState, 'i') } },
-      { 'address.state': { $regex: new RegExp(cityState, 'i') } }
+      { name: { $regex: new RegExp(address, 'i') } },
+      { 'address.street': { $regex: new RegExp(address, 'i') } }
     ]
   };
-  if (name) query.name = { $regex: new RegExp(name, 'i') };
+  if (city) query['address.city'] = { $regex: new RegExp(city, 'i') };
+  if (state) query['address.state'] = { $regex: new RegExp(state, 'i') };
 
   const searchedHospitals = await Hospital.find(query).lean()
   // Generate a unique link identifier
@@ -158,11 +157,15 @@ const getSharedHospitals = asyncHandler(async (req, res) => {
 // @route GET /hospitals/export
 // @access Public
 const exportHospitals = asyncHandler(async (req, res) => {
-  const { city, state } = req.query;
-
-  console.log(city, state)
+  const { address, city, state } = req.query;
 
   const query = {};
+  if (address) {
+    query["$or"] = [
+      { name: { $regex: new RegExp(address, "i") } },
+      { "address.street": { $regex: new RegExp(address, "i") } }
+    ]
+  };
   if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
   if (state) query["address.state"] = { $regex: new RegExp(state, "i") }
 
