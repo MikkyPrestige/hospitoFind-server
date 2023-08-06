@@ -9,6 +9,8 @@ import connectDB from "./config/db.js";
 import { logger, logEvents } from "./middleware/logger.js";
 import errorHandler from "./middleware/errorHandler.js";
 import rootRouter from "./routes/rootRoute.js";
+import authRouter from "./routes/authRoute.js";
+import userRouter from "./routes/userRoute.js";
 import hospitalRouter from "./routes/hospitalsRoute.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -32,6 +34,8 @@ app.use("/", express.static("public/views"));
 
 // Routes
 app.use("/", rootRouter)
+app.use("/auth", authRouter);
+app.use("/users", userRouter);
 app.use("/hospitals", hospitalRouter);
 
 // 404
