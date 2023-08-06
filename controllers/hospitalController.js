@@ -2,7 +2,8 @@ import Hospital from "../models/hospitalsModel.js";
 import ShareableLink from "../models/shareModel.js";
 import asyncHandler from "express-async-handler";
 import ids from "short-id";
-import { createObjectCsvWriter } from "csv-writer";
+// import { createObjectCsvWriter } from "csv-writer";
+import papa from "papaparse";
 
 // @desc Get all hospitals
 // @route GET /hospitals
@@ -171,18 +172,11 @@ const exportHospitals = asyncHandler(async (req, res) => {
 
   const hospitals = await Hospital.find(query).lean();
 
-  if (!hospitals) {
-    return res.status(400).json({
-      success: false,
-      error: "No matching records"
-    });
-  }
-
   const csvData = hospitals.map(hospital => ({
     name: hospital.name,
-    'address.street': hospital.address.street,
-    'address.city': hospital.address.city,
-    'address.state': hospital.address.state,
+    street: hospital.address.street,
+    city: hospital.address.city,
+    state: hospital.address.state,
     phone: hospital.phoneNumber,
     website: hospital.website,
     email: hospital.email,
@@ -193,30 +187,11 @@ const exportHospitals = asyncHandler(async (req, res) => {
     hours: hospital.hours.map(hour => `${hour.day}: ${hour.open}`).join(", "),
   }));
 
-  const csvWriter = createObjectCsvWriter({
-    path: 'hospitals.csv',
-    header: [
-      { id: 'name', title: 'Name' },
-      { id: 'address.street', title: 'Street' },
-      { id: 'address.city', title: 'City' },
-      { id: 'address.state', title: 'State' },
-      { id: 'phone', title: 'Phone' },
-      { id: 'website', title: 'Website' },
-      { id: 'email', title: 'Email' },
-      { id: 'photoUrl', title: 'PhotoUrl' },
-      { id: 'type', title: 'Type' },
-      { id: 'services', title: 'Services' },
-      { id: 'comments', title: 'Comments' },
-      { id: 'hours', title: 'Hours' },
-    ],
-  });
-
+  const csv = papa.unparse(csvData, { header: true });
 
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', 'attachment; filename="hospitals.csv"');
-
-  csvWriter.writeRecords(csvData)
-    .then(() => res.download("hospitals.csv"))
+  res.send(csv);
 })
 
 // @desc add new hospital
