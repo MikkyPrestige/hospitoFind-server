@@ -47,7 +47,7 @@ const createUser = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   const { name, username, email, password } = req.body
 
-  if (!name || !username || !email) {
+  if (!name && !email) {
     return res.status(400).json({ message: "Enter Name or Email to update" })
   }
 
@@ -57,26 +57,33 @@ const updateUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ username }).exec();
   if (!user) {
-    return res.status(404).json({ message: "User not found. Use your correct username" });
+    return res.status(404).json({ message: "User not found" });
   }
 
   // check if email is already taken by another user
-  const existingEmailUser = await User.findOne({ email: { $ne: user.email }, email }).exec();
-  if (existingEmailUser) {
-    return res.status(409).json({ message: "Email already taken" });
+  if (email !== user.email) {
+    const existingEmailUser = await User.findOne({ email }).exec();
+    if (existingEmailUser) {
+      return res.status(409).json({ message: "Email already taken" });
+    }
   }
 
-
   // check if password is correct
-  const isMatch = bcrypt.compare(password, user.password)
+  const isMatch = await bcrypt.compare(password, user.password)
   if (!isMatch) {
     return res.status(401).json({ message: "Invalid password" })
   }
 
   // update user
-  user.name = name
-  user.username = username
-  user.email = email
+  if (name) {
+    user.name = name;
+  }
+  if (username) {
+    user.username = username;
+  }
+  if (email) {
+    user.email = email;
+  }
 
   const updatedUser = await user.save()
   res.status(201).json({ message: `${updatedUser.username} user updated` })
@@ -96,13 +103,13 @@ const updatePassword = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "New password is required" })
   }
 
-  const user = await User.findOne({ username }).lean().exec()
+  const user = await User.findOne({ username }).exec()
   if (!user) {
     return res.status(404).json({ message: "User does not exist" })
   }
 
   // check if password is correct
-  const isMatch = bcrypt.compare(password, user.password)
+  const isMatch = await bcrypt.compare(password, user.password)
   if (!isMatch) {
     return res.status(401).json({ message: "Invalid password" })
   }

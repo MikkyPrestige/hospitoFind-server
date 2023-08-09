@@ -1,4 +1,3 @@
-// List of allowed origins
 const allowedOrigins = [
   "https://strange-blue-battledress.cyclic.app",
   "https://hospitofind.netlify.app",

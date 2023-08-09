@@ -8,7 +8,9 @@ userRouter.route("/")
   .get(userController.getUsers)
   .post(userController.createUser)
   .patch(userController.updateUser)
-  .patch(userController.updatePassword)
   .delete(userController.deleteUser)
+
+userRouter.route("/password")
+  .patch(userController.updatePassword)
 
 export default userRouter;
