@@ -26,7 +26,7 @@ const auth0Login = asyncHandler(async (req, res) => {
   // Get the public key based on the kid
   const getKey = (header, callback) => {
     client.getSigningKey(header.kid, (err, key) => {
-      const signingKey = key.publicKey || key.rsaPublicKey;
+      const signingKey = key.getPublicKey || key.rsaPublicKey;
       callback(null, signingKey);
     });
   };
