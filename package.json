@@ -23,7 +23,7 @@
     "jsonwebtoken": "^9.0.1",
     "jwks-rsa": "^3.0.1",
     "mongoose": "^7.5.0",
-    "nodemon": "^2.0.22",
+    "nodemon": "^3.1.4",
     "papaparse": "^5.4.1",
     "short-id": "^0.1.0-1"
   }
