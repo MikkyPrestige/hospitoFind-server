@@ -150,8 +150,6 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.status(201).json({ message: `${deletedUser.username} user deleted` })
 })
 
-
-
 export default {
   getUsers,
   createUser,
