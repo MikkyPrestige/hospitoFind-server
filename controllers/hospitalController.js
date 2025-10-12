@@ -49,56 +49,102 @@ const getHospitalByName = asyncHandler(async (req, res) => {
   return res.json(hospital);
 });
 
-// @desc Find hospitals by name or address
-// @route GET /hospitals/find?address=address&name=name
+// Helper: escape a string for use in RegExp
+function escapeRegex(text = "") {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// @desc Find hospitals by general search term (name, street, city, or state)
+// @route GET /hospitals/find?term=searchTerm
 // @access Public
 const findHospitals = asyncHandler(async (req, res) => {
-  const { street, cityState, name } = req.query;
-  const query = {};
-  if (street) query["address.street"] = { $regex: new RegExp(street, "i") };
-  if (cityState) {
-    query["$or"] = [
-      { "address.city": { $regex: new RegExp(cityState, "i") } },
-      { "address.state": { $regex: new RegExp(cityState, "i") } },
-    ];
-  }
-  if (name) query.name = { $regex: new RegExp(name, "i") };
-  const hospitals = await Hospital.find(query);
-  if (hospitals === 0) {
-    return res.status(400).json({
-      success: false,
-      error: "No matching records",
-    });
+  let { term } = req.query;
+
+  console.log("🧭 findHospitals term:", JSON.stringify(term)); // DEBUG LINE
+
+  // normalize and validate term
+  if (!term || typeof term !== "string") {
+    return res.status(400).json({ message: "Search term is required" });
   }
 
-  return res.json(hospitals);
+  term = term.trim();
+  if (term.length === 0) {
+    return res.status(400).json({ message: "Search term is required" });
+  }
+
+  if (term.length < 2) {
+    return res
+      .status(400)
+      .json({ message: "Please enter at least 2 characters" });
+  }
+
+  // escape regex special chars to prevent "match everything"
+  const safe = escapeRegex(term);
+  const searchRegex = new RegExp(safe, "i");
+
+  const query = {
+    $or: [
+      { name: { $regex: searchRegex } },
+      { "address.street": { $regex: searchRegex } },
+      { "address.city": { $regex: searchRegex } },
+      { "address.state": { $regex: searchRegex } },
+    ],
+  };
+
+  const hospitals = await Hospital.find(query).lean().limit(200);
+
+  console.log(`✅ Found ${hospitals.length} hospitals for "${term}"`);
+
+  return res.status(200).json(hospitals || []);
 });
+
+// const findHospitals = asyncHandler(async (req, res) => {
+//   const { street, cityState, name } = req.query;
+//   const query = {};
+//   if (street) query["address.street"] = { $regex: new RegExp(street, "i") };
+//   if (cityState) {
+//     query["$or"] = [
+//       { "address.city": { $regex: new RegExp(cityState, "i") } },
+//       { "address.state": { $regex: new RegExp(cityState, "i") } },
+//     ];
+//   }
+//   if (name) query.name = { $regex: new RegExp(name, "i") };
+//   const hospitals = await Hospital.find(query);
+//   if (hospitals === 0) {
+//     return res.status(400).json({
+//       success: false,
+//       error: "No matching records",
+//     });
+//   }
+
+//   return res.json(hospitals);
+// });
 
 // @desc Search for hospitals by cities or state
 // @route GET /hospitals/search?city=city&state=state
 // @access Public
-const searchHospitals = asyncHandler(async (req, res) => {
-  const { address, city, state } = req.query;
-  const query = {};
-  if (address) {
-    query["$or"] = [
-      { name: { $regex: new RegExp(address, "i") } },
-      { "address.street": { $regex: new RegExp(address, "i") } },
-    ];
-  }
-  if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
-  if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
+// const searchHospitals = asyncHandler(async (req, res) => {
+//   const { address, city, state } = req.query;
+//   const query = {};
+//   if (address) {
+//     query["$or"] = [
+//       { name: { $regex: new RegExp(address, "i") } },
+//       { "address.street": { $regex: new RegExp(address, "i") } },
+//     ];
+//   }
+//   if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
+//   if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
 
-  const hospitals = await Hospital.find(query);
-  if (hospitals === 0) {
-    return res.status(400).json({
-      success: false,
-      error: "No matching records",
-    });
-  }
+//   const hospitals = await Hospital.find(query);
+//   if (hospitals === 0) {
+//     return res.status(400).json({
+//       success: false,
+//       error: "No matching records",
+//     });
+//   }
 
-  return res.json(hospitals);
-});
+//   return res.json(hospitals);
+// });
 
 // @desc share hospitals
 // @route POST /hospitals/share
@@ -456,7 +502,7 @@ export default {
   getRandomHospitals,
   getHospitalByName,
   findHospitals,
-  searchHospitals,
+  // searchHospitals,
   shareHospitals,
   getSharedHospitals,
   exportHospitals,

@@ -13,7 +13,7 @@ hospitalRouter.route("/random").get(hospitalController.getRandomHospitals);
 
 hospitalRouter.route("/find").get(hospitalController.findHospitals);
 
-hospitalRouter.route("/search").get(hospitalController.searchHospitals);
+// hospitalRouter.route("/search").get(hospitalController.searchHospitals);
 
 hospitalRouter.route("/share").post(hospitalController.shareHospitals);
 
