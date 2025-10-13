@@ -20,29 +20,29 @@ const hospitalSchema = new Schema({
     },
     state: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   phoneNumber: {
-    type: String
+    type: String,
   },
   website: {
-    type: String
+    type: String,
   },
   email: {
-    type: String
+    type: String,
   },
   photoUrl: {
-    type: String
+    type: String,
   },
   type: {
     type: String,
   },
   services: {
-    type: [String]
+    type: [String],
   },
   comments: {
-    type: [String]
+    type: [String],
   },
   hours: {
     type: [
@@ -52,10 +52,16 @@ const hospitalSchema = new Schema({
         },
         open: {
           type: String,
-        }
+        },
       },
-    ]
-  }
+    ],
+  },
+  longitude: {
+    type: Number,
+  },
+  latitude: {
+    type: Number,
+  },
 });
 
 const Hospital = mongoose.model("Hospital", hospitalSchema);
