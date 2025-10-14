@@ -49,14 +49,14 @@ const getHospitalByName = asyncHandler(async (req, res) => {
   return res.json(hospital);
 });
 
+// @desc Find hospitals by general search term (name, street, city, or state)
+// @route GET /hospitals/find?term=searchTerm
+// @access Public
 // Helper: escape a string for use in RegExp
 function escapeRegex(text = "") {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-// @desc Find hospitals by general search term (name, street, city, or state)
-// @route GET /hospitals/find?term=searchTerm
-// @access Public
 const findHospitals = asyncHandler(async (req, res) => {
   let { term } = req.query;
 
@@ -123,28 +123,30 @@ const findHospitals = asyncHandler(async (req, res) => {
 // @desc Search for hospitals by cities or state
 // @route GET /hospitals/search?city=city&state=state
 // @access Public
-// const searchHospitals = asyncHandler(async (req, res) => {
-//   const { address, city, state } = req.query;
-//   const query = {};
-//   if (address) {
-//     query["$or"] = [
-//       { name: { $regex: new RegExp(address, "i") } },
-//       { "address.street": { $regex: new RegExp(address, "i") } },
-//     ];
-//   }
-//   if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
-//   if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
+const searchHospitals = asyncHandler(async (req, res) => {
+  const { address, city, state } = req.query;
+  const query = {};
+  if (address) {
+    query["$or"] = [
+      { name: { $regex: new RegExp(address, "i") } },
+      { "address.street": { $regex: new RegExp(address, "i") } },
+    ];
+  }
+  if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
+  if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
 
-//   const hospitals = await Hospital.find(query);
-//   if (hospitals === 0) {
-//     return res.status(400).json({
-//       success: false,
-//       error: "No matching records",
-//     });
-//   }
+  const hospitals = await Hospital.find(query);
+console.log(`✅ /search matched ${hospitals.length} hospitals for`, query);
 
-//   return res.json(hospitals);
-// });
+  if (hospitals === 0) {
+    return res.status(400).json({
+      success: false,
+      error: "No matching records",
+    });
+  }
+
+  return res.json(hospitals);
+});
 
 // @desc share hospitals
 // @route POST /hospitals/share
@@ -502,7 +504,7 @@ export default {
   getRandomHospitals,
   getHospitalByName,
   findHospitals,
-  // searchHospitals,
+  searchHospitals,
   shareHospitals,
   getSharedHospitals,
   exportHospitals,
