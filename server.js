@@ -21,9 +21,6 @@ const app = express();
 
 dotenv.config();
 
-// Connect to database
-connectDB();
-
 // Init Middleware
 app.use(logger);
 app.use(cors(corsOptions));
@@ -57,11 +54,12 @@ app.use(errorHandler);
 // Start server
 const PORT = process.env.PORT || 5000;
 
-mongoose.connection.once("open", () => {
-  console.log("MongoDB Connected!");
+// Connect to database
+connectDB().then(() => {
   app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-});
+})
 
+// Log database errors
 mongoose.connection.on("error", (err) => {
   console.log(err);
   logEvents(

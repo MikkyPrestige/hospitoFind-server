@@ -1,4 +1,3 @@
-// List of allowed origins
 const allowedOrigins = [
   "https://hospitofind-server.onrender.com",
   "https://hospitofind.netlify.app",

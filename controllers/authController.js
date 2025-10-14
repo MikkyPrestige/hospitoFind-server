@@ -26,8 +26,12 @@ const auth0Login = asyncHandler(async (req, res) => {
   // Get the public key based on the kid
   const getKey = (header, callback) => {
     client.getSigningKey(header.kid, (err, key) => {
-      const signingKey = key.publicKey || key.rsaPublicKey;
-      callback(null, signingKey);
+      if (err) {
+        callback(err);
+      } else {
+        const signingKey = key.getPublicKey || key.rsaPublicKey;
+        callback(null, signingKey);
+      }
     });
   };
 
@@ -55,7 +59,7 @@ const auth0Login = asyncHandler(async (req, res) => {
   let user = await User.findOne({ username }).exec();
   if (!user) {
     // Check if the email is available in the request, otherwise use a placeholder
-    const userEmail = email || `${username}_${Date.now()}@hospitoFind.com`;
+    const userEmail = email || `${username}_${Date.now()}@hospitofind.com`;
     user = await User.create({
       name,
       username,
