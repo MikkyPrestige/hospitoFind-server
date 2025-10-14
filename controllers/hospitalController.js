@@ -49,14 +49,14 @@ const getHospitalByName = asyncHandler(async (req, res) => {
   return res.json(hospital);
 });
 
+// @desc Find hospitals by general search term (name, street, city, or state)
+// @route GET /hospitals/find?term=searchTerm
+// @access Public
 // Helper: escape a string for use in RegExp
 function escapeRegex(text = "") {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-// @desc Find hospitals by general search term (name, street, city, or state)
-// @route GET /hospitals/find?term=searchTerm
-// @access Public
 const findHospitals = asyncHandler(async (req, res) => {
   let { term } = req.query;
 
@@ -98,53 +98,33 @@ const findHospitals = asyncHandler(async (req, res) => {
   return res.status(200).json(hospitals || []);
 });
 
-// const findHospitals = asyncHandler(async (req, res) => {
-//   const { street, cityState, name } = req.query;
-//   const query = {};
-//   if (street) query["address.street"] = { $regex: new RegExp(street, "i") };
-//   if (cityState) {
-//     query["$or"] = [
-//       { "address.city": { $regex: new RegExp(cityState, "i") } },
-//       { "address.state": { $regex: new RegExp(cityState, "i") } },
-//     ];
-//   }
-//   if (name) query.name = { $regex: new RegExp(name, "i") };
-//   const hospitals = await Hospital.find(query);
-//   if (hospitals === 0) {
-//     return res.status(400).json({
-//       success: false,
-//       error: "No matching records",
-//     });
-//   }
-
-//   return res.json(hospitals);
-// });
-
 // @desc Search for hospitals by cities or state
 // @route GET /hospitals/search?city=city&state=state
 // @access Public
-// const searchHospitals = asyncHandler(async (req, res) => {
-//   const { address, city, state } = req.query;
-//   const query = {};
-//   if (address) {
-//     query["$or"] = [
-//       { name: { $regex: new RegExp(address, "i") } },
-//       { "address.street": { $regex: new RegExp(address, "i") } },
-//     ];
-//   }
-//   if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
-//   if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
+const searchHospitals = asyncHandler(async (req, res) => {
+  const { address, city, state } = req.query;
+  const query = {};
+  if (address) {
+    query["$or"] = [
+      { name: { $regex: new RegExp(address, "i") } },
+      { "address.street": { $regex: new RegExp(address, "i") } },
+    ];
+  }
+  if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
+  if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
 
-//   const hospitals = await Hospital.find(query);
-//   if (hospitals === 0) {
-//     return res.status(400).json({
-//       success: false,
-//       error: "No matching records",
-//     });
-//   }
+  const hospitals = await Hospital.find(query);
+  console.log(`✅ /search matched ${hospitals.length} hospitals for`, query);
 
-//   return res.json(hospitals);
-// });
+  if (hospitals === 0) {
+    return res.status(400).json({
+      success: false,
+      error: "No matching records",
+    });
+  }
+
+  return res.json(hospitals);
+});
 
 // @desc share hospitals
 // @route POST /hospitals/share
@@ -301,51 +281,6 @@ const addHospital = asyncHandler(async (req, res) => {
   });
 });
 
-// const addHospital = asyncHandler(async (req, res) => {
-//   const {
-//     name,
-//     address,
-//     phoneNumber,
-//     website,
-//     email,
-//     photoUrl,
-//     type,
-//     services,
-//     comments,
-//     hours,
-//   } = new Hospital(req.body);
-//   // confirm data
-//   if (!name || !address.city || !address.state) {
-//     return res
-//       .status(400)
-//       .json({ message: "Name, City and State address fields are required" });
-//   }
-//   // check for duplicate hospital by name and address
-//   const duplicate = await Hospital.findOne({ name, address }).lean().exec();
-//   if (duplicate) {
-//     return res.status(400).json({ message: "Hospital already exists" });
-//   }
-//   // create new hospital
-//   const hospital = await Hospital.create({
-//     name,
-//     address,
-//     phoneNumber,
-//     website,
-//     email,
-//     photoUrl,
-//     type,
-//     services,
-//     comments,
-//     hours,
-//   });
-
-//   if (hospital) {
-//     return res.status(201).json({ message: "New hospital created" });
-//   } else {
-//     return res.status(400).json({ message: "Invalid hospital data" });
-//   }
-// });
-
 // @desc update hospital
 // @route PATCH /hospitals/:id
 // @access Public
@@ -429,59 +364,6 @@ const updateHospital = asyncHandler(async (req, res) => {
   });
 });
 
-// const updateHospital = asyncHandler(async (req, res) => {
-//   const {
-//     id,
-//     name,
-//     address,
-//     phoneNumber,
-//     website,
-//     email,
-//     photoUrl,
-//     type,
-//     services,
-//     comments,
-//     hours,
-//   } = new Hospital(req.body);
-//   // confirm data
-//   if (!name || !address.city || !address.state) {
-//     res
-//       .status(400)
-//       .json({ message: "Name, City and State address fields are required" });
-//   }
-//   // Confirm Hospital exists to update
-//   const hospital = await Hospital.findById(id).exec();
-//   if (!hospital) {
-//     res.status(404).json({ message: "Hospital not found" });
-//   }
-//   // check for duplicate hospital by name and address
-//   const duplicate = await Hospital.findOne({
-//     name,
-//     "address.city": address.city,
-//     "address.state": address.state,
-//   })
-//     .lean()
-//     .exec();
-//   // Allow updating of the original Hospital
-//   if (duplicate && duplicate._id.toString() !== id) {
-//     res.status(400).json({ message: "Hospital already exists" });
-//   }
-//   // update hospital
-//   hospital.name = name;
-//   hospital.address = address;
-//   hospital.phoneNumber = phoneNumber;
-//   hospital.website = website;
-//   hospital.email = email;
-//   hospital.photoUrl = photoUrl;
-//   hospital.type = type;
-//   hospital.services = services;
-//   hospital.comments = comments;
-//   hospital.hours = hours;
-
-//   const updatedHospital = await hospital.save();
-//   return res.json(`${updatedHospital.name} updated`);
-// });
-
 // @desc delete hospital
 // @route DELETE /hospitals/:id
 // @access Public
@@ -502,7 +384,7 @@ export default {
   getRandomHospitals,
   getHospitalByName,
   findHospitals,
-  // searchHospitals,
+  searchHospitals,
   shareHospitals,
   getSharedHospitals,
   exportHospitals,
