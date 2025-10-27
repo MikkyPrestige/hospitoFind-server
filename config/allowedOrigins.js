@@ -5,6 +5,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5000/auth/auth0",
   "http://localhost:5000",
+  "https://health.gov/myhealthfinder",
 ];
 
 export default allowedOrigins;
