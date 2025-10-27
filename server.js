@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import path from "path";
 import cors from "cors";
 import bodyParser from "body-parser";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import corsOptions from "./config/corsOptions.js";
 import connectDB from "./config/db.js";
 import { logger, logEvents } from "./middleware/logger.js";
@@ -12,16 +14,16 @@ import rootRouter from "./routes/rootRoute.js";
 import authRouter from "./routes/authRoute.js";
 import userRouter from "./routes/userRoute.js";
 import hospitalRouter from "./routes/hospitalsRoute.js";
-import testRoutes from "./routes/testRoutes.js";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import healthRouter from "./routes/healthRoute.js";
+// import testRoutes from "./routes/testRoutes.js";
 
 const app = express();
-
 dotenv.config();
 
-// Init Middleware
+// Resolve __dirname
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// ===== Middleware =====
 app.use(logger);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
@@ -30,14 +32,15 @@ app.use(express.json());
 app.use("/", express.static("public"));
 app.use("/", express.static("public/views"));
 
-// Routes
+// ===== Routes =====
 app.use("/", rootRouter);
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/hospitals", hospitalRouter);
-app.use("/test", testRoutes);
+app.use("/health", healthRouter);
+// app.use("/test", testRoutes);
 
-// 404
+// ===== 404 Handling =====
 app.all("*", (req, res) => {
   res.status(404);
   if (req.accepts("html")) {
@@ -51,15 +54,13 @@ app.all("*", (req, res) => {
 
 app.use(errorHandler);
 
-// Start server
+// ===== Server + DB Connection =====
 const PORT = process.env.PORT || 5000;
 
-// Connect to database
 connectDB().then(() => {
   app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-})
+});
 
-// Log database errors
 mongoose.connection.on("error", (err) => {
   console.log(err);
   logEvents(

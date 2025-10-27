@@ -10,21 +10,14 @@ hospitalRouter
   .patch(hospitalController.updateHospital);
 
 hospitalRouter.route("/random").get(hospitalController.getRandomHospitals);
-
 hospitalRouter.route("/find").get(hospitalController.findHospitals);
-
 hospitalRouter.route("/search").get(hospitalController.searchHospitals);
-
+hospitalRouter.route("/nearby").get(hospitalController.getNearbyHospitals);
+hospitalRouter.route("/:id").get(hospitalController.getHospitalById);
 hospitalRouter.route("/share").post(hospitalController.shareHospitals);
-
-hospitalRouter
-  .route("/share/:linkId")
-  .get(hospitalController.getSharedHospitals);
-
+hospitalRouter.route("/share/:linkId").get(hospitalController.getSharedHospitals);
 hospitalRouter.route("/export").get(hospitalController.exportHospitals);
-
 hospitalRouter.route("/:name").get(hospitalController.getHospitalByName);
-
 hospitalRouter.route("/").delete(hospitalController.deleteHospital);
 
 export default hospitalRouter;

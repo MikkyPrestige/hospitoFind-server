@@ -1,16 +1,38 @@
-import Hospital from "../models/hospitalsModel.js";
-import ShareableLink from "../models/shareModel.js";
-import { getCoordinates } from "../config/geocode.js";
 import asyncHandler from "express-async-handler";
 import ids from "short-id";
-// import { createObjectCsvWriter } from "csv-writer";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import papa from "papaparse";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import Hospital from "../models/hospitalsModel.js";
+import hospitalsData from "../data/hospitals.json" assert { type: "json" };
+import ShareableLink from "../models/shareModel.js";
+import { getCoordinates } from "../config/geocode.js";
 
 dotenv.config();
 
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// In-memory cache for nearby hospitals
+const nearbyCache = new Map();
+const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+
+// Haversine formula to calculate distance between two lat/lon points
+const haversine = (a, b) => {
+  const R = 6371e3; // meters
+  const φ1 = (a.lat * Math.PI) / 180;
+  const φ2 = (b.lat * Math.PI) / 180;
+  const Δφ = ((b.lat - a.lat) * Math.PI) / 180;
+  const Δλ = ((b.lon - a.lon) * Math.PI) / 180;
+  const d =
+    Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(d), Math.sqrt(1 - d));
+};
 
 // @desc Get all hospitals
 // @route GET /hospitals
@@ -28,7 +50,7 @@ const getHospitals = asyncHandler(async (req, res) => {
 // @route GET /hospitals/random
 // @access Public
 const getRandomHospitals = asyncHandler(async (req, res) => {
-  const hospitals = await Hospital.aggregate([{ $sample: { size: 3 } }]);
+  const hospitals = await Hospital.aggregate([{ $sample: { size: 8 } }]);
   // If no hospitals
   if (!hospitals) {
     return res.status(400).json({ message: "No Hospital found" });
@@ -125,6 +147,134 @@ const searchHospitals = asyncHandler(async (req, res) => {
 
   return res.json(hospitals);
 });
+
+
+//  @desc Get nearby hospitals based on lat/lon or IP
+//  @route GET /hospitals/nearby?lat=..&lon=..&limit=..
+//  @access Public
+ const getNearbyHospitals = async (req, res) => {
+  const { lat, lon, limit } = req.query;
+  const userLat = parseFloat(lat);
+  const userLon = parseFloat(lon);
+  const max = parseInt(limit) || 3;
+  const maxRadiusKm = 500;
+
+  const ip =
+    req.headers["x-forwarded-for"]?.split(",")[0] ||
+    req.connection.remoteAddress ||
+    "unknown";
+  const cacheKey = userLat && userLon ? `${userLat},${userLon}` : `ip:${ip}`;
+
+  // ✅ Check cache
+  const cached = nearbyCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    console.log(`⚡ Serving cached hospitals for ${cacheKey}`);
+    return res.json(cached.data);
+  }
+
+  try {
+    // 🧩 Try MongoDB first
+    let hospitals = [];
+    try {
+      hospitals = await Hospital.find().lean();
+      if (!Array.isArray(hospitals) || hospitals.length === 0) {
+        console.warn("⚠️ MongoDB has no hospitals, using local JSON fallback.");
+        hospitals = hospitalsData;
+      } else {
+        console.log(`✅ Loaded ${hospitals.length} hospitals from MongoDB.`);
+      }
+    } catch (err) {
+      console.warn("⚠️ MongoDB query failed, using local JSON fallback:", err);
+      hospitals = hospitalsData;
+    }
+
+    let results = [];
+    let fallbackMessage = "Showing popular hospitals globally.";
+
+    // 📍 User provided location
+    if (!isNaN(userLat) && !isNaN(userLon)) {
+      const withDistances = hospitals.map((h) => {
+        if (typeof h.latitude !== "number" && typeof h.lat !== "number") {
+          return { ...h, distance: null, distanceValue: Infinity };
+        }
+
+        const km =
+          haversine(
+            { lat: userLat, lon: userLon },
+            { lat: h.latitude ?? h.lat, lon: h.longitude ?? h.lon }
+          ) / 1000;
+
+        return {
+          ...h,
+          distance: !isNaN(km) ? `${km.toFixed(1)} km` : null,
+          distanceValue: km,
+        };
+      });
+
+      const nearby = withDistances
+        .filter((h) => h.distanceValue <= maxRadiusKm)
+        .sort((a, b) => a.distanceValue - b.distanceValue)
+        .slice(0, max);
+
+      if (nearby.length > 0) {
+        results = nearby;
+        fallbackMessage = "Based on your location.";
+      } else {
+        console.log("⚠️ No hospitals within radius, falling back globally.");
+      }
+    }
+
+    // 🌍 Fallback to random/global
+    if (results.length === 0) {
+      results = hospitals.sort(() => 0.5 - Math.random()).slice(0, max);
+    }
+
+    const responseData = { results, fallback: true, message: fallbackMessage };
+    nearbyCache.set(cacheKey, { data: responseData, timestamp: Date.now() });
+
+    console.log(`💾 Cached hospitals for ${cacheKey}`);
+    res.json(responseData);
+  } catch (err) {
+    console.error("❌ Error fetching nearby hospitals:", err);
+    res.status(500).json({ message: "Failed to fetch hospitals" });
+  }
+};
+
+// ✅ Hospital by ID
+ const getHospitalById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Try MongoDB first
+    const hospital = await Hospital.findById(id).lean();
+
+    if (hospital) {
+      let locationString = "";
+      if (hospital.address && typeof hospital.address === "object") {
+        const { street, city, state } = hospital.address;
+        locationString = [street, city, state].filter(Boolean).join(", ");
+      }
+
+      return res.json({
+        ...hospital,
+        location: locationString || "Location unavailable",
+      });
+    }
+
+    // Fallback to JSON file
+    const localHospitals = JSON.parse(
+      fs.readFileSync(path.join(__dirname, "../data/hospitals.json"), "utf-8")
+    );
+    const fallback = localHospitals.find((h) => h._id === id || h.id === id);
+
+    if (fallback) return res.json(fallback);
+
+    res.status(404).json({ message: "Hospital not found" });
+  } catch (err) {
+    console.error("❌ Error fetching hospital:", err);
+    res.status(500).json({ message: "Server error fetching hospital" });
+  }
+};
 
 // @desc share hospitals
 // @route POST /hospitals/share
@@ -385,6 +535,8 @@ export default {
   getHospitalByName,
   findHospitals,
   searchHospitals,
+  getNearbyHospitals,
+  getHospitalById,
   shareHospitals,
   getSharedHospitals,
   exportHospitals,
