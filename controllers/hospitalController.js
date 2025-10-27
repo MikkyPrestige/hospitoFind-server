@@ -8,7 +8,6 @@ import papa from "papaparse";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import Hospital from "../models/hospitalsModel.js";
-import hospitalsData from "../data/hospitals.json" assert { type: "json" };
 import ShareableLink from "../models/shareModel.js";
 import { getCoordinates } from "../config/geocode.js";
 
@@ -17,6 +16,10 @@ dotenv.config();
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const hospitalsData = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "../data/hospitals.json"), "utf-8")
+);
 
 // In-memory cache for nearby hospitals
 const nearbyCache = new Map();
