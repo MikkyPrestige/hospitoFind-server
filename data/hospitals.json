@@ -3378,7 +3378,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-    ]
+    ],
+    "isFeatured": true
   },
   {
     "id": "91",
@@ -6539,7 +6540,7 @@
   },
 {
     "id": "183",
-    "name": "Charité Universitätsmedizin Berlin",
+    "name": "Charité Universitätsmedizin",
     "address": {"street": "Charitéplatz1 10117", "city": "Berlin", "state": "Germany"},
     "phoneNumber": "+49 30 45050",
     "website": "https://www.charite.de",
@@ -6556,7 +6557,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-    ]
+    ],
+    "isFeatured": true
   },
   {
     "id": "184",
@@ -6577,7 +6579,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-    ]
+    ],
+    "isFeatured": true
   },
   {
     "id": "185",
@@ -6691,7 +6694,7 @@
         "phoneNumber": "+44 20 7188 7188",
         "website": "https://www.guysandstthomas.nhs.uk",
         "email": "info@gstthomas.nhs.uk",
-        "photoUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npP3PkkkMT08uB9-jMitO8gtk0HCHzelIxN8O8R7FFh-RTeZaH8hNuin2xQOg4CEvCp1Lf2-ApSxdT3SXaQBMIxr6gwokzlWW9xU1rC5kL_FYFJqEBarbSsXjXpBMq1lG1eZZU=s1360-w1360-h1020-rw",
+        "photoUrl": "https://guysandstthomasspecialistcare.co.uk/wp-content/uploads/2024/03/St-Thomas-hospital-external-1.jpg",
         "type": "Public",
         "services": ["Emergency Care", "Cardiovascular", "Maternity", "Sexual Health", "Urology", "Dental"],
         "comment": ["Renowned for its emergency and trauma services", "Mini museum", "Free Wifi"],
@@ -6703,7 +6706,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-        ]
+        ],
+         "isFeatured": true
     },
     {
         "id": "191",
@@ -6871,7 +6875,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-    ]
+    ],
+    "isFeatured": true
   },
   {
     "id": "199",
@@ -6913,7 +6918,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-        ]
+        ],
+"isFeatured": true
     },
     {
         "id": "201",
@@ -6955,7 +6961,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-        ]
+        ],
+        "isFeatured": true
     },
   {
     "id": "203",
@@ -6976,7 +6983,8 @@
       {"day": "Friday","open": "9:00 AM - 5:30 PM"},
       {"day": "Saturday","open": "9:00 AM - 1:00 PM"},
       {"day": "Sunday","open": "Closed"}
-    ]
+    ],
+    "isFeatured": true
   },
   {
     "id": "204",
@@ -6997,7 +7005,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-    ]
+    ],
+    "isFeatured": true
   },
   {
     "id": "205",
@@ -7018,7 +7027,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-    ]
+    ],
+    "isFeatured": true
   },
   {
     "id": "206",
@@ -7039,7 +7049,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-    ]
+    ],
+    "isFeatured": true
   },
   {
     "id": "207",
@@ -7122,7 +7133,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-        ]
+        ],
+        "isFeatured": true
     },
     {
         "id": "211",
@@ -7501,7 +7513,8 @@
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
-    ]
+    ],
+    "isFeatured": true
   },
   {
     "id": "240",
@@ -7733,5 +7746,137 @@
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
     ]
+  },
+  {
+    "id": "251",
+    "name": "Auckland City Hospital",
+    "address": {"street": "2 Park Road, Grafton","city": "Auckland","state": "New Zealand"},
+    "phoneNumber": "+64 9 367 0000",
+    "website": "https://www.adhb.health.nz",
+    "email": "scheduling@adhb.govt.nz",
+    "photoUrl": "https://info.health.nz/assets/Locations/Auckland/Auckland-City-Hospital/auckland-city-hospital__ScaleWidthWzk2Nl0_ExtRewriteWyJqcGciLCJ3ZWJwIl0.webp",
+    "type": "Public",
+    "services": ["Emergency", "Children’s hospital", "Tertiary birthing unit", "Mental Health", "Cardiology", "Anaesthesia", "Neurology", "Orthopaedics", "Neurosurgery", "Gynaecology", "Haematology", "Gastroenterology","Infectious Diseases"],
+    "comment": ["New Zealand's largest public hospital as well as one of the oldest medical facilities in the country"],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday","open":"24h"},
+      {"day":"Wednesday","open":"24h"},
+      {"day":"Thursday","open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "252",
+    "name": "Royal Melbourne hospital",
+    "address": {"street": "300 Grattan Street Parkville, Victoria","city": "Melbourne","state": "Australia"},
+    "phoneNumber": " +61 3 9342 7000",
+    "website": "https://www.thermh.org.au",
+    "email": "",
+    "photoUrl": "https://thermh.imgix.net/files/images/Places/main-entrance.jpg?ar=2:1.2&fit=crop&width=1000&crop=faces,center&auto=compress,format",
+    "type": "Public",
+    "services": ["Emergency", "Diabetes and Endocrinology", "Intensive Care", "Kidney Care", "Cardiology", "Major Trauma", "Medical Imaging", "Mental Health", "Metabolic Diseases", "Neurology and Stroke", "Victorian Infectious Disease", "Gastroenterology","Infectious Diseases"],
+    "comment": ["The hospital also cares and treats many people from regional and rural Victoria as well as interstate through a number of specialist services.", "It is the major trauma centre for northern and western Victoria and receives patients from as far as Tasmania and southern New South Wales."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday","open":"24h"},
+      {"day":"Wednesday","open":"24h"},
+      {"day":"Thursday","open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "253",
+    "name": "Cleveland Clinic Abu Dhabi",
+    "address": {"street": "Building 72, Al Maryah Island","city": "Abu Dhabi","state": "UAE"},
+    "phoneNumber": "+971 800 82223",
+    "website": "https://www.clevelandclinicabudhabi.ae",
+    "email": "",
+    "photoUrl": "https://www.clevelandclinicabudhabi.ae/-/media/MicrosoftTeams-image-(13).png",
+    "type": "Public",
+    "services": ["Allergy and Immunology", "General Internal Medicine", "Bariatric Surgery", "Anaesthesiology", "Critical Care Medicine", "Neurological Restoration", "Head and Neck", "General Surgery", "Head and Neck", "Heart and Vascular", "Physical Therapy", "Rehabilitation","Rheumatology", "Eye Care", "Endoscopy", "Endocrinology", "Epilepsy", "Nuclear Medicine", "Pediatric Ophthalmology", "Emergency", "Digestive Diseases", "Transplant Center", "Surgical Oncology", "Speech Pathology", "Urology"],
+    "comment": ["The hospital is part of the Cleveland Clinic Foundation in the United States and offers advanced medical care across various specialties.", "It is known for its state-of-the-art facilities and highly skilled medical professionals."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday","open":"24h"},
+      {"day":"Wednesday","open":"24h"},
+      {"day":"Thursday","open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "254",
+    "name": "Toronto General Hospital (TGH)",
+    "address": {"street": "200 Elizabeth St, Toronto","city": "Ontario","state": "Canada"},
+    "phoneNumber": "+1 416-340-3111, +1 416 340 4907",
+    "website": "https://www.uhn.ca/OurHospitals/TGH",
+    "email": "social@uhn.ca",
+    "photoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Toronto_-_ON_-_Toronto_General_Hospital.jpg/1280px-Toronto_-_ON_-_Toronto_General_Hospital.jpg",
+    "type": "Public",
+    "services": ["Acute care", "Cardiac care", "Transplantation", "Surgery and Critical care", "Eating Disorder Program", "Labs and Test Services", "Inpatient Services", "Outpatient Clinics", "Emergency Care","Diagnostic Imaging", "Pharmacy Services"],
+    "comment": ["Toronto General Hospital (TGH) is leading the way in cardiac care, organ transplants and the treatment of complex patient needs."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday","open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "255",
+    "name": "Mayo Clinic",
+    "address": {"street": "13400 E. Shea Blvd. Scottsdale","city": "Arizona","state": "USA"},
+    "phoneNumber": "+1 480-301-8000",
+    "website": "https://www.mayoclinic.org",
+    "email": "social@mayoclinic.org",
+    "photoUrl": "https://assets.mayoclinic.org/content/dam/media/global/images/2024/03/08/photo_campus_arizona-campus-sunset_1296x555.jpg",
+    "type": "Private",
+    "services": ["Cardiology and heart surgery", "Cancer (oncology)", "Digestive diseases", "Endocrinology", "Neurology and neurosurgery", "Orthopaedics", "Transplant medicine and surgery", "Pulmonology", "Urology"],
+    "comment": ["Mayo Clinic is renowned for its comprehensive medical care, cutting-edge research, and education.", "It consistently ranks among the top hospitals in the United States and globally.", "Mayo Clinic Health System operates more than 70 smaller hospitals and clinics across Minnesota, Iowa, and Wisconsin, providing healthcare close to home in those communities"],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday","open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "256",
+    "name": "St Thomas Hospital Malta",
+    "address": {"street": "St Thomas Street, Valletta Road, Qormi","city": "Valletta","state": "Malta"},
+    "phoneNumber": "+356 2148 2482",
+    "website": "https://www.sthmalta.com",
+    "email": "enquiries@sthmalta.com",
+    "photoUrl": "https://cdn-attachments.timesofmalta.com/fa3b0416032aab3511cb6a69e576497e32e8de04-1733311779-6f6653d0-1920x1280.jpg",
+    "type": "Private",
+    "services": ["Cardiology", "Paediatric", "General Surgery", "Gastroenterology", "Weight Loss Surgery", "Orthopaedics", "Health Screening", "Pain Management", "Urology", "Gynacology", "ENT", "Dermatology"],
+    "comment": ["St Thomas Hospital Malta is a leading private healthcare institution in Malta, known for its state-of-the-art facilities and comprehensive medical services.", "St Thomas Hospital Malta is committed to providing high-quality patient care and has a team of experienced medical professionals dedicated to ensuring the well-being of their patients."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday","open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
   }
 ]

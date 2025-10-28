@@ -13,8 +13,6 @@ import { getCoordinates } from "../config/geocode.js";
 
 dotenv.config();
 
-const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const hospitalsData = JSON.parse(
@@ -151,11 +149,10 @@ const searchHospitals = asyncHandler(async (req, res) => {
   return res.json(hospitals);
 });
 
-
 //  @desc Get nearby hospitals based on lat/lon or IP
 //  @route GET /hospitals/nearby?lat=..&lon=..&limit=..
 //  @access Public
- const getNearbyHospitals = async (req, res) => {
+const getNearbyHospitals = async (req, res) => {
   const { lat, lon, limit } = req.query;
   const userLat = parseFloat(lat);
   const userLon = parseFloat(lon);
@@ -244,7 +241,7 @@ const searchHospitals = asyncHandler(async (req, res) => {
 };
 
 // ✅ Hospital by ID
- const getHospitalById = async (req, res) => {
+const getHospitalById = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -277,6 +274,43 @@ const searchHospitals = asyncHandler(async (req, res) => {
     console.error("❌ Error fetching hospital:", err);
     res.status(500).json({ message: "Server error fetching hospital" });
   }
+};
+
+let cachedFeatured = [];
+let lastFeaturedFetch = 0;
+const FEATURED_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
+
+// @desc Fallback — return top hospitals (no location access)
+const getTopHospitals = async (req, res) => {
+  const now = Date.now();
+
+  // Serve from cache if fresh
+  if (cachedFeatured.length && now - lastFeaturedFetch < FEATURED_CACHE_TTL) {
+    console.log("⚡ Using cached featured hospitals");
+  } else {
+    try {
+      const hospitals = await Hospital.find({ isFeatured: true }).limit(20).lean();
+
+      if (!hospitals.length) {
+        console.warn("⚠️ No featured hospitals found — using random fallback.");
+        const fallback = await Hospital.aggregate([{ $sample: { size: 20 } }]);
+        cachedFeatured = fallback;
+      } else {
+        cachedFeatured = hospitals;
+      }
+
+      lastFeaturedFetch = now;
+      console.log(`🏥 Cached ${cachedFeatured.length} featured hospitals`);
+    } catch (err) {
+      console.error("❌ Error fetching featured hospitals:", err);
+      return res.status(500).json({ message: "Failed to load top hospitals" });
+    }
+  }
+
+  // ✅ Randomize and limit results to 3
+  const randomized = cachedFeatured.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+  res.json(randomized);
 };
 
 // @desc share hospitals
@@ -540,6 +574,7 @@ export default {
   searchHospitals,
   getNearbyHospitals,
   getHospitalById,
+  getTopHospitals,
   shareHospitals,
   getSharedHospitals,
   exportHospitals,
