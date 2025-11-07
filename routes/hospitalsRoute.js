@@ -14,11 +14,11 @@ hospitalRouter.route("/find").get(hospitalController.findHospitals);
 hospitalRouter.route("/search").get(hospitalController.searchHospitals);
 hospitalRouter.route("/nearby").get(hospitalController.getNearbyHospitals);
 hospitalRouter.route("/top").get(hospitalController.getTopHospitals);
+hospitalRouter.route("/explore").get(hospitalController.getHospitalsGroupedByCountry);
+hospitalRouter.route("/country/:country").get(hospitalController.getHospitalsForCountry);
 hospitalRouter.route("/:id").get(hospitalController.getHospitalById);
 hospitalRouter.route("/share").post(hospitalController.shareHospitals);
-hospitalRouter
-  .route("/share/:linkId")
-  .get(hospitalController.getSharedHospitals);
+hospitalRouter.route("/share/:linkId").get(hospitalController.getSharedHospitals);
 hospitalRouter.route("/export").get(hospitalController.exportHospitals);
 hospitalRouter.route("/:name").get(hospitalController.getHospitalByName);
 hospitalRouter.route("/").delete(hospitalController.deleteHospital);

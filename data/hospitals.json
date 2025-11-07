@@ -2,11 +2,7 @@
   {
     "id": "1",
     "name": "Abia State University Teaching Hospital",
-    "address": {
-      "street": "Umueze Road Abayi",
-      "city": "Aba",
-      "state": "Abia"
-    },
+    "address": {"street": "Umueze Road Abayi","city": "Aba","state": "Nigeria"},
     "phoneNumber": "082233714, +234 826 00000, +234 806 500000",
     "website": "abiastateuniversity.edu.ng",
     "email": "info@absuthng.org",
@@ -42,7 +38,7 @@
     "address": {
       "street": "Aba Road Umuahia",
       "city": "Umuahia",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "+2348038089468",
     "website": "fmc-umuahia.com.ng",
@@ -86,12 +82,12 @@
     "address": {
       "street": "8, Eziukwu Road",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "08034229951, 08181315899, 08033166678",
     "website": "",
     "email": "lifecareclinicsltdaba@yahoo.com",
-    "photoUrl": "https://nigerianhospitaldirectory.com.ng/wp-content/uploads/2021/05/Life-Care-Clinic-logo.png",
+    "photoUrl": "https://lifecareng.com/assets/img/gallery/life1.jpg",
     "type": "Private",
     "services": [
       "Medical Services: Gastroenterology, Hematology",
@@ -124,12 +120,12 @@
     "address": {
       "street": "5/7, Umuocham Rd, off Aba-Owerri Rd",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 4954 556, 0803 799 9992",
     "website": "",
     "email": "",
-    "photoUrl": "https://nigerianhospitaldirectory.com.ng/wp-content/uploads/2021/05/Living-Word-Mission-Hospital.jpg",
+    "photoUrl": "https://lh3.googleusercontent.com/eRixXtxRGLft36FkFxF7bN7c2UrKmFxnAUTMhSPRmkZ5CwWDJRonjBK47CyRgm4F",
     "type": "Private",
     "services": [
       "Dental Clinic",
@@ -159,7 +155,7 @@
     "address": {
       "street": "20 Tenant Road",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "082-234441, 0803 7105 051",
     "website": "mendel-hospital-diabetes-care.business.site",
@@ -188,7 +184,7 @@
     "address": {
       "street": "213/215 Azikiwe road",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "08059506712, 08037022637, 07033807294",
     "website": "",
@@ -228,7 +224,7 @@
     "address": {
       "street": "18 ABA IKOT-EKPENE ROAD, OBINGWA L.G.A",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "08082290603",
     "website": "sites.google.com/a/davidlipscomb.org/west-end-m/Home/nigerian-christian-hospital",
@@ -263,7 +259,7 @@
     "address": {
       "street": "36, Glass Industry Road",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "82-227362, 0803 7336 880",
     "website": "",
@@ -295,7 +291,7 @@
     "address": {
       "street": "62/80 Etche Road",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "234 82 230974",
     "website": "",
@@ -324,7 +320,7 @@
     "address": {
       "street": "Ogbor hill, 3 Ezimba Road",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "082-232468",
     "website": "zikorafoundation.org",
@@ -353,7 +349,7 @@
     "address": {
       "street": "6 Brisibe Street, Off Etuwewe, | 9 Freshville Street, Ughelli Road, Okuokoko | 1 sokoto Close, Former Shell Estate, Edjeba | 18 Deco Road",
       "city": "Warri",
-      "state": "Delta"
+      "state": "Nigeria"
     },
     "phoneNumber": " 07053351741, 08127199957, 08039637765, 07050793485, 08113690489, 08113690487, 09055609040",
     "website": "lilyhospitals.com",
@@ -398,7 +394,7 @@
     "address": {
       "street": "23 Finbarrs Road",
       "city": "Umuahia",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -438,7 +434,7 @@
     "address": {
       "street": "15, Scotland Crescent",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "08063592871, +234 803 707 9432",
     "website": "",
@@ -480,7 +476,7 @@
     "address": {
       "street": "Km 2 Bende Road",
       "city": "Umuahia",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "08037418928",
     "website": "",
@@ -509,7 +505,7 @@
     "address": {
       "street": "Block 3, Amuzukwu Road Niger Road",
       "city": "Umuahia",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "088-221029, 0805 7307 927, 0803 7804 967",
     "website": "",
@@ -544,7 +540,7 @@
     "address": {
       "street": "Aba Road",
       "city": "Umuahia",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "08037473770, 07030602513, 08067459271, 08037753667",
     "website": "info@mchumuahia.com",
@@ -581,7 +577,7 @@
     "address": {
       "street": "32, Okigwe Road Aba",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "0813 430 0192, 0813 430 0192",
     "website": "",
@@ -623,7 +619,7 @@
     "address": {
       "street": "21 School Road",
       "city": "Umuahia",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 803 584 2805",
     "website": "obiomahospital.gnbo.com.ng",
@@ -664,7 +660,7 @@
     "address": {
       "street": "50, Omoba Road, Ogbor Hill",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -697,7 +693,7 @@
     "address": {
       "street": "Ahiaeke Ndume",
       "city": "Umuahia",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "123-456-7878",
     "website": "mercyspecialisthospital.org",
@@ -727,9 +723,9 @@
     "id": "21",
     "name": "Uzondu Hospital Polyclinic",
     "address": {
-      "street": "NO 8, OFALI AGWI ROAD, AMAEKPU OHAFIA",
-      "city": "Ohafia",
-      "state": "Abia"
+      "street": "NO 8, OFALI AGWI ROAD, AMAEKPU OHAFIA, Ohafia L.G.A",
+      "city": "Abia",
+      "state": "Nigeria"
     },
     "phoneNumber": "0806 372 1409",
     "website": "",
@@ -763,7 +759,7 @@
     "address": {
       "street": "5a Hill Top Road",
       "city": "Aba",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 82 22 1938",
     "website": "",
@@ -798,7 +794,7 @@
     "address": {
       "street": "42 Aba road",
       "city": "Umuahia",
-      "state": "Abia"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 805 237 0612",
     "website": "abiaspecialisthospital.com.ng",
@@ -836,7 +832,7 @@
     "address": {
       "street": "12, Umudora Street",
       "city": "Awka",
-      "state": "Anambra"
+      "state": "Nigeria"
     },
     "phoneNumber": "23448550841, 0808 065 1933",
     "website": "",
@@ -865,7 +861,7 @@
     "address": {
       "street": "Housing Estate Fegge, 9cl Pound Street",
       "city": "Onitsha",
-      "state": "Anambra"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 80 367 376 10",
     "website": "",
@@ -892,9 +888,9 @@
     "id": "26",
     "name": "Synapse Oak Unit",
     "address": {
-      "street": "No. 24, Senator Uche Ekwunife Crescent by Valuation House/ Federal Ministry of Agriculture",
+      "street": "No. 24, Senator Uche Ekwunife Crescent by Valuation House Federal Ministry of Agriculture",
       "city": "Awka",
-      "state": "Anambra"
+      "state": "Nigeria"
     },
     "phoneNumber": "0705 640 9301, 0815 288 2329",
     "website": "synapseservices.org/our-facilities-oak.html",
@@ -938,7 +934,7 @@
     "address": {
       "street": "2 Bex Avenue Km 1 Owerri Rd",
       "city": "Onitsha",
-      "state": "Anambra"
+      "state": "Nigeria"
     },
     "phoneNumber": "+2348139522732, +2348139522732",
     "website": "www.bexhospital.com",
@@ -977,7 +973,7 @@
     "address": {
       "street": "80 SS Edokwe Street/Ezemewi Road, Abubor Nnewichi",
       "city": "Nnewi",
-      "state": "Anambra"
+      "state": "Nigeria"
     },
     "phoneNumber": "0817 038 2214, +234 8033-560-232",
     "website": "chimexhospital.com",
@@ -1009,7 +1005,7 @@
     "address": {
       "street": "No 1 Oloh street, Omagba",
       "city": "Onitsha",
-      "state": "Anambra"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 80 39 328 090, 0080-332-1889",
     "website": "",
@@ -1045,7 +1041,7 @@
     "address": {
       "street": "No. 14 Asueifai Off Baybridge Road Hospital Road",
       "city": "Yenagoa",
-      "state": "Bayelsa"
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "asueifai-hospital.business.site",
@@ -1074,7 +1070,7 @@
     "address": {
       "street": "48, Yenagoa Road, Kpansia-epe",
       "city": "Yenagoa",
-      "state": "Bayelsa"
+      "state": "Nigeria"
     },
     "phoneNumber": "0807 558 9781, 0803 667 1829, 0703 795 5070",
     "website": "",
@@ -1103,7 +1099,7 @@
     "address": {
       "street": "Niger Delta University Teaching Hospital, Okolobiri",
       "city": "Yenagoa",
-      "state": "Bayelsa"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234-388448800, +123 44092 888",
     "website": "nduth.org.ng",
@@ -1142,9 +1138,9 @@
     "id": "33",
     "name": "Bayelsa Diagnostic Centre",
     "address": {
-      "street": "22 Imgbi Road",
-      "city": "Yenagoa",
-      "state": "Bayelsa"
+      "street": "22 Imgbi Road, Kpansia, Yenagoa",
+      "city": "Bayelsa",
+      "state": "Nigeria"
     },
     "phoneNumber": "0801 234 5678, 0706 9053030, 0705 4713419, 0907 4507978, 0817 7174427",
     "website": "bayelsadiagnostic.com",
@@ -1179,8 +1175,8 @@
     "name": "May Dental Hospital",
     "address": {
       "street": "Bay Bridge Road Yenagoa 560213 Kpansia",
-      "city": "Yenagoa",
-      "state": "Bayelsa"
+      "city": "Bayelsa",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 371 4338",
     "website": "may-dental-hospital.business.site",
@@ -1209,9 +1205,9 @@
     "id": "35",
     "name": "Federal Medical Centre (FMC)",
     "address": {
-      "street": "Hospital Road, Ovom",
-      "city": "Yenagoa",
-      "state": "Bayelsa"
+      "street": "Hospital Road, Ovom, Yenagoa",
+      "city": "Bayelsa",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 906 000 1156",
     "website": "fmcyenagoa.org.ng",
@@ -1255,7 +1251,7 @@
     "address": {
       "street": "13 Saptex Road, Yenizue-epie",
       "city": "Yenagoa",
-      "state": "Bayelsa"
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 600 2204, 0813 874 4498, 0809 991 2925",
     "website": "yenagoahospital.com",
@@ -1286,9 +1282,9 @@
     "id": "37",
     "name": "Dialysis World Nigeria",
     "address": {
-      "street": "6, Bakery Junction, Azikoro Town",
-      "city": "Yenagoa",
-      "state": "Bayelsa"
+      "street": "6, Bakery Junction, Azikoro Town, Yenagoa",
+      "city": "Bayelsa",
+      "state": "Nigeria"
     },
     "phoneNumber": "0704 467 9799, 0802 316 1394",
     "website": "",
@@ -1319,8 +1315,8 @@
     "name": "Silhoutte Radiodiagnostic Consultants",
     "address": {
       "street": "567 Mbiama-Yenagoa Road",
-      "city": "Yenagoa",
-      "state": "Bayelsa"
+      "city": "Bayelsa",
+      "state": "Nigeria"
     },
     "phoneNumber": "0902 888 7046, 0802 671 8680",
     "website": "",
@@ -1353,9 +1349,9 @@
     "id": "39",
     "name": "First Delta America Hospital",
     "address": {
-      "street": "No 4 Goshen Avenue off Okpanam Road, behind sweet spirit hotel",
-      "city": "Asaba",
-      "state": "Delta"
+      "street": "No 4 Goshen Avenue off Okpanam Road, behind sweet spirit hotel, Asaba",
+      "city": "Delta",
+      "state": "Nigeria"
     },
     "phoneNumber": "08036876988, +234 809 234 0000, +234 813 305 3900",
     "website": "fdahospital.org",
@@ -1396,7 +1392,7 @@
     "address": {
       "street": "142 Nnebisi Road",
       "city": "Asaba",
-      "state": "Delta"
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 230 0170, 0810 179 4977, 0803 758 1543, 0803 262 6620",
     "website": "",
@@ -1425,7 +1421,7 @@
     "address": {
       "street": "Ranyo’s Place, 2, Omamofe Sillo Street",
       "city": "Warri",
-      "state": "Delta"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 803 7162448, +234 802 8360918, +234 802 836 0918",
     "website": "capitolhillhospitals.com.ng",
@@ -1467,7 +1463,7 @@
     "address": {
       "street": "3 Humanity Hospital Close, Off Enerhen Road, (Near The Seminary), Effurun",
       "city": "Warri",
-      "state": "Delta"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 806 674 0701, +234 803 579 8574",
     "website": "humanityhospitals.com",
@@ -1508,9 +1504,9 @@
     "id": "43",
     "name": "Anioma Hospital",
     "address": {
-      "street": "13, Memeh Street",
-      "city": "Agbor",
-      "state": "Delta"
+      "street": "13, Memeh Street, Off Ugbor Road Opposite Agbor Hilltop Hotel",
+      "city": "Delta",
+      "state": "Nigeria"
     },
     "phoneNumber": "08055332778, 08054505191",
     "website": "aniomahospital.com",
@@ -1550,9 +1546,9 @@
     "id": "44",
     "name": "General Hospital Ibusa",
     "address": {
-      "street": "OGBEOWELE QTRS",
-      "city": "Ibusa",
-      "state": "Delta"
+      "street": "OGBEOWELE QTRS, IBUSA",
+      "city": "Delta",
+      "state": "Nigeria"
     },
     "phoneNumber": "0813-953-5253",
     "website": "",
@@ -1584,9 +1580,9 @@
     "id": "45",
     "name": "Ufor Hospital",
     "address": {
-      "street": "9, Uloho Avenue",
-      "city": "Ughelli",
-      "state": "Delta"
+      "street": "9, Uloho Avenue, Off Sapele Road, Ughelli",
+      "city": "Delta",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 807 425 6070, 08023835391, 052-253275",
     "website": "www.uforhospital.com",
@@ -1615,14 +1611,14 @@
     "id": "46",
     "name": "Lana Hospital",
     "address": {
-      "street": "48, Atufe Road",
-      "city": "Sapele",
-      "state": "Delta"
+      "street": "48, Atufe Road, Sapele",
+      "city": "Delta",
+      "state": "Nigeria"
     },
     "phoneNumber": "+2348038125940, +2348024061962",
     "website": "lanahospital.com",
     "email": "info@lanahospital.com",
-    "photoUrl": "https://instagram.fabb1-2.fna.fbcdn.net/v/t51.2885-15/83889219_130069625164462_3863530815630633009_n.jpg?stp=dst-jpg_e35_s480x480&_nc_ht=instagram.fabb1-2.fna.fbcdn.net&_nc_cat=110&_nc_ohc=oPpaLLX-hacAX8P9VII&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AfBjDFWF0xY7q8Blw7pIoWZjgsj6Q082xDrcVjR58EmNaw&oe=64BFD97B&_nc_sid=8b3546",
+    "photoUrl": "https://askannie.tortoisepath.com/wp-content/uploads/2024/10/Lana-Hospital-Sapele-Nigeria-AskAnnie-TortoisePathcom-1.jpeg",
     "type": "Private",
     "services": [
       "General Practice",
@@ -1716,9 +1712,9 @@
     "id": "49",
     "name": "Federal Medical Centre (FMC)",
     "address": {
-      "street": "Nnebisi road",
-      "city": "Asaba",
-      "state": "Delta"
+      "street": "Nnebisi road, P.M.B 1060 , Asaba",
+      "city": "Delta",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 817 177 7722, +234 805 555 4759, +234 701 113 3354, +234 903 332 6334",
     "website": "fmcasaba.org",
@@ -1760,9 +1756,9 @@
     "id": "50",
     "name": "Central Hospital",
     "address": {
-      "street": "Sapele Road, Oka",
-      "city": "Benin",
-      "state": "Edo"
+      "street": "Sapele Road, Oka, Benin City",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "0704 241 5863, 0703 466 2885, 052290227",
     "website": "",
@@ -1799,9 +1795,9 @@
     "id": "51",
     "name": "University of Benin Teaching Hospital (UBTH)",
     "address": {
-      "street": "P.M.B 1111, Benin Lagos Express Road, Uselu",
-      "city": "Benin",
-      "state": "Edo"
+      "street": "P.M.B 1111, Benin Lagos Express Road, Uselu, Benin City",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 814 777 2992",
     "website": "ubth.org",
@@ -1849,9 +1845,9 @@
     "id": "52",
     "name": "Eseohe Medical Centre",
     "address": {
-      "street": "No. 2, Police Barrack RD, Off Benin Auchi Express Way, Beside Mousco Petrol Station",
-      "city": "Ekpoma",
-      "state": "Edo"
+      "street": "No. 2, Police Barrack RD, Off Benin Auchi Express Way, Beside Mousco Petrol Station, Ekpoma",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 706 397 4807",
     "website": "",
@@ -1878,9 +1874,9 @@
     "id": "53",
     "name": "Fate Medical Centre",
     "address": {
-      "street": "99 JATTU ROAD",
-      "city": "Auchi",
-      "state": "Edo"
+      "street": "99 JATTU ROAD, BEHIND OGBONNA POLICE STATION, AUCHI",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 813 838 8330",
     "website": "",
@@ -1907,9 +1903,9 @@
     "id": "54",
     "name": "Eromosele Medical Centre",
     "address": {
-      "street": "36A Ujeolen Road",
-      "city": "Ekpoma",
-      "state": "Edo"
+      "street": "36A Ujeolen Road, Opposite Police Barracks, Ekpoma",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "0903 948 2331",
     "website": "",
@@ -1933,9 +1929,9 @@
     "id": "55",
     "name": "Mount Gilead Hospital",
     "address": {
-      "street": "NO 1 Mount Gilead Close, Uselu quarters",
-      "city": "Benin",
-      "state": "Edo"
+      "street": "NO 1 Mount Gilead Close, Uselu quarters, Benin City",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "0903 948 2331, 0807 669 3429",
     "website": "mount-gilead-hospital.business.site",
@@ -1962,9 +1958,9 @@
     "id": "56",
     "name": "Edi International Hospital Ltd",
     "address": {
-      "street": "1 CORONATION DRIVE, OFF AIDEYAN STREET GRA",
-      "city": "Benin",
-      "state": "Edo"
+      "street": "1 CORONATION DRIVE, OFF AIDEYAN STREET GRA, BENIN CITY",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "0805 2692048",
     "website": "edi-hospital.squarespace.com",
@@ -2012,9 +2008,9 @@
     "id": "57",
     "name": "Irrua Specialist Teaching Hospital (ISTH)",
     "address": {
-      "street": "KM 87 Benin Auchi Road, P.M.B. 08",
-      "city": "Irrua",
-      "state": "Edo"
+      "street": "KM 87 Benin Auchi Road, P.M.B. 08, Irrua",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "0805 806 5577, 0706 048 3732",
     "website": "isth.org.ng",
@@ -2053,9 +2049,9 @@
     "id": "58",
     "name": "Igbinedion University Teaching Hospital",
     "address": {
-      "street": "P. O. Box 11, Ovia North East L.G.A",
-      "city": "Okada",
-      "state": "Edo"
+      "street": "P. O. Box 11, Ovia North East L.G.A, Okada",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "0806 300 7065",
     "website": "iuokada.edu.ng",
@@ -2093,7 +2089,7 @@
     "address": {
       "street": "17 Edo-Osagie St, Oka 300102 | 16A Edo-Osagie Street GRA | 7 Boundary Road, GRA | 3 Afe Close, Off Ikpokpan Road",
       "city": "Benin",
-      "state": "Edo"
+      "state": "Nigeria"
     },
     "phoneNumber": "08113690590, 080113690687, 08112690592, 08113690679, 08113690687, 08112690592",
     "website": "lilyhospitals.com",
@@ -2240,7 +2236,7 @@
     "phoneNumber": "08084632038",
     "website": "saintnicholashospital.com",
     "email": "info@saintnicholashospital.com, clientservice@saintnicholashospital.com",
-    "photoUrl": "https://i0.wp.com/saintnicholashospital.com/wp-content/uploads/2021/06/hay-10.jpg?w=1080&ssl=1",
+    "photoUrl": "https://saintnicholashospital.com/wp-content/uploads/2019/09/St.-Nicholas-Hospital_Campbell-1024x683.jpg",
     "type": "Private",
     "services": [
       "Endoscopy",
@@ -2384,11 +2380,11 @@
   },
   {
     "id": "67",
-    "name": "General Hospital, Lagos Island",
+    "name": "General Hospital",
     "address": {
-      "street": "1 - 3 Broad St, Odan 102273",
-      "city": "Lagos Island",
-      "state": "Lagos"
+      "street": "1 - 3 Broad St, Odan 102273, Lagos Island",
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 1 263 0642, +234 803 300 3658",
     "website": "",
@@ -2436,9 +2432,9 @@
     "id": "68",
     "name": "Ajeromi General Hospital",
     "address": {
-      "street": "6, Cardoso Street, Awodiora, Ajegunle, Ajeromi-Ifelodun,",
-      "city": "Ajegunle",
-      "state": "Lagos"
+      "street": "6, Cardoso Street, Awodiora, Ajegunle, Ajeromi-Ifelodun L.G.A",
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 8023152879, +234 8088643374, +234 8060272567",
     "website": "ajeromigeneralhospital.com",
@@ -2483,11 +2479,11 @@
   },
   {
     "id": "69",
-    "name": "General Hospital, Ikorodu",
+    "name": "General Hospital",
     "address": {
       "street": "Otunba TOS Benson Rd, Ikorodu Hospital Rd, Ijede",
-      "city": "Ikorodu",
-      "state": "Lagos"
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "0802 860 6347, 0802860634, 0805 430 4151, 0812 590 4022",
     "website": "generalhospitalikorodu.org",
@@ -2533,9 +2529,9 @@
     "id": "70",
     "name": "Lagos State University Teaching Hospital (LSUTH)",
     "address": {
-      "street": "1 - 5, Oba Akinjobi Road",
-      "city": "Ikeja",
-      "state": "Lagos"
+      "street": "1 - 5, Oba Akinjobi Road, Ikeja",
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234-909-148-1560, +234- 909-148-1560, 805-769-9802",
     "website": "lasuth.org.ng",
@@ -2585,8 +2581,8 @@
     "name": "Orile Agege General Hospital",
     "address": {
       "street": "3 Old Otta Rd, Orile Agege",
-      "city": "Agege",
-      "state": "Lagos"
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 705 689 3641,",
     "website": "",
@@ -2634,9 +2630,9 @@
     "id": "72",
     "name": "Epe General Hospital",
     "address": {
-      "street": "Hospital Road",
-      "city": "Epe",
-      "state": "Lagos"
+      "street": "Hospital Road, Epe",
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 359 5052, +234 1 7770551",
     "website": "",
@@ -2676,8 +2672,8 @@
     "name": "The Synapse Magnolia",
     "address": {
       "street": "No.60 Babaponmile Street, Onipetesi (former Punch) Estate, through Petcostars Filling Station, Mangoro Bus Stop",
-      "city": "Ikeja",
-      "state": "Lagos"
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "0909 219 0476, 0815 288 2329",
     "website": "synapseservices.org/our-facilities-magnolia.html",
@@ -2720,8 +2716,8 @@
     "name": "Gbagada General Hospital",
     "address": {
       "street": " 1, Hospital Road, Gbagada, Kosofe",
-      "city": "Gbagada",
-      "state": "Lagos"
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "0811 389 8138",
     "website": "gbagadagh.org.ng",
@@ -2764,9 +2760,9 @@
     "id": "75",
     "name": "Ifako Ijaiye General Hospital",
     "address": {
-      "street": "14 College Road",
-      "city": "Ifako Ijaiye",
-      "state": "Lagos"
+      "street": "14 College Road Off Ogba Road, Ifako Ijaiye",
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "0802 331 1868",
     "website": "",
@@ -2806,9 +2802,9 @@
     "id": "76",
     "name": "MariGold Hospital",
     "address": {
-      "street": "12/14 Adeniyi Adefioye Street, Kilo",
-      "city": "Surulere",
-      "state": "Lagos"
+      "street": "12/14 Adeniyi Adefioye Street, Kilo Bus Stop, Surulere",
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 811 355 2222, +234 818 299 0999",
     "website": "marigoldhospital.ng",
@@ -2852,9 +2848,9 @@
     "id": "77",
     "name": "Cottage Medical Hospital",
     "address": {
-      "street": "18, IWAYA ROAD, ONIKE",
-      "city": "Yaba",
-      "state": "Lagos"
+      "street": "18, IWAYA ROAD, ONIKE BUS STOP, YABA",
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "07044999088, 08026261632",
     "website": "cottagemedicare.com.ng",
@@ -2891,9 +2887,9 @@
     "id": "78",
     "name": "Regis & Reina Hospital",
     "address": {
-      "street": "41 Industrial Avenue",
-      "city": "Yaba",
-      "state": "Lagos"
+      "street": "41 Industrial Avenue Off Fola Agoro, Yaba",
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 807 485 8708, +234 810 106 8422",
     "website": "regisandreina.com",
@@ -2925,9 +2921,9 @@
     "id": "79",
     "name": "Mobihealth",
     "address": {
-      "street": "Suite E1 Bobsar Complex, Plot 1035 Michika Street, Area 11",
-      "city": "Garki",
-      "state": "Abuja"
+      "street": "Suite E1 Bobsar Complex, Plot 1035 Michika Street, Area 11 Garki II District",
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "0703 947 1943",
     "website": "mobihealthinternational.com",
@@ -2969,9 +2965,9 @@
     "id": "80",
     "name": "Royal Specialist Hospital",
     "address": {
-      "street": "No. 2 Kukawa Street Off Gimbiya street, Area 11",
-      "city": "Garki",
-      "state": "Abuja"
+      "street": "No. 2 Kukawa Street Off Gimbiya street, Area 11 Garki",
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "+2348134712000",
     "website": "royalspecialisthospital.com",
@@ -3006,9 +3002,9 @@
     "id": "81",
     "name": "SYNAPSE AZALEA",
     "address": {
-      "street": "Plot 238, Kado Cadastral Zone B09",
-      "city": "Kado",
-      "state": "Abuja"
+      "street": "Plot 238, Kado Cadastral Zone B09 Off Aguiyi Ironsi Street, Behind NNPC Filling Station",
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 09056906007, 08117775319",
     "website": "azaleaservices.org",
@@ -3045,8 +3041,8 @@
     "name": "Synapse Mustard Centre",
     "address": {
       "street": "No. 10, Inuwa Wada Crescent, Off T.O.S Benson Street, Opposite LEA Primary School, Off Ngozi Okonjo-Iweala Way, Utako District",
-      "city": "Utako",
-      "state": "Abuja"
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "0815 288 2329, 0816 392 2780",
     "website": "synapseservices.org/our-facilities-mustard.html",
@@ -3088,14 +3084,14 @@
     "id": "83",
     "name": "Supreme Vision Eye Clinic",
     "address": {
-      "street": "Abia House, 2nd Floor, Right Wing 2, Central Business District",
-      "city": "Wuse",
-      "state": "Abuja"
+      "street": "Mall 55, No 55, Kumasi Crescent, Wuse 2",
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 808 586 1111, +234 803 314 6169, +234 805 897 1009",
     "website": "sveyeclinic.com",
     "email": "supremevision2004@gmail.com, info@sveyeclinic.com",
-    "photoUrl": "https://scontent.fabb1-1.fna.fbcdn.net/v/t1.6435-9/125489248_153741289788188_8795328303755727276_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=19026a&_nc_ohc=1Dd969OZJYUAX9ygOKP&_nc_ht=scontent.fabb1-1.fna&oh=00_AfBe2MwypgZ8nJLKvh9JtTRfFYUe5eHJaMZQ5stSqOAKNg&oe=64E2B6C5",
+    "photoUrl": "https://askannie.tortoisepath.com/wp-content/uploads/2024/10/Supreme-Vision-Eye-Clinic-Abuja-Nigeria-AskAnnie-TortoisePathcom-11.jpeg",
     "type": "Private",
     "services": [
       "Comprehensive Eye Care",
@@ -3131,9 +3127,9 @@
     "id": "84",
     "name": "Living Stream Hospital",
     "address": {
-      "street": "Plot 42, Phase 1 off University Road",
-      "city": "Gwagwalada",
-      "state": "Abuja"
+      "street": "Plot 42, Phase 1 off University Road Gwagwalada",
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "07030901023",
     "website": "",
@@ -3160,9 +3156,9 @@
     "id": "85",
     "name": "University of Abuja Teaching Hospital",
     "address": {
-      "street": "University of Abuja Teaching Hospital Gwagwalada, P.M.B. 228",
-      "city": "Gwagwalada",
-      "state": "Abuja"
+      "street": "Gwagwalada, P.M.B. 228",
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 704 004 5614",
     "website": "uath.gov.ng",
@@ -3199,8 +3195,8 @@
     "name": "Our Lady of Fatima Catholic Hospital",
     "address": {
       "street": "Ushafa Road, After Deeper Life Bible Church, 16-16 Bwari",
-      "city": "Bwari",
-      "state": "Abuja"
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "07039470987, 08064188612",
     "website": "",
@@ -3236,8 +3232,8 @@
     "name": "Silver- Fountain Medical Center",
     "address": {
       "street": "Kc 12, Kukwaba District, Phase 2, Opposite Kuchingoro, Airport Road",
-      "city": "Lugbe",
-      "state": "Abuja"
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "09077752018",
     "website": "silverfountainng.com",
@@ -3272,9 +3268,9 @@
     "id": "88",
     "name": "Abaji General Hospital",
     "address": {
-      "street": "Opposite Abaji Motor Park, General Hospital Road",
-      "city": "Abaji",
-      "state": "Abuja"
+      "street": "Opposite Abaji Motor Park, General Hospital Road Abaji",
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "0807 602 0573, 0810 531 3379, 08035408722",
     "website": "",
@@ -3304,9 +3300,9 @@
     "id": "89",
     "name": "Gwarinpa General Hospital",
     "address": {
-      "street": "Jabi-Gwarinpa, Abuja Municipal",
-      "city": "Jabi",
-      "state": "Abuja"
+      "street": "Jabi-Gwarinpa, Abuja Municipal Area Council",
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "0806 537 1843",
     "website": "",
@@ -3341,9 +3337,9 @@
     "id": "90",
     "name": "Nisa Premier Hospital",
     "address": {
-      "street": "15/21 Alex Ekwueme Way",
-      "city": "Jabi",
-      "state": "Abuja"
+      "street": "15/21 Alex Ekwueme Way, Jabi",
+      "city": "Abuja",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 817 420 9999, +234 817 420 9990",
     "website": "nisa.com.ng",
@@ -3387,7 +3383,7 @@
     "address": {
       "street": "No 5 Elikwu Crescent, by Mopol 19 barracks, GRA phase 4",
       "city": "Port Harcourt",
-      "state": "Rivers"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 0905 681 1133",
     "website": "japonica.synapseservices.org",
@@ -3419,9 +3415,9 @@
     "id": "92",
     "name": "University of Port Harcourt Teaching Hospital (UPTH)",
     "address": {
-      "street": "East - West road, opposite Alakahia Junction, P.M.B. 6173",
+      "street": "East - West road, opposite Alakahia Junction, P.M.B 6173",
       "city": "Port Harcourt",
-      "state": "Rivers"
+      "state": "Nigeria"
     },
     "phoneNumber": "07010207377, 08182692056",
     "website": "upthng.com",
@@ -3471,9 +3467,9 @@
     "id": "93",
     "name": "Maryland Healthcare Hospital",
     "address": {
-      "street": "Rumuokwurusi, 14 Elechi Amadi Road",
+      "street": "Rumuokwurusi, 14 Elechi Amadi Road, GRA Phase 2 Extension",
       "city": "Port Harcourt",
-      "state": "Rivers"
+      "state": "Nigeria"
     },
     "phoneNumber": "0907 448 7448",
     "website": "marylandhealthcare.com.ng",
@@ -3510,9 +3506,9 @@
     "id": "94",
     "name": "Mediethics Medical solutions LTD",
     "address": {
-      "street": "3 Benin Street, D/Line",
-      "city": "Port Harcourt",
-      "state": "Rivers"
+      "street": "3 Benin Street, D/Line, Port Harcourt",
+      "city": "Rivers",
+      "state": "Nigeria"
     },
     "phoneNumber": "+2348130660041, +2348090472888, +2348090456888",
     "website": "mmshealthcare.ng",
@@ -3546,9 +3542,9 @@
     "id": "95",
     "name": "New Mile One Hospital",
     "address": {
-      "street": "15 Emenike Street, Mile 1",
-      "city": "Port Harcourt",
-      "state": "Rivers"
+      "street": "15 Emenike Street, Mile 1, Diobu, Port Harcourt",
+      "city": "Rivers",
+      "state": "Nigeria"
     },
     "phoneNumber": "234 84 485184, 08056041910",
     "website": "",
@@ -3575,9 +3571,9 @@
     "id": "96",
     "name": "Onne Medical Centre",
     "address": {
-      "street": "Harbour Road, Onne Nchia Eleme",
-      "city": "Onne",
-      "state": "Rivers"
+      "street": "Harbour Road, Onne Nchia Eleme, P.O. Box 1276 Port Harcourt",
+      "city": "Rivers",
+      "state": "Nigeria"
     },
     "phoneNumber": "0806 715 8834",
     "website": "",
@@ -3604,9 +3600,9 @@
     "id": "97",
     "name": "Gbeye Hospital and Maternity",
     "address": {
-      "street": "17, Ahoada Road",
-      "city": "Omoku",
-      "state": "Rivers"
+      "street": "Ahoada Degema Road, Obiakpo",
+      "city": "Rivers",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 803 873 6693, +234 812 901 1922",
     "website": "gbeyehospital.com",
@@ -3644,7 +3640,7 @@
     "address": {
       "street": "38 Uyo Street, Off Stadium Rd, Rumuomasi",
       "city": "Port Harcourt",
-      "state": "Rivers"
+      "state": "Nigeria"
     },
     "phoneNumber": "07044000138",
     "website": "savealifehospital.com",
@@ -3681,7 +3677,7 @@
     "address": {
       "street": "7/9 OLD ABA ROAD (250 ABA /PH EXPRESS WAY) RUMUOMASI",
       "city": "Port Harcourt",
-      "state": "Rivers"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 815 849 3600,  0803 705 8080, 0803 747 2138",
     "website": "firstrivers.com",
@@ -3712,9 +3708,9 @@
     "id": "100",
     "name": "Anchor Hospital",
     "address": {
-      "street": "Km 15, Port-Harcourt/Aba,Near Eleme Junction, Umurolu",
-      "city": "Port Harcourt",
-      "state": "Rivers"
+      "street": "Km 15, Port-Harcourt/Aba, Near Eleme Junction, Umurolu Aluu Road",
+      "city": "Rivers",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 803 310 3672",
     "website": "",
@@ -3741,9 +3737,9 @@
     "id": "101",
     "name": "Rivers State University Teaching Hospital (RSUTH)",
     "address": {
-      "street": "Harley Street, Port Harcourt 500101",
-      "city": "Port Harcourt",
-      "state": "Rivers"
+      "street": "Harley Street, Old GRA Port Harcourt",
+      "city": "Rivers",
+      "state": "Nigeria"
     },
     "phoneNumber": "0815 149 1555, 0815 149 1574",
     "website": "rsuth.ng",
@@ -3784,9 +3780,9 @@
     "id": "102",
     "name": "Alex Ekwueme Federal University Teaching Hospital Abakaliki (AEFUTHA)",
     "address": {
-      "street": "No. 1, Chidume Street, Behind State Prison Headquarters",
-      "city": "Abakaliki",
-      "state": "Ebonyi"
+      "street": "No. 1, Chidume Street, Behind State Prison Headquarters, Abakaliki",
+      "city": "Ebonyi",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 903 2419 744, +234 813 8317 048",
     "website": "aefutha.gov.ng",
@@ -3822,9 +3818,9 @@
     "id": "103",
     "name": "Christ The King Hospital",
     "address": {
-      "street": "85 Afikpo Road",
-      "city": "Abakaliki",
-      "state": "Ebonyi"
+      "street": "85 Afikpo Road, Abakaliki",
+      "city": "Ebonyi",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 4330 0411, 080 3595 911",
     "website": "",
@@ -3854,8 +3850,8 @@
     "name": "National Obstetric Fistula Centre",
     "address": {
       "street": "Abakaliki Rd, Ntezi Abba 480108",
-      "city": "Abakaliki",
-      "state": "Ebonyi"
+      "city": "Ebonyi",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234(0)813-653-3679, +234(0)803-867-9354",
     "website": "nofic.org.ng",
@@ -3895,8 +3891,8 @@
     "name": "Ebonyi State University Teaching Hospital (ESUTH)",
     "address": {
       "street": "Km 2, Abakaliki - Enugu Expressway",
-      "city": "Abakaliki",
-      "state": "Ebonyi"
+      "city": "Ebonyi",
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -3925,8 +3921,8 @@
     "name": "General Hospital Onueke",
     "address": {
       "street": "Onueke Urban Onueke urban Ezza South",
-      "city": "Onueke",
-      "state": "Ebonyi"
+      "city": "Ebonyi",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803-565-3320",
     "website": "",
@@ -3960,9 +3956,9 @@
     "id": "107",
     "name": "Mater Misericordiae Hospital",
     "address": {
-      "street": "12 Mater Road Afipo",
-      "city": "Afikpo",
-      "state": "Ebonyi"
+      "street": "12 Mater Road Afipo, Afikpo",
+      "city": "Ebonyi",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 806 326 7858, 0806 435 7167",
     "website": "matersomn.org",
@@ -3990,9 +3986,9 @@
     "id": "108",
     "name": "Ezzamgbo General Hospital",
     "address": {
-      "street": "Enugu-Abakaliki Road, Idembia Izi",
-      "city": "Abakaliki",
-      "state": "Ebonyi"
+      "street": "Enugu-Abakaliki Road, Idembia Izi, Abakaliki",
+      "city": "Ebonyi",
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -4019,9 +4015,9 @@
     "id": "109",
     "name": "Nakowa Specialist Hospital",
     "address": {
-      "street": "No 16 Lagos Street",
-      "city": "Maiduguri",
-      "state": "Borno"
+      "street": "No 16 Lagos Street, Maiduguri",
+      "city": "Borno",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 76 23 1585",
     "website": "",
@@ -4050,9 +4046,9 @@
     "id": "110",
     "name": "Borno Medical Centre",
     "address": {
-      "street": "81 Sir Kashim Ibrahim Way",
-      "city": "Maiduguri",
-      "state": "Borno"
+      "street": "81 Sir Kashim Ibrahim Way, Maiduguri",
+      "city": "Borno",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 605 0833",
     "website": "",
@@ -4082,9 +4078,9 @@
     "id": "111",
     "name": "Kanem Hospital and Maternity",
     "address": {
-      "street": "152, Tafawa Balewa Street Lamisula Junction, Mafoni Ward",
-      "city": "Maiduguri",
-      "state": "Borno"
+      "street": "152, Tafawa Balewa Street Lamisula Junction, Mafoni Ward, Maiduguri",
+      "city": "Borno",
+      "state": "Nigeria"
     },
     "phoneNumber": "076234287, 08036002204",
     "website": "",
@@ -4111,9 +4107,9 @@
     "id": "112",
     "name": "Royal Specialist Hospital",
     "address": {
-      "street": "Gombe road after Giwa barracks",
-      "city": "Maiduguri",
-      "state": "Borno"
+      "street": "Gombe road after Giwa barracks, Maiduguri",
+      "city": "Borno",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234810066590",
     "website": "royalspecialisthospital.com",
@@ -4148,9 +4144,9 @@
     "id": "113",
     "name": "State Specialist Hospital",
     "address": {
-      "street": "Barno, Hausari 600282",
-      "city": "Maiduguri",
-      "state": "Borno"
+      "street": "Barno, Hausari 600282, Maiduguri",
+      "city": "Borno",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 703 333 9753",
     "website": "",
@@ -4178,9 +4174,9 @@
     "id": "114",
     "name": "Royal Specialist Hospital",
     "address": {
-      "street": "No. 1, Agatu street, Otukpo, Benue state No. 21 federal road",
-      "city": "Otukpo",
-      "state": "Benue"
+      "street": "No. 1, Agatu street, Otukpo",
+      "city": "Benue",
+      "state": "Nigeria"
     },
     "phoneNumber": "+2347084780003, +2349034447532",
     "website": "royalspecialisthospital.com",
@@ -4216,8 +4212,8 @@
     "name": "University of Maiduguri Teaching Hospital (UMTH)",
     "address": {
       "street": "Bama Road Maiduguri, P.M.B 1414",
-      "city": "Maiduguri",
-      "state": "Borno"
+      "city": "Borno",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 909 305 0548",
     "website": "umth.org.ng",
@@ -4264,9 +4260,9 @@
     "id": "116",
     "name": "NEW FOUNDATION HOSPITAL",
     "address": {
-      "street": "No 340 Shehu Umar Road, Sabo Lamba Ward",
-      "city": "Maiduguri",
-      "state": "Borno"
+      "street": "No 340 Shehu Umar Road, Sabo Lamba Ward, Maiduguri",
+      "city": "Borno",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 803 417 4667",
     "website": "",
@@ -4293,9 +4289,9 @@
     "id": "117",
     "name": "First Fertility Hospital",
     "address": {
-      "street": "Plot BNB5827 Samuel Rufus Street, Ankpa Quarters, Township 970251",
-      "city": "Makurdi",
-      "state": "Benue"
+      "street": "Plot BNB5827 Samuel Rufus Street, Ankpa Quarters, Makurdi",
+      "city": "Benue",
+      "state": "Nigeria"
     },
     "phoneNumber": "0909 946 6012, 08034339111",
     "website": "firstfertilityhospital.com",
@@ -4323,9 +4319,9 @@
     "id": "118",
     "name": "Madonna Hospital",
     "address": {
-      "street": "New Bridge Road",
-      "city": "Makurdi",
-      "state": "Benue"
+      "street": "New Bridge Road, Makurdi",
+      "city": "Benue",
+      "state": "Nigeria"
     },
     "phoneNumber": "+2347038502653, +2348027473188, +2348131838557",
     "website": "madonnahospitalmakurdi.com.ng",
@@ -4366,9 +4362,9 @@
     "id": "119",
     "name": "General Hospital",
     "address": {
-      "street": "North Bank market",
-      "city": "Makurdi",
-      "state": "Benue"
+      "street": "North Bank market, Makurdi",
+      "city": "Benue",
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -4395,9 +4391,9 @@
     "id": "120",
     "name": "Benue State University Teaching Hospital (BSUTH)",
     "address": {
-      "street": "3 Makurdi-Gboko Rd, Walmayo 970101",
-      "city": "Makurdi",
-      "state": "Benue"
+      "street": "3 Makurdi-Gboko Rd, Walmayo 970101, Makurdi",
+      "city": "Benue",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 07089547856, 08134889931, 08066841838",
     "website": "bsuth.org.ng",
@@ -4430,8 +4426,8 @@
     "name": "General Hospital, Vandekeiya",
     "address": {
       "street": "Vandeikya town",
-      "city": "Vandeikya",
-      "state": "Benue"
+      "city": "Benue",
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -4458,9 +4454,9 @@
     "id": "122",
     "name": "St. Daniels Hospital",
     "address": {
-      "street": "No 5 Ochalefu street behind new garage 972231",
-      "city": "Otukpo",
-      "state": "Benue"
+      "street": "No 5 Ochalefu street behind new garage, Otukpo",
+      "city": "Benue",
+      "state": "Nigeria"
     },
     "phoneNumber": "0808 965 9337, 0802 767 4480, 0816 399 1065",
     "website": "saintdanielhospital.business.site",
@@ -4492,9 +4488,9 @@
     "id": "123",
     "name": "Myom Hospital",
     "address": {
-      "street": "NO.28, GENERAL HOSPITAL ROAD, GBOKO EAST, P.O Box 744",
-      "city": "Gboko",
-      "state": "Benue"
+      "street": "NO.28 GENERAL HOSPITAL ROAD, GBOKO EAST, P.O Box 744",
+      "city": "Benue",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 44 470 071, 0806-424-2045",
     "website": "",
@@ -4529,8 +4525,8 @@
     "name": "Faith Foundation Specialist Clinic",
     "address": {
       "street": "57 Ndidem Usang ISO Rd, Calabar Municipal",
-      "city": "Calabar",
-      "state": "Cross River"
+      "city": "Cross River",
+      "state": "Nigeria"
     },
     "phoneNumber": "087-239436, 08033580726, 08023744014, 08034019721",
     "website": "faithfoundationmedical.com",
@@ -4557,9 +4553,9 @@
     "id": "125",
     "name": "Bakor Medical Centre",
     "address": {
-      "street": "124 Murtala Mohammed Highway, Opposite NNPC Mega Station, Federal Housing Estate",
-      "city": "Calabar",
-      "state": "Cross River"
+      "street": "124 Murtala Mohammed Highway, Opposite NNPC Mega Station, Federal Housing Estate, Calabar",
+      "city": "Cross River",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 809 096 8401, +234 809 233 7055, +234 912 036 3659",
     "website": "bakorhospitals.com",
@@ -4608,9 +4604,9 @@
     "id": "126",
     "name": "General Hospital, Calabar",
     "address": {
-      "street": "113 Mary Slessor Avenue, Efut Ekondo",
-      "city": "Calabar",
-      "state": "Cross River"
+      "street": "113 Mary Slessor Avenue, Efut Ekondo, Calabar",
+      "city": "Cross River",
+      "state": "Nigeria"
     },
     "phoneNumber": "087 776 451",
     "website": "",
@@ -4643,8 +4639,8 @@
     "name": "Danex Hospital",
     "address": {
       "street": "5 Danex Road, off Ikom-Calabar Highway, Ugep",
-      "city": "Ugep",
-      "state": "Cross River"
+      "city": "Cross River",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 591 0169, 0817 591 0169",
     "website": "",
@@ -4671,9 +4667,9 @@
     "id": "128",
     "name": "County Specialist Hospital",
     "address": {
-      "street": "11, Calabar Road Fourconner Square Ikom",
-      "city": "Ikom",
-      "state": "Cross River"
+      "street": "11, Calabar Road Fourconner Square, Ikom",
+      "city": "Cross River",
+      "state": "Nigeria"
     },
     "phoneNumber": "07035022715, 08177143218, 234-8028985004",
     "website": "",
@@ -4705,9 +4701,9 @@
     "id": "129",
     "name": "Calabar Specialist Hospital",
     "address": {
-      "street": "Summit Hills Development Area, Off Murtala Muhammed Highway",
-      "city": "Calabar",
-      "state": "Cross River"
+      "street": "Summit Hills Development Area, Off Murtala Muhammed Highway, Calabar",
+      "city": "Cross River",
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -4738,9 +4734,9 @@
     "id": "130",
     "name": "Niima Consultant Clinic",
     "address": {
-      "street": "Niima Close, Off Airport Road G.R.A, P.O.Box 3018,",
+      "street": "Niima Close, Off Airport Road G.R.A",
       "city": "Bauchi",
-      "state": "Bauchi"
+      "state": "Nigeria"
     },
     "phoneNumber": "077-543587, 08036270075",
     "website": "",
@@ -4769,7 +4765,7 @@
     "address": {
       "street": "Dan Iya Bauchi",
       "city": "Bauchi",
-      "state": "Bauchi"
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -4802,7 +4798,7 @@
     "address": {
       "street": "No. 5 Sule Katagum Road",
       "city": "Azare",
-      "state": "Bauchi"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 8036161249, 08036892083",
     "website": "fmcazare.gov.ng",
@@ -4838,7 +4834,7 @@
     "address": {
       "street": "Sabunwa Kasuwa Railway road",
       "city": "Bauchi",
-      "state": "Bauchi"
+      "state": "Nigeria"
     },
     "phoneNumber": "08065811873",
     "website": "",
@@ -4869,7 +4865,7 @@
     "address": {
       "street": "Former AMSAD Hospital, 02 Nassarawa Road",
       "city": "Bauchi",
-      "state": "Bauchi"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 803 865 2037, 0703 789 8673, 0816 6601660",
     "website": "",
@@ -4909,7 +4905,7 @@
     "address": {
       "street": "Off Yandoka Street, Hospital Road",
       "city": "Bauchi",
-      "state": "Bauchi"
+      "state": "Nigeria"
     },
     "phoneNumber": "077543500",
     "website": "atbuth.ng",
@@ -4950,9 +4946,9 @@
     "id": "136",
     "name": "Mount Olive Hospital",
     "address": {
-      "street": "8 Ebong Essien Street, off Ikot Ekpene Rd",
-      "city": "Uyo",
-      "state": "Akwa Ibom"
+      "street": "8 Ebong Essien Street, off Ikot Ekpene Rd, Uyo",
+      "city": "Akwa Ibom",
+      "state": "Nigeria"
     },
     "phoneNumber": "085-200590, 202202, 08022232072",
     "website": "",
@@ -4980,9 +4976,9 @@
     "id": "137",
     "name": "St Athanasius Hospital",
     "address": {
-      "street": "No 1 Ufeh Street, Federal Housing Estate Off clement Isong Street",
-      "city": "Uyo",
-      "state": "Akwa Ibom"
+      "street": "No 1 Ufeh Street, Federal Housing Estate Off clement Isong Street, Uyo",
+      "city": "Akwa Ibom",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 792 0924, 0802 314 7926, 0803 923 5370",
     "website": "",
@@ -5009,9 +5005,9 @@
     "id": "138",
     "name": "Nduye Medical Services",
     "address": {
-      "street": "29 Ekpene Ukpa Street",
-      "city": "Eket",
-      "state": "Akwa Ibom"
+      "street": "29 Ekpene Ukpa Street, Eket",
+      "city": "Akwa Ibom",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 231 5931",
     "website": "",
@@ -5038,9 +5034,9 @@
     "id": "139",
     "name": "Samaritan Clinic & Hospital",
     "address": {
-      "street": "7 Ekong Uko",
-      "city": "Eket",
-      "state": "Akwa Ibom"
+      "street": "7 Ekong Uko, Eket",
+      "city": "Akwa Ibom",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234(806) 475 2204, 085-701160, 08023347227",
     "website": "samaritanclinics.com",
@@ -5077,9 +5073,9 @@
     "id": "140",
     "name": "Peace Hospital",
     "address": {
-      "street": "2 Bishop Street",
-      "city": "Jimeta",
-      "state": "Adamawa"
+      "street": "2 Bishop Street, Jimeta",
+      "city": "Adamawa",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 75 625 932",
     "website": "",
@@ -5108,9 +5104,9 @@
     "id": "141",
     "name": "Adamawa-German Medical Centre",
     "address": {
-      "street": "Hospital Road, Jimeta 640022",
-      "city": "Yola",
-      "state": "Adamawa"
+      "street": "Hospital Road, Jimeta 640022, Yola",
+      "city": "Adamawa",
+      "state": "Nigeria"
     },
     "phoneNumber": "+2348165713406, +2348032543651, 0703 872 0124",
     "website": "",
@@ -5144,8 +5140,8 @@
     "name": "General Hospital Michika",
     "address": {
       "street": "Opposite GDSS Jang Michika 2",
-      "city": "Michika",
-      "state": "Adamawa"
+      "city": "Adamawa",
+      "state": "Nigeria"
     },
     "phoneNumber": "0808-202-3154",
     "website": "",
@@ -5181,8 +5177,8 @@
     "name": "General Hospital Numan",
     "address": {
       "street": "PMB 12, Numan",
-      "city": "Numan",
-      "state": "Adamawa"
+      "city": "Adamawa",
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -5209,9 +5205,9 @@
     "id": "144",
     "name": "Federal Medical Centre",
     "address": {
-      "street": "Yola Bye-Pass Road, Madumari",
-      "city": "Yola",
-      "state": "Adamawa"
+      "street": "Yola Bye-Pass Road, Madumari, Yola",
+      "city": "Adamawa",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 803 670 2021",
     "website": "fmcyola.gov.ng",
@@ -5238,9 +5234,9 @@
     "id": "145",
     "name": "New Boshang Hospital ltd",
     "address": {
-      "street": "Ngurore Street Karewa Extension Jimeta",
-      "city": "Yola",
-      "state": "Adamawa"
+      "street": "Ngurore Street Karewa Extension Jimeta, Yola",
+      "city": "Adamawa",
+      "state": "Nigeria"
     },
     "phoneNumber": "0808 787 2226, 0806 984 1275",
     "website": "boshanghospital.com",
@@ -5267,9 +5263,9 @@
     "id": "146",
     "name": "Adetade Hospital",
     "address": {
-      "street": "55, Okebola Street",
-      "city": "Ado-Ekiti",
-      "state": "Ekiti"
+      "street": "55, Okebola Street, Ado-Ekiti",
+      "city": "Ekiti",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 475 3037",
     "website": "",
@@ -5298,9 +5294,9 @@
     "id": "147",
     "name": "St. Gregory’s Hospital",
     "address": {
-      "street": "No22, Basiri Street, Km2, Iyin Rd",
-      "city": "Ado-Ekiti",
-      "state": "Ekiti"
+      "street": "No22 Basiri Street, Km2, Iyin Rd, Ado-Ekiti",
+      "city": "Ekiti",
+      "state": "Nigeria"
     },
     "phoneNumber": "08033580364",
     "website": "stgregoryshospital.com",
@@ -5341,9 +5337,9 @@
     "id": "148",
     "name": "FEDERAL TEACHING HOSPITAL IDO-EKITI",
     "address": {
-      "street": "P.M.B 201",
-      "city": "Ido-Ekiti",
-      "state": "Ekiti"
+      "street": "P.M.B 201, Ido-Ekiti",
+      "city": "Ekiti",
+      "state": "Nigeria"
     },
     "phoneNumber": "09062386341",
     "website": "fethi.gov.ng",
@@ -5382,9 +5378,9 @@
     "id": "149",
     "name": "Federal Medical Center",
     "address": {
-      "street": "Fayose Housing Estate, Ilawe Road",
-      "city": "Ado-Ekiti",
-      "state": "Ekiti"
+      "street": "Fayose Housing Estate, Ilawe Road, Ado-Ekiti",
+      "city": "Ekiti",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 814 055 3912",
     "website": "",
@@ -5423,9 +5419,9 @@
     "id": "150",
     "name": "State Specialist Hospital",
     "address": {
-      "street": "Ise-Ekiti Road",
-      "city": "Ikere Ekiti",
-      "state": "Ekiti"
+      "street": "Ise-Ekiti Road, Ikere Ekiti",
+      "city": "Ekiti",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 374 3597, +234 805 828 7173",
     "website": "",
@@ -5453,9 +5449,9 @@
     "id": "151",
     "name": "Kenechukwu Specialist Hospital",
     "address": {
-      "street": "Plot 31/32 Thinkers Estate, Thinker’s Corner Behind Nike Grammar School",
-      "city": "Abakpa",
-      "state": "Enugu"
+      "street": "Plot 31/32 Thinkers Estate, Abakpa",
+      "city": "Enugu",
+      "state": "Nigeria"
     },
     "phoneNumber": "08064511682, 07057732223",
     "website": "",
@@ -5483,9 +5479,9 @@
     "id": "152",
     "name": "Akulue Memorial Hospital",
     "address": {
-      "street": "16/18 Akule Raod, Onuiyi",
-      "city": "Nsukka",
-      "state": "Enugu"
+      "street": "16/18 Akule Raod, Onuiyi, Nsukka",
+      "city": "Enugu",
+      "state": "Nigeria"
     },
     "phoneNumber": "0816 063 6646",
     "website": "",
@@ -5514,7 +5510,7 @@
     "address": {
       "street": "ESUTH Teaching Hospital Parklane, P.M.B. 1030",
       "city": "Enugu",
-      "state": "Enugu"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 814 268 0000",
     "website": "esuth.org",
@@ -5553,7 +5549,7 @@
     "address": {
       "street": "Ashaka Road Rd, 620261",
       "city": "Gombe",
-      "state": "Gombe"
+      "state": "Nigeria"
     },
     "phoneNumber": "08036085361",
     "website": "fthgombe.gov.ng",
@@ -5599,7 +5595,7 @@
     "address": {
       "street": "Goodluck Ebele Jonathan Road",
       "city": "Gombe",
-      "state": "Gombe"
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -5628,7 +5624,7 @@
     "address": {
       "street": "Behind Hammadu Kafi Primary School, Southern Bypass",
       "city": "Gombe",
-      "state": "Gombe"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 806 472 1014",
     "website": "",
@@ -5663,7 +5659,7 @@
     "address": {
       "street": "Abacha Rd",
       "city": "Gombe",
-      "state": "Gombe"
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -5695,9 +5691,9 @@
     "id": "158",
     "name": "Umezuruike Hospital",
     "address": {
-      "street": "No 21/22 Umezuruike Street",
-      "city": "Owerri",
-      "state": "Imo"
+      "street": "No 21/22 Umezuruike Street, Owerri",
+      "city": "Imo",
+      "state": "Nigeria"
     },
     "phoneNumber": "+2348133907095",
     "website": "umezuruikehospital.com",
@@ -5735,9 +5731,9 @@
     "id": "159",
     "name": "Federal Medical Center Owerri",
     "address": {
-      "street": "105 Orlu Rd, P.M.B 1010",
-      "city": "Owerri",
-      "state": "Imo"
+      "street": "105 Orlu Rd, P.M.B 1010, Owerri",
+      "city": "Imo",
+      "state": "Nigeria"
     },
     "phoneNumber": "083 232 738, 0702 847 5638, 0806 342 5154",
     "website": "",
@@ -5779,9 +5775,9 @@
     "id": "160",
     "name": "Federal Medical Centre jigawa",
     "address": {
-      "street": "P.M.B 1022, Along kano - Maiduguri Road",
-      "city": "Birnin Kudu",
-      "state": "Jigawa"
+      "street": "P.M.B 1022, Along kano - Maiduguri Road, Birnin Kudu",
+      "city": "Jigawa",
+      "state": "Nigeria"
     },
     "phoneNumber": "+2348036304601 +2348028377672",
     "website": "fmcbkd.gov.ng",
@@ -5808,9 +5804,9 @@
     "id": "161",
     "name": "General Hospital Dutse",
     "address": {
-      "street": "Along Dustse-wakanukuguma Road, Sabon Gari Danmasara",
-      "city": "Dutse ",
-      "state": "Jigawa"
+      "street": "Along Dustse-wakanukuguma Road, Sabon Gari Danmasara, Dutse",
+      "city": "Jigawa",
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -5837,9 +5833,9 @@
     "id": "162",
     "name": "Sefa Specialist Hospital",
     "address": {
-      "street": "5 College Road",
-      "city": "Badiko",
-      "state": "Kaduna"
+      "street": "5 College Road, Badiko",
+      "city": "Kaduna",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 703 0446 088, +234 62 410 937, 0803 305 7195",
     "website": "sefaspecialisthospital.com",
@@ -5866,9 +5862,9 @@
     "id": "163",
     "name": "Zaria Almadina Clinic",
     "address": {
-      "street": "28 Queen Elizabeth Road, G.R.A",
-      "city": "Zaria",
-      "state": "Kaduna"
+      "street": "28 Queen Elizabeth Road, G.R.A Zaria",
+      "city": "Kaduna",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 806-083-9148",
     "website": "info@almadinazaria.com",
@@ -5902,9 +5898,9 @@
     "id": "164",
     "name": "Continental Medical Centre",
     "address": {
-      "street": "Adekunle Fajuyi Road",
-      "city": "Ibadan",
-      "state": "Oyo"
+      "street": "Adekunle Fajuyi Road, Ibadan",
+      "city": "Oyo",
+      "state": "Nigeria"
     },
     "phoneNumber": "0812 403 7406, +234 706 652 7133",
     "website": "continentalmedcentre.com",
@@ -5932,9 +5928,9 @@
     "id": "165",
     "name": "Onward Specialist Hospital",
     "address": {
-      "street": "Dr D. A. Laosebikan St. Off Ilobu Rd, Oke Agunbelewo, P.O Box 506",
-      "city": "Osogbo",
-      "state": "Osun"
+      "street": "Dr D. A. Laosebikan St. Off Ilobu Rd, Oke Agunbelewo, Osogbo",
+      "city": "Osun",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234(0)908 490 4233, +234(0)901 224 8337",
     "website": "onwardsphospital.org",
@@ -5972,9 +5968,9 @@
     "id": "166",
     "name": "St John And Mary Hospital",
     "address": {
-      "street": "2, Adebayo Oni Lane, Isikan",
-      "city": "Akure",
-      "state": "Ondo"
+      "street": "2, Adebayo Oni Lane, Isikan, Akure",
+      "city": "Ondo",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 350 4658, 0808 333 8262",
     "website": "",
@@ -6001,9 +5997,9 @@
     "id": "167",
     "name": "Federal Medical Centre Abeokuta",
     "address": {
-      "street": "Olabisi Onabanjo Way, Idi-Aba",
-      "city": "Abeokuta",
-      "state": "Ogun"
+      "street": "Olabisi Onabanjo Way, Idi-Aba, Abeokuta",
+      "city": "Ogun",
+      "state": "Nigeria"
     },
     "phoneNumber": "08033398341, 08062426088, 08034226334",
     "website": "fmcabeokuta.net",
@@ -6031,9 +6027,9 @@
     "id": "168",
     "name": "General Hospital Minna",
     "address": {
-      "street": "1 Hospital Road",
-      "city": "Minna",
-      "state": "Niger"
+      "street": "1 Hospital Road, Minna",
+      "city": "Niger",
+      "state": "Nigeria"
     },
     "phoneNumber": "0802 562 5895",
     "website": "",
@@ -6061,9 +6057,9 @@
     "id": "169",
     "name": "Adonai Hospital",
     "address": {
-      "street": "2 Adonai Close, Old Karu Road",
-      "city": "Mararaba",
-      "state": "Nasarawa"
+      "street": "2 Adonai Close, Old Karu Road, Mararaba",
+      "city": "Nasarawa",
+      "state": "Nigeria"
     },
     "phoneNumber": "+2348022853066, +2348095236014",
     "website": "adonaihospital.com",
@@ -6100,9 +6096,9 @@
     "id": "170",
     "name": "Sauki Clinic and Hospital",
     "address": {
-      "street": "Near Hill Station Junction Jenta Adamu Jos North",
-      "city": "Jos",
-      "state": "Plateau"
+      "street": "Near Hill Station Junction Jenta Adamu Jos North, Jos",
+      "city": "Plateau",
+      "state": "Nigeria"
     },
     "phoneNumber": "0906-000-1956",
     "website": "",
@@ -6137,9 +6133,9 @@
     "id": "171",
     "name": "Federal Medical Center Lokoja",
     "address": {
-      "street": "Lokoja-Ankpa Road",
-      "city": "Lokoja",
-      "state": "Kogi"
+      "street": "Lokoja-Ankpa Road, Lokoja",
+      "city": "Kogi",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 58 220 020",
     "website": "fmclokoja.org.ng",
@@ -6174,9 +6170,9 @@
     "id": "172",
     "name": "Med Care Hospital",
     "address": {
-      "street": "182, Pipeline Road, Gaa-Akanbi, adjacent CBN Quarters",
-      "city": "Ilorin",
-      "state": "Kwara"
+      "street": "182, Pipeline Road, Gaa-Akanbi, adjacent CBN Quarters, Ilorin",
+      "city": "Kwara",
+      "state": "Nigeria"
     },
     "phoneNumber": "09084131959, 08062544440, 0808 622 5307",
     "website": "medcareng.com",
@@ -6209,9 +6205,9 @@
     "id": "173",
     "name": "Sir Yahaya Memorial Hospital",
     "address": {
-      "street": "Haliru Abdu Raod, P.M.B 1006",
-      "city": "Birnin Kebbi",
-      "state": "Kebbi"
+      "street": "Haliru Abdu Raod, P.M.B 1006, Birnin Kebbi",
+      "city": "Kebbi",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 803 597 8511",
     "website": "siryahayahospital.com",
@@ -6246,7 +6242,7 @@
     "address": {
       "street": "Lautai Road, Plot 155 Wudil Rd, City Centre",
       "city": "Kano",
-      "state": "Kano"
+      "state": "Nigeria"
     },
     "phoneNumber": "0810 875 1568, +23464310915",
     "website": "",
@@ -6277,9 +6273,9 @@
     "id": "175",
     "name": "Wudil General Hospital",
     "address": {
-      "street": "Gaya Raod",
-      "city": "Wudil",
-      "state": "Kano"
+      "street": "Gaya Raod, Wudil",
+      "city": "Kano",
+      "state": "Nigeria"
     },
     "phoneNumber": "",
     "website": "",
@@ -6308,7 +6304,7 @@
     "address": {
       "street": "Murtala Mohammed Way Dandagoro",
       "city": "Katsina",
-      "state": "Katsina"
+      "state": "Nigeria"
     },
     "phoneNumber": "+2348036379783, 08035946691 ",
     "website": "fmckatsina.gov.ng",
@@ -6337,7 +6333,7 @@
     "address": {
       "street": "46, Abdullahi Fodio Road",
       "city": "Sokoto",
-      "state": "Sokoto"
+      "state": "Nigeria"
     },
     "phoneNumber": "0701 076 0119, 060-231012, 0818 971 4151",
     "website": "",
@@ -6366,7 +6362,7 @@
     "address": {
       "street": "1, Garba Nadama Road, PMB: 23270",
       "city": "Sokoto",
-      "state": "Sokoto"
+      "state": "Nigeria"
     },
     "phoneNumber": "+234CALLUDUTH, +23480808080",
     "website": "uduth.org.ng",
@@ -6411,9 +6407,9 @@
     "id": "179",
     "name": "Federal Medical Centre Jalingo",
     "address": {
-      "street": "Off Barde way, PMB 1061",
-      "city": "Jalingo",
-      "state": "Taraba"
+      "street": "Off Barde way, PMB 1061, Jalingo",
+      "city": "Taraba",
+      "state": "Nigeria"
     },
     "phoneNumber": "09134195527, 09134201316",
     "website": "fmcjalingo.gov.ng",
@@ -6456,9 +6452,9 @@
     "id": "180",
     "name": "Federal Medical Centre, Nguru",
     "address": {
-      "street": "NNPC Road Leme Aboekuta",
-      "city": "Nguru",
-      "state": "Yobe"
+      "street": "NNPC Road Leme Aboekuta, Nguru",
+      "city": "Yobe",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 912 6371",
     "website": "",
@@ -6485,9 +6481,9 @@
     "id": "181",
     "name": "Daula Hospital & Maternity Home",
     "address": {
-      "street": "Kaura Namoda, Lebin Lebin, Tundun Wada",
-      "city": "Gashua",
-      "state": "Zamfara"
+      "street": "Kaura Namoda, Lebin Lebin, Tundun Wada, Gashua",
+      "city": "Zamfara",
+      "state": "Nigeria"
     },
     "phoneNumber": "08036917466",
     "website": "",
@@ -6512,9 +6508,9 @@
     "id": "182",
     "name": "Poly Medical And Diagnostic Centre",
     "address": {
-      "street": "26 Premier Road Gusau Tudun Wada",
-      "city": "Gashua",
-      "state": "Zamfara"
+      "street": "26 Premier Road Gusau Tudun Wada, Gashua",
+      "city": "Zamfara",
+      "state": "Nigeria"
     },
     "phoneNumber": "0813-242-8656, 07030286672",
     "website": "",
@@ -6648,7 +6644,7 @@
   {
     "id": "188",
     "name": "King's College Hospital",
-    "address": {"street": "Denmark Hill", "city": "London", "state": "UK"},
+    "address": {"street": "Denmark Hill", "city": "London", "state": "United Kingdom"},
     "phoneNumber": "+44 20 3299 9000",
     "website": "https://www.kch.nhs.uk",
     "email": "info@kingsprivate.com",
@@ -6690,11 +6686,11 @@
     {
         "id": "190",
         "name": "St. Thomas Hospital",
-        "address": {"street": "Westminster Bridge Road", "city": "London", "state": "UK"},
+        "address": {"street": "Westminster Bridge Road", "city": "London", "state": "United Kingdom"},
         "phoneNumber": "+44 20 7188 7188",
         "website": "https://www.guysandstthomas.nhs.uk",
         "email": "info@gstthomas.nhs.uk",
-        "photoUrl": "https://guysandstthomasspecialistcare.co.uk/wp-content/uploads/2024/03/St-Thomas-hospital-external-1.jpg",
+        "photoUrl": "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSxznWkiaYURDGzVyfnb4u7tWK0lMoGevKkqY5sQAHMM0o5oZsfAS6v3-gqHPOKeYaMcGi_NQ5h0-bJ_l-er6-fAU5DmckJsWV600DOrvvtGy08ydMHGLpjt1BxtGu8ac5Xkvq0_qA=w243-h174-n-k-no-nu",
         "type": "Public",
         "services": ["Emergency Care", "Cardiovascular", "Maternity", "Sexual Health", "Urology", "Dental"],
         "comment": ["Renowned for its emergency and trauma services", "Mini museum", "Free Wifi"],
@@ -6731,7 +6727,7 @@
         ]
     },
     {
-        "id": "20",
+        "id": "192",
         "name": "University Hospital of Leuven (UZ Leuven)",
         "address": {"street": "Herestraat 49", "city": "Leuven", "state": "Belgium"},
         "phoneNumber": "+32 16 33 22 11",
@@ -6752,7 +6748,7 @@
         ]
     },
     {
-        "id": "21",
+        "id": "193",
         "name": "University Hospital of Ghent (UZ Gent)",
         "address": {"street": "C. Heymanslaan 10", "city": "Ghent", "state": "Belgium"},
         "phoneNumber": "+32 9 332 21 11, +32 9 332 91 11",
@@ -6779,7 +6775,7 @@
     "phoneNumber": "+39 02 26431",
     "website": "https://www.hsr.it",
     "email": "informazioni@hsr.it",
-    "photoUrl": "https://eatris.eu/wp-content/uploads/2016/08/Ospedale-San-Raffaele_Photo-1360x400.jpg",
+    "photoUrl": "https://endo-ern.eu/wp-content/uploads/2018/08/632-ospedale-san-raffaele-loc-1024x576.jpg",
     "type": "private",
     "services": ["Orthopedics and Traumatology", "Neurology", "Cardiovascular", "Urology", "Oncology", "Clinical services", "Dentistry"],
     "comment": ["Top private hospital in Italy", "The Institute specializes in Rehabilitation and is able to offer care support to individuals of all ages.", "The institute was first recognized by the Italian Ministry of Health as a research hospital in 1972, for its expertise in diabetes research and cure. The recognition was then extended to the entire field of molecular medicine in 2001."],
@@ -6859,7 +6855,7 @@
   {
     "id": "198",
     "name": "Singapore General Hospital (SGH)",
-    "address": {"street": "Outram Rd", "city": "Singapore", "state": "Singapore"},
+    "address": {"street": "Outram Rd", "city": "Outram", "state": "Singapore"},
     "phoneNumber": "+65 6222 3322",
     "website": "https://www.sgh.com.sg",
     "email": "appointments@sgh.com.sg, mss@sgh.com.sg",
@@ -6945,7 +6941,7 @@
     {
         "id": "202",
         "name": "Cleveland Clinic",
-        "address": {"street": "9500 Euclid Ave, Cleveland", "city": "Ohio", "state": "US"},
+        "address": {"street": "9500 Euclid Ave, Cleveland", "city": "Ohio", "state": "United States"},
         "phoneNumber": "+1 800 223 2273 +1 216-444-2200",
         "website": "https://my.clevelandclinic.org",
         "email": "ombudsman@ccf.org",
@@ -7075,7 +7071,7 @@
   },
   {    "id": "208",
     "name": "The Alfred Hospital",
-    "address": {"street": "55 Commercial Rd", "city": "Melbourne, Vic", "state": "Australia"},
+    "address": {"street": "55 Commercial Rd", "city": "Melbourne", "state": "Australia"},
     "phoneNumber": "+61 3 9076 2000",
     "website": "https://www.alfredhealth.org.au",
     "email": "",
@@ -7265,7 +7261,7 @@
   {
     "id": "217",
     "name": "37 Military Hospital",
-    "address": {"street": "Neghelli Barracks Liberation Rd","city": "Accra","state": "Greater Accra"},
+    "address": {"street": "Neghelli Barracks Liberation Rd","city": "Accra","state": "Ghana"},
     "phoneNumber": "+233 30 277 7595",
     "website": "https://www.ghana.gov.gh/mdas/ee0f1b1bcc/",
     "email": "",
@@ -7305,7 +7301,7 @@
   {
     "id": "219",
     "name": "Koforidua Regional Hospital",
-    "address": {"street": "Box KF 201 Koforidua Behind ECG","city": "Eastern Region","state": "Ghana"},
+    "address": {"street": "Box KF 201 Koforidua Behind ECG","city": "Koforidua","state": "Ghana"},
     "phoneNumber": "+233 34202 3021, +233 34202 3031, +233 34202 3011",
     "website": "https://erhk.org",
     "email": "info@erhk.com",
@@ -7343,7 +7339,7 @@
   {
     "id": "221",
     "name": "Sunyani Teaching Hospital",
-    "address": {"street": "Techiman-Wenchi Road, Sunyani","city": "Bono Region","state": "Ghana"},
+    "address": {"street": "Techiman-Wenchi Road","city": "Sunyani","state": "Ghana"},
     "phoneNumber": "+233 352095600, 0266331214",
     "website": "https://sth.gov.gh",
     "email": "info@sth.gov.gh",
@@ -7362,7 +7358,7 @@
   {
     "id": "222",
     "name": "Cape Coast Teaching Hospital",
-    "address": {"street": "Interberton road, Cape Coast,","city": "Central Region","state": "Ghana"},
+    "address": {"street": "Interberton road","city": "Cape Coast","state": "Ghana"},
     "phoneNumber": "+233 33 213 4011, +233 (0) 201380902 +233, (0) 332150532",
     "website": "http://www.ccthghana.org",
     "email": "info@ccthghana.org",
@@ -7400,7 +7396,7 @@
   {
     "id": "224",
     "name": "Effia Nkwanta Regional Hospital",
-    "address": {"street": "Sekondi-Takoradi","city": "Western Region","state": "Ghana"},
+    "address": {"street": "J. De Graft-Johnson Ave","city": "Takoradi","state": "Ghana"},
     "phoneNumber": "+233 59-388-0090, 059-397-0442, +233 55 854 6809",
     "website": "http://www.enrh.org.gh",
     "email": "effiankwanta.rhwr@ghs.gov.gh",
@@ -7419,7 +7415,7 @@
   {
     "id": "225",
     "name": "Winneba Municipal Hospital",
-    "address": {"street": "Opposite UEW Research Center J B DAMPSON ST, Winneba","city": "Central Region","state": "Ghana"},
+    "address": {"street": "Opposite UEW Research Center J B DAMPSON ST","city": "Winneba","state": "Ghana"},
     "phoneNumber": "+233 55 540 4617, +233 55 550 0706",
     "website": "https://winnebamunicipalhospital.org",
     "email": "wbamunicipalhospital@gmail.com",
@@ -7438,7 +7434,7 @@
   {
     "id": "226",
     "name": "Bawku Presbyterian Hospital",
-    "address": {"street": "Bawku-Missiga Road, Bawku","city": "Upper East Region","state": "Ghana"},
+    "address": {"street": "Bawku-Missiga Road, Bawku","city": "Bawku","state": "Ghana"},
     "phoneNumber": "+233 38 202 2231",
     "website": "",
     "email": "",
@@ -7455,9 +7451,9 @@
       {"day":"Sunday","open":"24h"}]
   },
   {
-    "id": "237",
+    "id": "227",
     "name": "Ejura Government Hospital",
-    "address": {"street": "Atebubu- Ejura Rd","city": "Ashanti Region","state": "Ghana"},
+    "address": {"street": "Atebubu- Ejura Rd","city": "Ashanti","state": "Ghana"},
     "phoneNumber": "=233 20-8172007",
     "website": "",
     "email": "",
@@ -7474,7 +7470,7 @@
       {"day":"Sunday","open":"24h"}]
   },
   {
-    "id": "238",
+    "id": "228",
     "name": "Mampong Government Hospital",
     "address": {"street": "44 Sekou Toure Avenue, Mampong","city": "Ashanti","state": "Ghana"},
     "phoneNumber": "233 302 665651, 233 302 665651",
@@ -7495,7 +7491,7 @@
     ]
   },
   {
-    "id": "239",
+    "id": "229",
     "name": "Aga Khan University Hospital",
     "address": {"street": "3rd Parklands Avenue, Limuru Road","city": "Nairobi","state": "Kenya"},
     "phoneNumber": "254 (0) 20 366 2000",
@@ -7517,7 +7513,7 @@
     "isFeatured": true
   },
   {
-    "id": "240",
+    "id": "230",
     "name": "Kenyatta National Hospital",
     "address": {"street": "Hospital Road, Upper Hill","city": "Nairobi","state": "Kenya"},
     "phoneNumber": "+254 20 2726300",
@@ -7538,7 +7534,7 @@
     ]
   },
   {
-    "id": "241",
+    "id": "231",
     "name": "AAR Hospital",
     "address": {"street": "Muthaiga North Rd, Kiambu road opp Karura Forest","city": "Nairobi","state": "Kenya"},
     "phoneNumber": "+254 111 049 900",
@@ -7559,7 +7555,7 @@
     ]
   },
   {
-    "id": "242",
+    "id": "232",
     "name": "Mater Misericordiae Hospital",
     "address": {"street": "Along Mukenia & Dunga Road, South B","city": "Nairobi","state": "Kenya"},
     "phoneNumber": "+254 719073000,  +254732163000",
@@ -7580,7 +7576,7 @@
     ]
   },
   {
-    "id": "243",
+    "id": "233",
     "name": "Clínica Des Nations Unies",
     "address": {"street": "Avenue des Nations Unies, Quartier Agdal","city": "Rabat","state": "Morocco"},
     "phoneNumber": "+212 5 37 67 05 05",
@@ -7601,7 +7597,7 @@
     ]
   },
   {
-    "id": "244",
+    "id": "234",
     "name": "Clinique des Princes",
     "address": {"street": "14 Rue Omar Slaoui","city": "Casablanca","state": "Morocco"},
     "phoneNumber": " +212.522.20.72.05 +212.522.27.52.50",
@@ -7622,7 +7618,7 @@
     ]
   },
   {
-    "id": "245",
+    "id": "235",
     "name": "International Medical Center (ICC)",
     "address": {"street": "km. 42 Ismailia desert road El- Shorouk City","city": "Cairo","state": "Egypt"},
     "phoneNumber": "+20 2 2477 5902",
@@ -7643,7 +7639,7 @@
     ]
   },
   {
-    "id": "246",
+    "id": "236",
     "name": "Misr International Hospital",
     "address": {"street": "12 El Saraya St., Veiny Sq. Dokki","city": "Giza","state": "Egypt"},
     "phoneNumber": "+20 16010",
@@ -7664,7 +7660,7 @@
     ]
   },
   {
-    "id": "247",
+    "id": "237",
     "name": "Climed Serviços de Saúde",
     "address": {"street": "Alameda Príncipe Real, 65 Miramar","city": "Luanda","state": "Angola"},
     "phoneNumber": "+244 222 443 586 +244 923 283 848",
@@ -7685,7 +7681,7 @@
     ]
   },
   {
-    "id": "248",
+    "id": "238",
     "name": "Bokamoso Private Hospital",
     "address": {"street": "Plot 4769 Mmopane, Block 1","city": "Gaborone","state": "Botswana"},
     "phoneNumber": "+267 369 4000",
@@ -7706,7 +7702,7 @@
     ]
   },
   {
-    "id": "249",
+    "id": "239",
     "name": "Orota Referral Hospital",
     "address": {"street": "8WMF+WJW","city": "Asmara","state": "Eritrea"},
     "phoneNumber": "+291 1 127 762, 202914201917",
@@ -7727,7 +7723,7 @@
     ]
   },
   {
-    "id": "250",
+    "id": "240",
     "name": "Hôpital National Niamey",
     "address": {"street": "Boulevard de la Republique","city": "Niamey","state": "Niger"},
     "phoneNumber": "+227 20 722 253",
@@ -7748,7 +7744,7 @@
     ]
   },
   {
-    "id": "251",
+    "id": "241",
     "name": "Auckland City Hospital",
     "address": {"street": "2 Park Road, Grafton","city": "Auckland","state": "New Zealand"},
     "phoneNumber": "+64 9 367 0000",
@@ -7770,7 +7766,7 @@
     "isFeatured": true
   },
   {
-    "id": "252",
+    "id": "242",
     "name": "Royal Melbourne hospital",
     "address": {"street": "300 Grattan Street Parkville, Victoria","city": "Melbourne","state": "Australia"},
     "phoneNumber": " +61 3 9342 7000",
@@ -7792,7 +7788,7 @@
     "isFeatured": true
   },
   {
-    "id": "253",
+    "id": "243",
     "name": "Cleveland Clinic Abu Dhabi",
     "address": {"street": "Building 72, Al Maryah Island","city": "Abu Dhabi","state": "UAE"},
     "phoneNumber": "+971 800 82223",
@@ -7814,7 +7810,7 @@
     "isFeatured": true
   },
   {
-    "id": "254",
+    "id": "244",
     "name": "Toronto General Hospital (TGH)",
     "address": {"street": "200 Elizabeth St, Toronto","city": "Ontario","state": "Canada"},
     "phoneNumber": "+1 416-340-3111, +1 416 340 4907",
@@ -7836,9 +7832,9 @@
     "isFeatured": true
   },
   {
-    "id": "255",
+    "id": "245",
     "name": "Mayo Clinic",
-    "address": {"street": "13400 E. Shea Blvd. Scottsdale","city": "Arizona","state": "USA"},
+    "address": {"street": "13400 E. Shea Blvd. Scottsdale","city": "Arizona","state": "United States"},
     "phoneNumber": "+1 480-301-8000",
     "website": "https://www.mayoclinic.org",
     "email": "social@mayoclinic.org",
@@ -7858,7 +7854,7 @@
     "isFeatured": true
   },
   {
-    "id": "256",
+    "id": "246",
     "name": "St Thomas Hospital Malta",
     "address": {"street": "St Thomas Street, Valletta Road, Qormi","city": "Valletta","state": "Malta"},
     "phoneNumber": "+356 2148 2482",
@@ -7873,6 +7869,465 @@
       {"day":"Tuesday", "open":"24h"},
       {"day":"Wednesday", "open":"24h"},
       {"day":"Thursday","open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "247",
+    "name": "Peking Union Medical College Hospital (PUMCH)",
+    "address": {"street": "No.1 Shuaifuyuan Wangfujing Dongcheng District", "city": "Beijing", "state": "China"},
+    "phoneNumber": "+86-10-69155288, +86-10-69156699, +86-10-66016199",
+    "website": "http://www.pumch.cn",
+    "email": "ims@pumch.cn",
+    "photoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Peking_Union_Medical_College_Hospital_Dongdan_Campus_2.jpg/1200px-Peking_Union_Medical_College_Hospital_Dongdan_Campus_2.jpg?20230527030636",
+    "type": "Public",
+    "services": ["Internal Medicine", "Obstetrics & Gynaecology", "General Surgery", "Paediatric", "ENT", "Stomatology", "Cardiology", "Gastroenterology", "Endoscopy", "Rheumatology", "Immunology", "Gynecological Endocrinology and Reproduction Center", "Cosmetic Medicine Center", "Health Management Center"],
+    "comment": ["PUMCH ranks No. 1 in the National Tertiary Public Hospital Performance Evaluation.", "It has two locations: the Dongdan Campus in Wangfujing, Dongcheng District and the Xidan Campus in Damucang Hutong, Xicheng District."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "248",
+    "name": "Josina Machel Hospital",
+    "address": {"street": "Largo Josina Machel", "city": "Luanda", "state": "Angola"},
+    "phoneNumber": "+244 222 336 346, +244 919 298 292, +244 922 292 292",
+    "website": "",
+    "email": "",
+    "photoUrl": "https://lfs.au-pida.org/imager/files/12911/Screenshot-2025-09-22-at-16.07.30_9a53617452ba80bd8ee75dd1b49df6f6.webp",
+    "type": "Public",
+    "services": ["Anaesthesiology", "Critical Care Medicine", "Gastroenterology", "Endocrinology", "Nephrology", "Neurology", "Cardiology", "Ophthalmology", "Pediatric surgery", "Clinical psychology", "Orthopaedic", "Radiology", "General surgery"],
+    "comment": ["It is the oldest and largest state hospital in Angola and considered the best health facility in the country and is an important historical monument.", "The hospital was originally built between 1865 and 1883 as a military hospital named Maria Pia, after the Queen Maria Pia of Savoy. It was renamed Hospital Josina Machel in 1977 to honor the Mozambican resistance fighter Josina Machel."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "249",
+    "name": "Bongo Mission Hospital",
+    "address": {"street": "União Angolana Dos Adventistas Do 7 Dia, Teixeira Da Silva", "city": "Huambo", "state": "Angola"},
+    "phoneNumber": "+244 (241) 220-316, +244 7 2412 0316",
+    "website": "",
+    "email": "",
+    "photoUrl": "https://encyclosource.com/link/api/v1/image/ESDA/3FN4/3FN4L.jpg",
+"type": "Missionary",
+    "services": ["Outpatient consultations", "Dental consultation", "Laboratory Service", "Pharmacy"],
+    "comment": ["The hospital has a long history of serving its community and remains a key medical facility in the southwestern region of Angola."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ]
+  },
+  {
+    "id": "250",
+    "name": "Huashan hospital",
+    "address": {"street": "12 Wulumuqi Rd (M), Jing'An", "city": "Shanghai", "state": "China"},
+    "phoneNumber": "+86 21 5288 9998, +88 21-6248-3986",
+    "website": "https://huashan.org.cn",
+    "email": "hwmc@huashan.org.cn",
+    "photoUrl": "https://climatepromise.undp.org/sites/default/files/photo_stories/IMG_7475.jpeg",
+    "type": "Public",
+    "services": ["International General Practice", "Neurology", "Dermatology", "NeuroSurgery", "Infectious Diseases", "Urology", "Rehabilitative Medicine", "Hand Surgery", "Cardiology", "Orthopedic Surgery", "Endocrinology", "General Surgery", "Sports Medicine", "Nephrology", "Rheumatology", "Gastroenterology", "Oncology", "Integrated TCM and Western Medicine", "Hematology", "Cardiothoracic Surgery", "Maxillofacial Surgery", "Otorhinolaryngology", "Respiratory Medicine", "Opthalmology", "Dentistry", "Intensive Care Unit", "Emergency Medicine", "Clinical Nutrition"],
+    "comment": ["The hospital is a prestigious teaching hospital located in Shanghai, China, affiliated with Fudan University. It was founded in 1907 and is highly regarded in China for its clinical services, education, and research."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "251",
+    "name": "Mount Sinai Hospital",
+    "address": {"street": "600 University Avenue Toronto", "city": "Ontario ", "state": "Canada"},
+    "phoneNumber": "416-596-4200, 416-586-4800",
+    "website": "https://www.sinaihealth.ca",
+    "email": "EducationPavilion.MSH@sinaihealth.ca",
+    "photoUrl": "https://www.sinaihealth.ca/sites/default/files/styles/hospital_info_lg/public/2024-03/MSH-facility-exterior.jpg?h=a92f03cd&itok=DGWlXPDF",
+    "type": "Private",
+    "services": ["Emergency department", "Women's and infants' health", "Cancer care", "Rehabilitation", "Mental health"],
+    "comment": ["The hospital is part of the Sinai Health System and is affiliated with the University of Toronto.", "In 2025, Newsweek and Statista ranked Mount Sinai Hospital third among Canadian hospitals and 32nd globally."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "252",
+    "name": "Mount Sinai Hospital",
+    "address": {"street": "Plot 59932, Block 7", "city": "Gaborone ", "state": "Botswana"},
+    "phoneNumber": "+267 370-9500",
+    "website": "https://www.sidilegaprivatehospital.co.bw",
+    "email": "info@sidilegaprivatehospital.co.bw",
+    "photoUrl": "https://ik.imagekit.io/clinic4all/logos/profile/fc72285cf6d4e1d57be8ae549d949916.jpeg",
+    "type": "Private",
+    "services": ["Accident & Emergency", "ICU (Intensive Care Unit-Adult)", "NICU (Neonatal Intensive Care Unit)", "Paediatrics Unit", "Concierge Services", "Laboratory", "Obstetric & Gynaecology", "Pharmacy", "Dialysis Unit", "Oncology", "Radiology & Imaging Department", "Haematology", "Operating Theatres", "Medical Ward", "Rehabilitation", "Surgical Unit"],
+    "comment": ["Sidilega is the first citizen-owned private hospital in the Botswana.", "The facility is equipped with 110 beds and aims to provide high-quality, cost-effective health services."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "252",
+    "name": "Sidilega Private Hospital",
+    "address": {"street": "Plot 59932, Block 7", "city": "Gaborone ", "state": "Botswana"},
+    "phoneNumber": "+267 370-9500",
+    "website": "https://www.sidilegaprivatehospital.co.bw",
+    "email": "info@sidilegaprivatehospital.co.bw",
+    "photoUrl": "https://ik.imagekit.io/clinic4all/logos/profile/fc72285cf6d4e1d57be8ae549d949916.jpeg",
+    "type": "Private",
+    "services": ["Accident & Emergency", "ICU (Intensive Care Unit-Adult)", "NICU (Neonatal Intensive Care Unit)", "Paediatrics Unit", "Concierge Services", "Laboratory", "Obstetric & Gynaecology", "Pharmacy", "Dialysis Unit", "Oncology", "Radiology & Imaging Department", "Haematology", "Operating Theatres", "Medical Ward", "Rehabilitation", "Surgical Unit"],
+    "comment": ["Sidilega is the first citizen-owned private hospital in the Botswana.", "The facility is equipped with 110 beds and aims to provide high-quality, cost-effective health services."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "253",
+    "name": "Halibet Hospital",
+    "address": {"street": "8W6Q+QWJ", "city": "Asmara", "state": "Eritrea"},
+    "phoneNumber": "+291 1 185 400, +291 1 185 398",
+    "website": "",
+    "email": "",
+    "photoUrl": "https://shabait.com/wp-content/uploads/2017/06/june-29-news-2017-halibet.jpg",
+    "type": "Public",
+    "services": ["General Medical and Surgical Services", "Burn Care", "Orthopedic Care", "Emergency Services", "HIV/AIDS", "Hepatitis", "Intestinal and Abdominal cases", "TB cases", "Diabetes and High blood pressure"],
+    "comment": ["As of December 2023, the hospital has deployed modern medical equipment, which has been instrumental in improving its services.", "It is described as one of Eritrea's largest public hospitals."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ]
+  },
+  {
+    "id": "255",
+    "name": "Hôtel Dieu Hospital",
+    "address": {"street": "1 Parvis Notre-Dame – Place Jean-Paul II", "city": "Paris", "state": "France"},
+    "phoneNumber": "+33 1 42 34 82 34",
+    "website": "https://hoteldieu.aphp.fr",
+    "email": "droitsdespatients.htd@aphp.fr",
+    "photoUrl": "https://s3-media0.fl.yelpcdn.com/bphoto/IBf-85OOwbH8ZGPPbnrwww/o.jpg",
+    "type": "Public",
+    "services": ["Diagnostic and Treatment Center", "Sports Medicine", "Sexual Health Center", "Sleep and Vigilance Disorders Center", "Interdisciplinary Center for Therapy and Education", "Imaging", "Immunology-Infectious Diseases", "Women's House", "Adult psychiatry", "Adult and Child Medico-Legal Unit (UMJ)", "Outpatient Pharmaceutical Unit", "Ophthalmologist"],
+    "comment": ["Founded in 651 AD, it is considered the oldest hospital in the city and is part of the Assistance Publique–Hôpitaux de Paris (AP-HP) network."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "256",
+    "name": "Helios Klinikum Erfurt",
+    "address": {"street": "Nordhäuser Str. 74", "city": "Erfurt", "state": "Germany"},
+    "phoneNumber": "+49 361 7810",
+    "website": "https://www.helios-gesundheit.de",
+    "email": "ed.nekinilk-soileh@trufre.ofni",
+    "photoUrl": "https://www.helios-gesundheit.de/content/uwsrelaunch/de/de/standorte-angebote/kliniken/erfurt/_jcr_content/root/container/container_1362788709/carousel/teaser_stage.coreimg.jpeg/1738962868579/hel-erfurt-cz-aussen.jpeg",
+    "type": "Public",
+    "services": ["General & visceral surgery", "Angiology", "Gynaecology and Obstetrics", "Dermatology & Allergology", "Vascular surgery & endovascular surgery", "Geriatrics", "Gastroenterology / Hepatology, Endocrinology / Diabetology, Rheumatology", "Ear, nose and throat medicine, plastic surgery", "Hand Surgery", "Hematology, stem cell transplantation, oncology, hemostaseology", "Opthalmology", "Cardiology", "Interdisciplinary Intensive Care & Intermediate Care", "Pediatric surgery & pediatric urology", "Pediatric surgery & pediatric urology", "Nephrology", "Neurology", "Neurosurgery", "Neuroradiology", "Radiology", "Spinal surgery", "Oral and maxillofacial surgery, plastic surgery, aesthetic facial surgery", "Emergency department", "Trauma Surgery"],
+    "comment": ["With nearly 1,300 beds, we are the largest hospital in the region", "The Helios Clinic Erfurt is a maximum care hospital and an academic teaching hospital of the Jena University Hospital."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "257",
+    "name": "Artemis Hospital Gurugram",
+    "address": {"street": "Sector 51, Gurugram", "city": "Haryana", "state": "India"},
+    "phoneNumber": "+91 124 451 1111, +91 98004 00498",
+    "website": "https://www.artemishospitals.com",
+    "email": "info@artemishospitals.com",
+    "photoUrl": "https://www.artemishospitals.com/newhtml/images/img/hospital-img.jpg",
+    "type": "Private",
+    "services": ["Spine", "Orthopaedics", "Neuroservices", "Pediatric Orthopedics", "Cardiac services", "Urology", "Oncology", "IVF", "Cyber Knife", "Kidney Transplant", "Liver Transplant", "Bone Marrow Transplant"],
+    "comment": ["Artemis Hospitals is a large, multi-specialty hospital, It is JCI and NABH accredited and was established in 2007"],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "258",
+    "name": "St. Luke’s International Hospital",
+    "address": {"street": "9-1 Akashi-cho, Chuo-ku", "city": "Tokyo", "state": "Japan"},
+    "phoneNumber": "+81 3-3541-5151, +81-3-5550-7166",
+    "website": "https://hospital.luke.ac.jp/eng/index.html",
+    "email": "5931@luke.ac.jp",
+    "photoUrl": "https://www.japanhospitalsearch.org/contents/wp-content/uploads/2017/06/%E8%81%96%E8%B7%AF%E5%8A%A0_960x580.jpg",
+    "type": "Missionary",
+    "services": ["Cardiovascular Center", "Gastroenterology Center", "Ambulatory Care Center for Children", "Breast Center", "Center for Integrated Sports Medicine", "Neurology & Neurosurgery Center", "Kidney Center", "Immuno-Rheumatology Center", "Liaison Center", "Patholgy", "Otolaryngology", "Psychiatry", "Plastic and reconstructive surgery", "Opthalmology", "Infectious Diseases", "Haematology", "Endocrinology", "Emergency Care", "Dermatology", "Oral Surgery", "Clinical Laboratory"],
+    "comment": ["Today it is one of central Tokyo's largest and most comprehensive medical care facility, having played a significant role in advancing medical care, education, and public health in modern Japan.", "As an affiliate of St. Luke’s International University, the hospital continually strives to provide patient-centered care that respects individual values and backgrounds."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "259",
+    "name": "Mater Dei Hospital",
+    "address": {"street": "Triq id-Donaturi tad-Demm", "city": "Msida", "state": "Malta"},
+    "phoneNumber": "+356 2545 0000, +356 2545 4184 ",
+    "website": "https://materdeihospital.gov.mt/en/",
+    "email": "customercare.mdh@gov.mt",
+    "photoUrl": "https://cdn.newsbook.com.mt/wp-content/uploads/2022/10/24145506/Budget-2023-Mater-Dei-Hospital-Sptar-scaled.jpg",
+    "type": "Public",
+    "services": ["Accident & Emergency", "Surgical Services", "Medical Services", "Maternity and Neonatal Care", "Critical Care", "Diagnostics and Imaging", "Cardiology and Cardiac Rehabilitation", "Oncology & Haematology", "Physiotherapy and Occupational Therapy", "Pharmacy", "Dental Surgery", "Dermatology", "Psychology", "Breast Clinic", "Pain Clinic", "Speech and Language services", "Social work services."],
+    "comment": ["Mater Dei Hospital is the only, state-run, acute general teaching hospital in Malta."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "259",
+    "name": "St George’s Hospital",
+    "address": {"street": "249 Papanui Road Strowan, Christchurch", "city": "Canterbury", "state": "New Zealand"},
+    "phoneNumber": "+64 3 375 6000",
+    "website": "https://www.stgeorges.org.nz",
+    "email": "reception@stgeorges.org.nz",
+    "photoUrl": "https://stgeorges.imgix.net/assets/images/cancer-care/Exterior_SG10485-1.jpg?auto=compress%2Cformat&fit=max&q=75&w=2198",
+    "type": "Private",
+    "services": ["Bariatric", "Cardiac", "Cardiology", "Dental", "Colorectal", "Gastroenterology", "General Paediatrics", "Endocrinology", "Gynaecologic Oncologist", "Haematology, Pathology, Internal Medicine", "Medical Oncology", "Neurosurgery", "Obstetric & Gynaecology", "Oral & Maxillofacial", "Opthalmology", "Otolaryngology", "Plastic and Reconstructive", "Orthopaedic", "Respiratory Physician", "Upper GI Surgeon", "Urology"],
+    "comment": ["It is one of the largest and most modern private hospitals in the country", "St George’s looks after more than 13,000 patients each year and accepts all major health insurers."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "260",
+    "name": "Kingdom Hospital",
+    "address": {"street": "Al Thoumamah Rd, Ar Rabi", "city": "Riyadh", "state": "Saudi Arabia"},
+    "phoneNumber": "+966 9200 00751",
+    "website": "https://kingdomhospital.net/en/",
+    "email": "info@khccgroup.com",
+    "photoUrl": "https://ussaudi.org/wp-content/uploads/2021/03/sau-Kingdom-Hospital_BINARY_603952.jpg",
+    "type": "Private",
+    "services": ["Genral surgery", "ENT", "Dentistry", "Dermatology", "Paediatrics", "Nutrition", "Heart Center", "Obesity Surgery", "Physiotherapy", "Obstetric & Gynaecology", "Spine Surgery", "Opthalmology", "Wound care clinic", "Orthopaedic", "Urology", "Internal Medicine"],
+    "comment": ["Opened in 2000, it offers a wide range of comprehensive medical services, and is known for its modern facilities and advanced technology."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "261",
+    "name": "Riyadh Hospital مستشفى الرياض",
+    "address": {"street": "King Abdullah Rd, Al Mughrizat", "city": "Riyadh", "state": "Saudi Arabia"},
+    "phoneNumber": "+966 11 521 5555",
+    "website": "http://www.rh.med.sa",
+    "email": "info@rh.med.sa",
+    "photoUrl": "https://static.medigence.com/uploads/hospital/images/1744032915_0cf7cb58b6cb1faaeaba.jpg",
+    "type": "Private",
+    "services": ["Genral surgery", "Intensive Care Unit (ICU)", "Neonatal Intensive Care Unit (NICU)", "Radiology", "Paediatrics", "Laboratory", "Pharmacy", "Physiotherapy", "Obstetric & Gynaecology", "Endoscopy", "Dialysis", "Emergency department", "Fertility Treatment", "Internal Medicine"],
+    "comment": ["Equipped with advanced medical technology. It is accredited by the Central Board for Accreditation of Healthcare Institutions (CBAHI) and CHI.", "RH covers over 80,000 square meters across ten buildings and offers parking for more than 560 cars."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ]
+  },
+  {
+    "id": "262",
+    "name": "Thomson Medical Centre",
+    "address": {"street": "339 Thomson Road", "city": "Novena", "state": "Singapore"},
+    "phoneNumber": "+65 6350 8812, +65 9846 6766, (65) 6250 2222",
+    "website": "www.thomsonmedical.com",
+    "email": "contact@thomsonmedical.com",
+    "photoUrl": "https://ehr.meditech.com/sites/default/files/images/news/2024TMCSingapore_Article.jpg",
+    "type": "Private",
+    "services": ["Genral surgery", "Women's Health", "Children's Health", "Fertility & Family Planning", "Opthalmology", "Orthopaedics", "Preventive Health & Healthy Ageing (Health Screening)", "Breast Health", "Urology", "Diagnostic Imaging", "Cardiology", "Endocrinology", "Dermatology", "Respiratory Medicine & Critical Care", "Counselling and Therapy", "Surgical Care", "Traditional Chinese Medicine (TCM)", "Day Surgery (Outpatient Specialist Care)"],
+    "comment": ["Thomson Medical Centre is a 190-bed private hospital in Singapore. It has been in operation since 1979.", "It broke history in 2000 when it became the first clinic in the world to produce twins from frozen eggs and frozen sperm.", "It is the first private hospital in Singapore to set up an IVF clinic and in 1998 it delivered Singapore's first IVF triplets.", "It has the International Patient Relations Officers who assist prospective patients with appointments, treatments, length of stay, accommodations, transportation, food, budget estimates, and visas among many things."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "263",
+    "name": "Hospital Universitario Fundación Jiménez Díaz",
+    "address": {"street": "Avenida de los Reyes Católicos", "city": "Madrid", "state": "Spain"},
+    "phoneNumber": "+34 915 50 48 00, +34 915 50 48 76",
+    "website": "https://www.fjd.es/en",
+    "email": "",
+    "photoUrl": "https://isanidad.com/wp-content/uploads/2020/05/77698113-65DF-488A-BBC6-13A8B2AFF5E8.jpeg",
+    "type": "Private",
+    "services": ["Stomatology / Dentistry", "Intensive Care Units (ICU and Neonatal ICU)", "Gynaecology and Obstetrics", "Pathological Anatomy", "Opthalmology", "Resuscitation and Chronic Pain Unit", "Digestive System", "Cardiovascular Surgery", "Orthopedic Surgery and Traumatology", "Preventive medicine", "Nuclear Medicine", "Nephrology and Hypertension", "NeuroSurgery", "Pulmonology", "Interventional neuroradiology", "Neurology", "Rehabitation", "Plastic surgery", "Endocrinology and Nutrition", "Dermatology", "Psycology", "Paediatric", "Otolaryngology", "Overweight & Obesity", "Microbiology", "Epidemiology", "Hematology and Hemotherapy", "Clinical Immunology", "Rheumatology", "Aesthetic Medicine", "Vascular and Interventional Radiology"],
+    "comment": ["It is well-regarded for its commitment to patient care, teaching, and research.", "It has an associated Health Research Institute (IIS-FJD) and collaborates with the Universidad Autónoma de Madrid"],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "264",
+    "name": "Kiruna Hospital",
+    "address": {"street": "Thulegatan 29", "city": "Kiruna", "state": "Sweden"},
+    "phoneNumber": "+46 980 730 00",
+    "website": "norrbotten.se/kirunasjukhus",
+    "email": "",
+    "photoUrl": "https://www.norrbotten.se/imagevault/publishedmedia/2z5ksqawcxycocovzorh/D2323-025.jpg",
+    "type": "Public",
+    "services": ["Physical therapy and occupational therapy", "Diabetes and blood pressure clinics", "Maternal and child health care", "Psychosocial team", "Laboratory and testing services", "Cardiology","Neurology", "Gastroenterology",  "Nephrology", "Urology", "Internal medicine"],
+    "comment": ["It is operated by Region Norrbotten and serves the municipality of Kiruna.", "Due to mining-related ground subsidence, the city of Kiruna is being moved, and a new hospital is being designed. The existing hospital building has been affected by cracks, although they have not compromised its structural integrity. Sweco is the engineering firm responsible for designing the new hospital."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "265",
+    "name": "Vejthani Hospital",
+    "address": {"street": "1 Soi Lat Phrao 111, Khlong Chan, Bang Kap", "city": "Bangkok", "state": "Thailand"},
+    "phoneNumber": "(+66)85-223-8888, (+66)2-734-0000",
+    "website": "https://www.vejthani.com",
+    "email": "service@vejthani.com",
+    "photoUrl": "https://www.vejthani.com/wp-content/uploads/2020/08/IMG_3547-vejthani-1024x682.jpg",
+    "type": "Private",
+    "services": ["Orthopedics", "Rehabitation", "Oncology", "Neurology and Neurosurgery", "Executive Healthcare Center", "Infertility Program", "Gastroenterology and Hepatology", "Pediatric Neuroscience and Rehabilitation Center", "ENT", "Endocrinology", "Diabetes", "Clinical Nutrition", "Opthalmology", "Hepato Pancreato Biliary", "Hematology", "Heamodialysis"],
+    "comment": ["Vejthani Hospital is JCI-accredited tertiary care hospital, known for its services to international patients.", "It is a 24-hour facility that offers a wide range of medical services with a focus on specialized centers and advanced technology.", "It was named 'Hospital of the Year' in Thailand at the Healthcare Asia Awards in 2022 and 2023."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "266",
+    "name": "Aster Hospital, Al Qusais",
+    "address": {"street": "9 A Street - Beirut St, Al Qusais Industrial Area 2", "city": "Dubai", "state": "UAE"},
+    "phoneNumber": "+971 4 440 0500",
+    "website": "https://www.asterhospitals.ae/locations/hospital-detail/aster-hospital-al-qusais",
+    "email": "info@asterhospital.com",
+    "photoUrl": "https://static.zawya.com/view/acePublic/alias/contentid/ZjRiMjQzYzctNjU5ZS00/0/asterhospital-alqusais-jpg.webp?f=3%3A2&q=0.75&w=1080",
+    "type": "Private",
+    "services": ["Cardiology and Cardiovascular Surgery", "Critical Care and Emergency Medicine", "Dentistry", "Dermatology", "Endocrinology", "General and Laparoscopic Surgery", "Gastroenterology", "Internal Medicine", "Neurology and Neurosurgery", "Nephrology", "Obstetric & Gynaecology", "Oncology", "Opthalmology", "Pediatrics and Neonatology", "Orthopaedics", "Physiotherapy and Rehabilitation", "Plastic Surgery", "Radiology", "Pulmonology", "Vascular Surgery", "Rheumatology"],
+    "comment": ["Aster Hospital, Al Qusais is a 150-bed, multispecialty hospital located in Dubai. It is equipped with a 24-hour emergency department and pharmacy.", "Aster Hospital, Al Qusais is accredited by Canada with the diamond level accreditation status." ],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
       {"day":"Friday","open":"24h"},
       {"day":"Saturday","open":"24h"},
       {"day":"Sunday","open":"24h"}
