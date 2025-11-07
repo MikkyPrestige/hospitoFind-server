@@ -56,6 +56,10 @@ const hospitalSchema = new Schema({
       },
     ],
   },
+  isFeatured: {
+    type: Boolean,
+    default: false,
+  },
   longitude: {
     type: Number,
   },

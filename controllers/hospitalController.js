@@ -289,7 +289,9 @@ const getTopHospitals = async (req, res) => {
     console.log("⚡ Using cached featured hospitals");
   } else {
     try {
-      const hospitals = await Hospital.find({ isFeatured: true }).limit(20).lean();
+      const hospitals = await Hospital.find({ isFeatured: true })
+        .limit(20)
+        .lean();
 
       if (!hospitals.length) {
         console.warn("⚠️ No featured hospitals found — using random fallback.");
@@ -312,6 +314,54 @@ const getTopHospitals = async (req, res) => {
 
   res.json(randomized);
 };
+
+// GET /hospitals/explore
+const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
+  const agg = await Hospital.aggregate([
+    { $group: { _id: "$address.state", hospitals: { $push: "$$ROOT" } } },
+    { $project: { _id: 0, country: "$_id", hospitals: 1 } },
+    { $sort: { country: 1 } },
+  ]);
+
+  // Map to include address.country alias on each hospital object (optional)
+  const formatted = agg.map(({ country, hospitals }) => ({
+    country,
+    hospitals: hospitals.map((h) => {
+      // if it's a mongoose doc, ensure plain object
+      const doc = h.toObject ? h.toObject() : h;
+      return {
+        ...doc,
+        address: {
+          ...doc.address,
+          country: doc.address?.state ?? "",
+        },
+      };
+    }),
+  }));
+
+  res.json(formatted);
+});
+
+// GET /hospitals/country/:country
+// returns hospitals for a single country (case-insensitive)
+const getHospitalsForCountry = asyncHandler(async (req, res) => {
+  const countryParam = req.params.country;
+  // match case-insensitive against address.state
+  const hospitals = await Hospital.find({
+    "address.state": { $regex: `^${countryParam}$`, $options: "i" },
+  }).lean();
+
+  // alias state -> country on each hospital
+  const formatted = hospitals.map((doc) => ({
+    ...doc,
+    address: {
+      ...doc.address,
+      country: doc.address?.state ?? "",
+    },
+  }));
+
+  res.json(formatted);
+});
 
 // @desc share hospitals
 // @route POST /hospitals/share
@@ -575,6 +625,8 @@ export default {
   getNearbyHospitals,
   getHospitalById,
   getTopHospitals,
+getHospitalsGroupedByCountry,
+getHospitalsForCountry,
   shareHospitals,
   getSharedHospitals,
   exportHospitals,
