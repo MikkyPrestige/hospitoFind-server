@@ -1653,9 +1653,9 @@
     "id": "47",
     "name": "Central Hospital",
     "address": {
-      "street": "Market Road",
-      "city": "Sapele",
-      "state": "Delta"
+      "street": "Market Road, Sapele",
+      "city": "Delta",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 7272 4452, 0818 166 0549",
     "website": "",
@@ -1683,9 +1683,9 @@
     "id": "48",
     "name": "General Hospital",
     "address": {
-      "street": "Market Road",
-      "city": "Sapele",
-      "state": "Delta"
+      "street": "Market Road, Sapele",
+      "city": "Delta",
+      "state": "Nigeria"
     },
     "phoneNumber": "0803 634 0915",
     "website": "",
@@ -1712,7 +1712,7 @@
     "id": "49",
     "name": "Federal Medical Centre (FMC)",
     "address": {
-      "street": "Nnebisi road, P.M.B 1060 , Asaba",
+      "street": "Nnebisi road, P.M.B 1060, Asaba",
       "city": "Delta",
       "state": "Nigeria"
     },
@@ -2132,9 +2132,9 @@
     "id": "60",
     "name": "Bethel Faith Medical Centre",
     "address": {
-      "street": "Plots 11 & 12 Jos Bazuaye, off Ekenwan road",
-      "city": "Benin",
-      "state": "Edo"
+      "street": "Plots 11 & 12 Jos Bazuaye, off Ekenwan road, Benin",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "+234 08155501090, +234 08136899709, +234 08035818549",
     "website": "bethelfaithmedicalcentre.com",
@@ -2167,9 +2167,9 @@
     "id": "61",
     "name": "Michael Memorial Medical Centre",
     "address": {
-      "street": "No 2 Dele Ezekiel street off Okhunmwun road, Iguosa",
-      "city": "Benin",
-      "state": "Edo"
+      "street": "No 2 Dele Ezekiel street off Okhunmwun road, Iguosa Benin",
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "0907 990 2410",
     "website": "",
@@ -2201,8 +2201,8 @@
     "name": "ISDA HOSPITAL",
     "address": {
       "street": "No. 4 Akhavbere Street, Off Benin Abraka Road, Idobo",
-      "city": "Benin",
-      "state": "Edo"
+      "city": "Edo",
+      "state": "Nigeria"
     },
     "phoneNumber": "0703 597 7048",
     "website": "",
@@ -2266,14 +2266,14 @@
     "id": "64",
     "name": "Motayo Hospital",
     "address": {
-      "street": "3, Owodunni street, off Amore street off Toyin street",
-      "city": "Ikeja",
-      "state": "Lagos"
+      "street": "3, Owodunni street, off Amore street off Toyin street, Ikeja",
+      "city": "Lagos",
+      "state": "Nigeria"
     },
     "phoneNumber": "08063051518, 09086891822, 08172967589",
     "website": "motayohospitallimited.com",
     "email": "motayo_hospital@yahoo.com",
-    "photoUrl": "https://lh3.googleusercontent.com/p/AF1QipM4tGf5XHZpb69lfLVMEwfP2u0rfBz2pMS6qlTj=s1360-w1360-h1020",
+    "photoUrl": "https://askannie.tortoisepath.com/wp-content/uploads/2024/10/Motayo-Hospital-Lagos-Ikeja-Nigeria-AskAnnie-TortoisePathcom-2-1536x864.jpeg",
     "type": "Private",
     "services": [
       "Dermatology",
@@ -2382,14 +2382,14 @@
     "id": "67",
     "name": "General Hospital",
     "address": {
-      "street": "1 - 3 Broad St, Odan 102273, Lagos Island",
+      "street": "1/3, Broad Street, Marina, Lagos Island",
       "city": "Lagos",
       "state": "Nigeria"
     },
     "phoneNumber": "+234 1 263 0642, +234 803 300 3658",
     "website": "",
     "email": "",
-    "photoUrl": "https://lh3.googleusercontent.com/p/AF1QipO7Vh5UwQEuHJMbtGY7rRnaIiUwIelbeEQaGPPa=s1360-w1360-h1020",
+    "photoUrl": "https://static.wixstatic.com/media/f1bfef_692835b85a7446d7b81c511168831e31~mv2.jpg/v1/fill/w_664,h_499,al_c,lg_1,q_80,enc_avif,quality_auto/f1bfef_692835b85a7446d7b81c511168831e31~mv2.jpg",
     "type": "Public",
     "services": [
       "General Medical service",
@@ -6898,7 +6898,7 @@
     {
         "id": "200",
         "name": "Johns Hopkins Hospital",
-        "address": {"street": "1800 Orleans St Baltimore", "city": "Mary Land", "state": "US"},
+        "address": {"street": "1800 Orleans St Baltimore", "city": "Mary Land", "state": "United States"},
         "phoneNumber": "+1 410-955-5000",
         "website": "https://www.hopkinsmedicine.org/the-johns-hopkins-hospital",
         "email": "socialmedia@jhmi.edu",
@@ -6920,7 +6920,7 @@
     {
         "id": "201",
         "name": "Massachusetts General Hospital",
-        "address": {"street": "55 Fruit Street, Boston", "city": "Massachusetts", "state": "US"},
+        "address": {"street": "55 Fruit Street, Boston", "city": "Massachusetts", "state": "United States"},
         "phoneNumber": "+1 617-726-2000",
         "website": "https://www.massgeneral.org",
         "email": "",

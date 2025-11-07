@@ -316,51 +316,174 @@ const getTopHospitals = async (req, res) => {
 };
 
 // GET /hospitals/explore
+// GET /hospitals/explore
 const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
-  const agg = await Hospital.aggregate([
-    { $group: { _id: "$address.state", hospitals: { $push: "$$ROOT" } } },
-    { $project: { _id: 0, country: "$_id", hospitals: 1 } },
-    { $sort: { country: 1 } },
-  ]);
+  const hospitals = await Hospital.find().lean();
 
-  // Map to include address.country alias on each hospital object (optional)
-  const formatted = agg.map(({ country, hospitals }) => ({
-    country,
-    hospitals: hospitals.map((h) => {
-      // if it's a mongoose doc, ensure plain object
-      const doc = h.toObject ? h.toObject() : h;
-      return {
-        ...doc,
-        address: {
-          ...doc.address,
-          country: doc.address?.state ?? "",
-        },
-      };
-    }),
-  }));
+  const nigeriaStates = [
+    "Abia",
+    "Adamawa",
+    "Akwa Ibom",
+    "Anambra",
+    "Bauchi",
+    "Bayelsa",
+    "Benue",
+    "Borno",
+    "Cross River",
+    "Delta",
+    "Ebonyi",
+    "Edo",
+    "Ekiti",
+    "Enugu",
+    "Gombe",
+    "Imo",
+    "Jigawa",
+    "Kaduna",
+    "Kano",
+    "Katsina",
+    "Kebbi",
+    "Kogi",
+    "Kwara",
+    "Lagos",
+    "Nasarawa",
+    "Ogun",
+    "Ondo",
+    "Osun",
+    "Oyo",
+    "Plateau",
+    "Rivers",
+    "Sokoto",
+    "Taraba",
+    "Yobe",
+    "Zamfara",
+    "FCT",
+    "Abuja",
+  ];
 
-  res.json(formatted);
+  const grouped = {};
+
+  hospitals.forEach((h) => {
+    let state = h.address?.state?.trim();
+    if (!state) state = "Unknown";
+
+    // Normalize Nigerian states → Nigeria
+    const country = nigeriaStates.includes(state) ? "Nigeria" : state;
+
+    if (!grouped[country]) grouped[country] = [];
+    grouped[country].push({
+      ...h,
+      address: { ...h.address, country },
+    });
+  });
+
+  const result = Object.keys(grouped)
+    .sort((a, b) => a.localeCompare(b))
+    .map((country) => ({
+      country,
+      hospitals: grouped[country],
+    }));
+
+  res.json(result);
 });
 
 // GET /hospitals/country/:country
-// returns hospitals for a single country (case-insensitive)
 const getHospitalsForCountry = asyncHandler(async (req, res) => {
-  const countryParam = req.params.country;
-  // match case-insensitive against address.state
-  const hospitals = await Hospital.find({
-    "address.state": { $regex: `^${countryParam}$`, $options: "i" },
-  }).lean();
+  const rawParam = (req.params.country || "").trim();
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 9;
+  const skip = (page - 1) * limit;
 
-  // alias state -> country on each hospital
-  const formatted = hospitals.map((doc) => ({
-    ...doc,
-    address: {
-      ...doc.address,
-      country: doc.address?.state ?? "",
-    },
-  }));
+  const countryParam = rawParam.toLowerCase();
 
-  res.json(formatted);
+  const nigeriaStates = [
+    "abia",
+    "adamawa",
+    "akwa ibom",
+    "anambra",
+    "bauchi",
+    "bayelsa",
+    "benue",
+    "borno",
+    "cross river",
+    "delta",
+    "ebonyi",
+    "edo",
+    "ekiti",
+    "enugu",
+    "gombe",
+    "imo",
+    "jigawa",
+    "kaduna",
+    "kano",
+    "katsina",
+    "kebbi",
+    "kogi",
+    "kwara",
+    "lagos",
+    "nasarawa",
+    "ogun",
+    "ondo",
+    "osun",
+    "oyo",
+    "plateau",
+    "rivers",
+    "sokoto",
+    "taraba",
+    "yobe",
+    "zamfara",
+    "fct",
+    "abuja",
+  ];
+
+  const orConditions = [];
+
+  if (countryParam === "nigeria") {
+    nigeriaStates.forEach((s) =>
+      orConditions.push({
+        "address.state": { $regex: new RegExp(`^${s}$`, "i") },
+      })
+    );
+    orConditions.push({ "address.state": { $regex: /nigeria/i } });
+    orConditions.push({ "address.country": { $regex: /nigeria/i } });
+  } else {
+    orConditions.push({
+      "address.state": { $regex: new RegExp(`^${rawParam}$`, "i") },
+    });
+    orConditions.push({
+      "address.country": { $regex: new RegExp(`^${rawParam}$`, "i") },
+    });
+  }
+
+  const query = { $or: orConditions };
+
+  // count total hospitals before limiting
+  const total = await Hospital.countDocuments(query);
+  const hospitals = await Hospital.find(query).skip(skip).limit(limit).lean();
+
+  const formatted = hospitals.map((doc) => {
+    const rawState = (doc.address?.state || "").trim();
+    const isNigeriaState = nigeriaStates.includes(rawState.toLowerCase());
+    const country = isNigeriaState
+      ? "Nigeria"
+      : doc.address?.country
+      ? doc.address.country
+      : rawState;
+    return {
+      ...doc,
+      address: {
+        ...doc.address,
+        country,
+      },
+    };
+  });
+
+  res.json({
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    hospitals: formatted,
+  });
 });
 
 // @desc share hospitals
@@ -625,8 +748,8 @@ export default {
   getNearbyHospitals,
   getHospitalById,
   getTopHospitals,
-getHospitalsGroupedByCountry,
-getHospitalsForCountry,
+  getHospitalsGroupedByCountry,
+  getHospitalsForCountry,
   shareHospitals,
   getSharedHospitals,
   exportHospitals,
