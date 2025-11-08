@@ -7,20 +7,26 @@ hospitalRouter
   .route("/")
   .get(hospitalController.getHospitals)
   .post(hospitalController.addHospital)
-  .patch(hospitalController.updateHospital);
-
+  .patch(hospitalController.updateHospital)
+  .delete(hospitalController.deleteHospital);
+hospitalRouter.route("/count").get(hospitalController.getHospitalCount);
 hospitalRouter.route("/random").get(hospitalController.getRandomHospitals);
 hospitalRouter.route("/find").get(hospitalController.findHospitals);
 hospitalRouter.route("/search").get(hospitalController.searchHospitals);
+hospitalRouter.route("/export").get(hospitalController.exportHospitals);
+hospitalRouter.route("/share").post(hospitalController.shareHospitals);
 hospitalRouter.route("/nearby").get(hospitalController.getNearbyHospitals);
 hospitalRouter.route("/top").get(hospitalController.getTopHospitals);
-hospitalRouter.route("/explore").get(hospitalController.getHospitalsGroupedByCountry);
-hospitalRouter.route("/country/:country").get(hospitalController.getHospitalsForCountry);
+hospitalRouter
+  .route("/explore")
+  .get(hospitalController.getHospitalsGroupedByCountry);
+hospitalRouter
+  .route("/country/:country")
+  .get(hospitalController.getHospitalsForCountry);
+hospitalRouter
+  .route("/share/:linkId")
+  .get(hospitalController.getSharedHospitals);
 hospitalRouter.route("/:id").get(hospitalController.getHospitalById);
-hospitalRouter.route("/share").post(hospitalController.shareHospitals);
-hospitalRouter.route("/share/:linkId").get(hospitalController.getSharedHospitals);
-hospitalRouter.route("/export").get(hospitalController.exportHospitals);
 hospitalRouter.route("/:name").get(hospitalController.getHospitalByName);
-hospitalRouter.route("/").delete(hospitalController.deleteHospital);
 
 export default hospitalRouter;

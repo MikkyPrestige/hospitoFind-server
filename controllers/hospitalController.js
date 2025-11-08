@@ -47,6 +47,12 @@ const getHospitals = asyncHandler(async (req, res) => {
   return res.json(hospitals);
 });
 
+// get total hospital count
+const getHospitalCount = asyncHandler(async (req, res) => {
+  const count = await Hospital.countDocuments();
+  res.json({ total: count });
+});
+
 // @desc Get hospitals randomly
 // @route GET /hospitals/random
 // @access Public
@@ -377,7 +383,10 @@ const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
   });
 
   const result = Object.keys(grouped)
-    .sort((a, b) => a.localeCompare(b))
+    .sort((a, b) => {
+      const diff = grouped[b].length - grouped[a].length;
+      return diff !== 0 ? diff : a.localeCompare(b);
+    })
     .map((country) => ({
       country,
       hospitals: grouped[country],
@@ -565,26 +574,36 @@ const exportHospitals = asyncHandler(async (req, res) => {
 
   const hospitals = await Hospital.find(query).lean();
 
+  // ✅ Safe mapping (avoid crashes on missing fields)
   const csvData = hospitals.map((hospital) => ({
-    name: hospital.name,
-    street: hospital.address.street,
-    city: hospital.address.city,
-    state: hospital.address.state,
-    phone: hospital.phoneNumber,
-    website: hospital.website,
-    email: hospital.email,
-    photoUrl: hospital.photoUrl,
-    type: hospital.type,
-    services: hospital.services.join(", "),
-    comments: hospital.comments.join(", "),
-    hours: hospital.hours.map((hour) => `${hour.day}: ${hour.open}`).join(", "),
+    name: hospital.name || "",
+    street: hospital.address?.street || "",
+    city: hospital.address?.city || "",
+    state: hospital.address?.state || "",
+    phone: hospital.phoneNumber || "",
+    website: hospital.website || "",
+    email: hospital.email || "",
+    photoUrl: hospital.photoUrl || "",
+    type: hospital.type || "",
+    services: Array.isArray(hospital.services)
+      ? hospital.services.join(", ")
+      : "",
+    comments: Array.isArray(hospital.comments)
+      ? hospital.comments.join(", ")
+      : "",
+    hours: Array.isArray(hospital.hours)
+      ? hospital.hours
+          .map((hour) => `${hour.day || ""}: ${hour.open || ""}`)
+          .join(", ")
+      : "",
   }));
 
   const csv = papa.unparse(csvData, { header: true });
 
   res.setHeader("Content-Type", "text/csv");
   res.setHeader("Content-Disposition", 'attachment; filename="hospitals.csv"');
-  res.send(csv);
+
+  res.status(200).send(csv);
 });
 
 // @desc add new hospital
@@ -741,6 +760,7 @@ const deleteHospital = asyncHandler(async (req, res) => {
 
 export default {
   getHospitals,
+  getHospitalCount,
   getRandomHospitals,
   getHospitalByName,
   findHospitals,
