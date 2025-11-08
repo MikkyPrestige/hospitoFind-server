@@ -21,6 +21,9 @@ hospitalRouter
   .route("/explore")
   .get(hospitalController.getHospitalsGroupedByCountry);
 hospitalRouter
+  .route("/explore/top")
+  .get(hospitalController.getHospitalsGroupedByCountryTop);
+hospitalRouter
   .route("/country/:country")
   .get(hospitalController.getHospitalsForCountry);
 hospitalRouter
