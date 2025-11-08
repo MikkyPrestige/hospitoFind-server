@@ -321,7 +321,76 @@ const getTopHospitals = async (req, res) => {
   res.json(randomized);
 };
 
-// GET /hospitals/explore
+// GET /hospitals/explore/top
+const getHospitalsGroupedByCountryTop = asyncHandler(async (req, res) => {
+  const hospitals = await Hospital.find().lean();
+
+  const nigeriaStates = [
+    "Abia",
+    "Adamawa",
+    "Akwa Ibom",
+    "Anambra",
+    "Bauchi",
+    "Bayelsa",
+    "Benue",
+    "Borno",
+    "Cross River",
+    "Delta",
+    "Ebonyi",
+    "Edo",
+    "Ekiti",
+    "Enugu",
+    "Gombe",
+    "Imo",
+    "Jigawa",
+    "Kaduna",
+    "Kano",
+    "Katsina",
+    "Kebbi",
+    "Kogi",
+    "Kwara",
+    "Lagos",
+    "Nasarawa",
+    "Ogun",
+    "Ondo",
+    "Osun",
+    "Oyo",
+    "Plateau",
+    "Rivers",
+    "Sokoto",
+    "Taraba",
+    "Yobe",
+    "Zamfara",
+    "FCT",
+    "Abuja",
+  ];
+
+  const grouped = {};
+
+  hospitals.forEach((h) => {
+    let state = h.address?.state?.trim();
+    if (!state) state = "Unknown";
+
+    // Normalize Nigerian states → Nigeria
+    const country = nigeriaStates.includes(state) ? "Nigeria" : state;
+
+    if (!grouped[country]) grouped[country] = [];
+    grouped[country].push({
+      ...h,
+      address: { ...h.address, country },
+    });
+  });
+
+  const result = Object.keys(grouped)
+    .sort((a, b) => a.localeCompare(b))
+    .map((country) => ({
+      country,
+      hospitals: grouped[country],
+    }));
+
+  res.json(result);
+});
+
 // GET /hospitals/explore
 const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
   const hospitals = await Hospital.find().lean();
@@ -768,6 +837,7 @@ export default {
   getNearbyHospitals,
   getHospitalById,
   getTopHospitals,
+  getHospitalsGroupedByCountryTop,
   getHospitalsGroupedByCountry,
   getHospitalsForCountry,
   shareHospitals,
