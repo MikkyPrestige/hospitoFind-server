@@ -1,6 +1,6 @@
 const allowedOrigins = [
-  "https://hospitofind-server.onrender.com",
   "https://hospitofind-server-1.onrender.com",
+"https://hospitofind.online",
   "https://hospitofind.netlify.app",
   "https://findhospitalsdev.netlify.app",
   "http://localhost:5173",
