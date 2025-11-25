@@ -282,6 +282,47 @@ const getHospitalById = async (req, res) => {
   }
 };
 
+// ✅ Hospital by slug
+// const getHospitalBySlug = async (req, res) => {
+//   const { country, city, slug } = req.params;
+
+//   try {
+//     const hospital = await Hospital.findOne({
+//       "address.state": country,
+//       "address.city": city,
+//       slug,
+//     }).lean();
+
+//     if (!hospital) {
+//       return res.status(404).json({ message: "Hospital not found" });
+//     }
+
+//     return res.json(hospital);
+//   } catch (err) {
+//     console.error("Error fetching hospital by slug:", err);
+//     res.status(500).json({ message: "Server error fetching hospital" });
+//   }
+// };
+
+//  Redirect
+// const redirectHospitalById = async (req, res) => {
+//   try {
+//     const hospital = await Hospital.findById(req.params.id);
+
+//     if (!hospital) {
+//       return res.status(404).json({ message: "Hospital not found" });
+//     }
+
+//     const { state, city } = hospital.address;
+//     const finalUrl = `/hospitals/${state}/${city}/${hospital.slug}`;
+
+//     return res.redirect(301, finalUrl);
+//   } catch (err) {
+//     console.error("Redirect error:", err);
+//     return res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 let cachedFeatured = [];
 let lastFeaturedFetch = 0;
 const FEATURED_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
@@ -836,6 +877,8 @@ export default {
   searchHospitals,
   getNearbyHospitals,
   getHospitalById,
+  // getHospitalBySlug,
+  // redirectHospitalById,
   getTopHospitals,
   getHospitalsGroupedByCountryTop,
   getHospitalsGroupedByCountry,

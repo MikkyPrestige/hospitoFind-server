@@ -31,5 +31,8 @@
     "nodemon": "^3.1.4",
     "papaparse": "^5.4.1",
     "short-id": "^0.1.0-1"
+  },
+  "devDependencies": {
+    "sitemap": "^9.0.0"
   }
 }

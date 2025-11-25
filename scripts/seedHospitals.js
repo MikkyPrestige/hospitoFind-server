@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Hospital from "./models/hospitalsModel.js";
-import hospitalsData from "./data/hospitals.json" assert { type: "json" };
-import { getCoordinates } from "./config/geocode.js";
+import Hospital from "../models/hospitalsModel.js";
+import hospitalsData from "../data/hospitals.json" assert { type: "json" };
+import { getCoordinates } from "../config/geocode.js";
 
 dotenv.config();
 
