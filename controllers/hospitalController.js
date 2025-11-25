@@ -629,6 +629,7 @@ const shareHospitals = asyncHandler(async (req, res) => {
     hospitals: searchedHospitals.map((hospital) => ({
       id: hospital.id,
       name: hospital.name,
+      slug: hospital.slug,
       address: {
         street: hospital.address.street,
         city: hospital.address.city,
