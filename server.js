@@ -16,6 +16,9 @@ import userRouter from "./routes/userRoute.js";
 import hospitalRouter from "./routes/hospitalsRoute.js";
 import hospitalSlugRouter from "./routes/hospitalsSlugRoute.js";
 import healthRouter from "./routes/healthRoute.js";
+// import sitemapRoutes from "./routes/sitemaps/index.js";
+// import { loadRoutes } from "./config/loadRoutes.js";
+// import testRoutes from "./routes/testRoutes.js";
 
 const app = express();
 dotenv.config();
@@ -36,9 +39,14 @@ app.use("/", express.static("public/views"));
 app.use("/", rootRouter);
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
+// sitemapRoutes.forEach((route) => {app.use("/", route)});
 app.use("/hospital", hospitalSlugRouter);
 app.use("/hospitals", hospitalRouter);
 app.use("/health", healthRouter);
+// app.use("/test", testRoutes);
+
+// Auto-load backend routes
+// loadRoutes(app);
 
 // ===== 404 Handling =====
 app.all("*", (req, res) => {
