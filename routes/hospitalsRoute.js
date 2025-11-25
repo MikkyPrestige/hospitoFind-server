@@ -1,5 +1,6 @@
 import express from "express";
 import hospitalController from "../controllers/hospitalController.js";
+// import { redirectHospitalById } from "../controllers/redirectController.js";
 
 const hospitalRouter = express.Router();
 

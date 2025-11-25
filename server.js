@@ -14,8 +14,8 @@ import rootRouter from "./routes/rootRoute.js";
 import authRouter from "./routes/authRoute.js";
 import userRouter from "./routes/userRoute.js";
 import hospitalRouter from "./routes/hospitalsRoute.js";
+import hospitalSlugRouter from "./routes/hospitalsSlugRoute.js";
 import healthRouter from "./routes/healthRoute.js";
-// import testRoutes from "./routes/testRoutes.js";
 
 const app = express();
 dotenv.config();
@@ -36,9 +36,9 @@ app.use("/", express.static("public/views"));
 app.use("/", rootRouter);
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
+app.use("/hospital", hospitalSlugRouter);
 app.use("/hospitals", hospitalRouter);
 app.use("/health", healthRouter);
-// app.use("/test", testRoutes);
 
 // ===== 404 Handling =====
 app.all("*", (req, res) => {

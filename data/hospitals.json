@@ -8333,5 +8333,93 @@
       {"day":"Sunday","open":"24h"}
     ],
     "isFeatured": true
+  },
+  {
+    "id": "267",
+    "name": "Chesterfield Royal Hospital",
+    "address": {"street": "Chesterfield Road, Calow, S44 5BL", "city": "Chesterfield", "state": "United Kingdom"},
+    "phoneNumber": "+44 1246 277271, 01246 516090",
+    "website": "https://www.chesterfieldroyal.nhs.uk",
+    "email": "crhft.outpatient@nhs.net",
+    "photoUrl": "https://www.chesterfieldroyal.nhs.uk/application/files/thumbnails/xxl/4817/3073/5178/Chesterfield_Emergency_Departmenrt.jpg",
+    "type": "Public",
+    "services": ["Accident and emergency (A&E)", "Breast cancer services", "Breast Surgery", "Cardiology", "Cataract Surgery", "Children's & Adolescent Services", "Chronic Obstructive Pulmonary Disease", "Dimentia", "Dermatology", "Diabetic Medicine", "Ear, Nose & Throat", "Endocrinology and Metabolic Medicine", "Obstetrics And Gynaecology", "Ophthalmology", "Orthopaedics", "Physiotherapy", "Paediatric Surgery", "Prostate Cancer Service", "Rehabilitation", "Rheumatology", "Urology", "Vascular surgery"],
+    "comment": ["As of its latest assessment, the hospital has an overall rating of 'Good' from the Care Quality Commission (CQC)", "The hospital has around 500 inpatient beds and employs more than 4,000 staff, supported by approximately 170 volunteers" ],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "268",
+    "name": "Ipswich Hospital",
+    "address": {"street": "Heath Rd, Ipswich IP4 5PD", "city": "Suffolk", "state": "United Kingdom"},
+    "phoneNumber": "+44 1473 712233",
+    "website": "https://www.esneft.nhs.uk/your-visit/getting-here/ipswich-hospital/",
+    "email": "Appointment.Centre@esneft.nhs.uk",
+    "photoUrl": "http://www.eoeortho.com/wp-content/uploads/2016/02/article-2273150-02525C500000044D-450_634x415.jpg",
+    "type": "Public",
+    "services": ["Emergency department", "Acute medicine", "Breast Surgery", "General Surgery", "Colorectal surgery", "Maternity & Neonatal services", "Trauma and orthopaedics", "Heart and lung conditions", "Cancer Care", "Imaging and diagnostics", "Mental Health", "Oral and Maxillofacial Surgery", "Obstetrics And Gynaecology", "Neurology", "Opthalmology", "Endocrinology", "Dermatology", "Nephrology", "Rheumatology", "Vascular surgery", "Haematology", "Elderly care"],
+    "comment": ["This is a large NHS district general hospital managed by the East Suffolk and North Essex NHS Foundation Trust.", "The hospital has around 500 inpatient beds and employs more than 4,000 staff, supported by approximately 170 volunteers" ],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "269",
+    "name": "Royal London Hospital",
+    "address": {"street": "Whitechapel Rd, London E1 1FR", "city": "London", "state": "United Kingdom"},
+    "phoneNumber": "+44 207377 7000",
+    "website": "https://www.bartshealth.nhs.uk/the-royal-london",
+    "email": "BHNT.AIRS@nhs.net",
+    "photoUrl": "https://www.bartshealth.nhs.uk/media/images/versions/img94joktmu754417.jpg",
+    "type": "Public",
+    "services": ["Accident & Emergency (A&E)", "Acute Admissions Units (AAU)", "Barts Heart Centre", "Cancer Treatment", "Children's Hospital (Young Barts Health)", "Critical Care", "Dental Clinic", "Dermatology", "Diagnostic and Screening Procedures", "Gastroenterology and Hepatology", "Gynacology", "Haematology", "HIV and Infectious Diseases", "Maternity and Midwifery Services", "Neuroscience", "Orthopaedic", "Plastics and Reconstructive Surgery", "Renal and Urology", "Respiratory Medicine", "Stroke Care", "Surgical Procedures", "Vascular Surgery", "Elderly care"],
+    "comment": ["The Royal London Hospital is an internationally renowned teaching hospital and the busiest major trauma centre in the UK, providing critical care for severely injured patients across London", "The hospital moved into a new, state-of-the-art building in 2012, designed to support modern healthcare delivery with 1,248 beds and 34 wards", "The hospital's rooftop helipad serves as the operational base for London's Air Ambulance, allowing for rapid transport of critical patients"],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "270",
+    "name": "The Alexandra Hospital",
+    "address": {"street": "Mill Lane, Cheadle, Cheshire, SK8 2PX", "city": "Greater Manchester", "state": "United Kingdom"},
+    "phoneNumber": "+44 161 820 0886, +44 161 428 3656",
+    "website": "https://www.circlehealthgroup.co.uk/hospitals/the-alexandra-hospital",
+    "email": "appointment.confirmation@circlehealthgroup.co.uk",
+    "photoUrl": "https://www.lsiarchitects.co.uk/wp-content/uploads/2018/07/LSI_Architects_BMI_TheAlexandraHospital_Entrance_02.jpg",
+    "type": "Private",
+    "services": ["Allergy and immunology", "Cardiology", "Dermatology", "Cancer Treatment", "Audiology", "Breast Surgery", "Paediatrics (outpatient services and inpatient/day case procedures for children from ages 3 to 18)", "Orthopaedics", "Neurology", "Spinal surgery", "Fertility Treatment", "Physiotherapy", "Diagnostic imaging (including MRI and CT scans)", "Private GP services", "Endocrinology", "Ear Nose and Throat (ENT Surgery)", "Gastroenterology treatment", "Gynacology", "Rheumatology", "Nephrology", "Surgical Procedures", "Vascular Surgery", "Urology"],
+    "comment": ["Over 500 consultants, many with international reputations and teaching responsibilities, choose to practice at the hospital, attracting patients from around the world.", "The hospital has been awarded the iWantGreatCare certificate of excellence for delivering outstanding care.", "Patients frequently mention the hospital is spotless, clean, light, and airy, with comfortable en-suite rooms and good food.", "The Care Quality Commission (CQC) has rated The Alexandra Hospital as 'Good' overall. This rating extends to all key areas: safety, effectiveness, care, responsiveness, and leadership.", "It has a comprehensive facility including seven operating theatres, a hybrid catheter lab, a five-bed intensive care unit (Level 3) and a dedicated paediatric ward"],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
   }
 ]
