@@ -34,9 +34,9 @@ router.get("/sitemap-images.xml", async (req, res) => {
       return `
         <url>
             <loc>${hospitalPage}</loc>
+            <lastmod>${lastmod}</lastmod>
             <image:image>
                 <image:loc>${imageUrl}</image:loc>
-                <image:lastmod>${lastmod}</image:lastmod>
             </image:image>
         </url>
       `;
