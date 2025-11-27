@@ -3,7 +3,7 @@ import Hospital from "../../models/hospitalsModel.js";
 import { sanitize } from "../../config/sanitize.js";
 
 const router = express.Router();
-const FRONTEND_URL = "https://hospitofind.online";
+const FRONTEND_URL = process.env.Frontend_URL;
 
 // sitemap for hospitals based on their addresses and slugs
 router.get("/sitemap-hospitals.xml", async (req, res) => {
