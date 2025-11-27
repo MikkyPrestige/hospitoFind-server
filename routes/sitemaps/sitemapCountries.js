@@ -3,26 +3,29 @@ import Hospital from "../../models/hospitalsModel.js";
 import { sanitize } from "../../config/sanitize.js";
 
 const router = express.Router();
+const FRONTEND_URL = "https://hospitofind.online";
 
+// sitemap for countries based on hospitals' states
 router.get("/sitemap-countries.xml", async (req, res) => {
-  const base = "https://hospitofind.online";
+  const states = await Hospital.distinct("address.state");
 
-  const countries = await Hospital.distinct("address.state");
+  const xmlItems = states
+    .map((state) => {
+      const stateSlug = sanitize(state);
 
-  const xmlItems = countries
-    .map((countryRaw) => {
-      const country = sanitize(countryRaw);
       return `
-<sitemap>
-  <loc>${base}/sitemap-country-${country}.xml</loc>
-</sitemap>`;
+        <url>
+            <loc>${FRONTEND_URL}/country/${stateSlug}</loc>
+            <priority>0.8</priority>
+        </url>
+      `;
     })
     .join("");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${xmlItems}
-</sitemapindex>`;
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      ${xmlItems}
+  </urlset>`;
 
   res.header("Content-Type", "application/xml");
   res.send(xml);
