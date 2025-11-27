@@ -1,7 +1,7 @@
 import express from "express";
 
 const router = express.Router();
-const FRONTEND_URL = "https://hospitofind.online";
+const FRONTEND_URL = process.env.Frontend_URL;
 
 // list of static pages to include in the sitemap
 const staticPages = [

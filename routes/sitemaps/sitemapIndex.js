@@ -13,7 +13,7 @@ const SITEMAPS = [
 
 // sitemap index XML file
 router.get("/sitemap.xml", (req, res) => {
-  const HOST = "https://hospitofind.online";
+  const HOST = process.env.Frontend_URL;
 
   const items = SITEMAPS.map((path) => {
     return `

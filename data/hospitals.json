@@ -8421,5 +8421,93 @@
       {"day":"Sunday","open":"24h"}
     ],
     "isFeatured": true
+  },
+  {
+    "id": "271",
+    "name": "Leduc Community Hospital",
+    "address": {"street": "4210 48 St, Leduc, AB T9E 5Z3", "city": "Alberta", "state": "Canada"},
+    "phoneNumber": "+1 780-986-7711, +1 780-980-4644",
+    "website": "https://www.albertahealthservices.ca/leduc/leduc.aspx",
+    "email": "ahsinfo@ahs.ca, ambulance@leduc.ca",
+    "photoUrl": "https://www.lchfoundation.ca/public/uploads/images/leduccommunityhealthcentre.jpg",
+    "type": "Public",
+    "services": ["Addiction and Mental Health - Domestic Abuse Response Team", "Breathe Easy Program - Pulmonary Rehabilitation", "Community Audiology Services", "Emergency Services", "Endoscopy", "Anaesthesiology", "Colonoscopy", "Computed Tomography", "Echocardiography", "Fluoroscopy", "Gastroscopy", "General Internal Medicine Clinic", "General Radiography (X-Ray)", "Laboratory Services", "Nutrition Counselling - Adult, Pregnancy and Pediatrics", "Respiratory Therapy", "Surgical Services", "Ultrasound", "Sexual Assault Response Team", "Inpatient Services (Family Medicine)", "Sigmoidoscopy"],
+    "comment": ["The hospital is a 70-bed facility, part of the Canadian universal health care system and managed by Alberta Health Services (AHS).", "To support patients and families, the hospital has removed formal visiting hours, basing visit times on the patient's expressed wishes and care needs."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "272",
+    "name": "Dartmouth General Hospital",
+    "address": {"street": "325 Pleasant St, Dartmouth, NS B2Y 4G8", "city": "Nova Scotia", "state": "Canada"},
+    "phoneNumber": "+1 902-465-8300, +1-844-884-4177",
+    "website": "https://www.nshealth.ca/locations-and-facilities/dartmouth-general-hospital",
+    "email": "czpatientrelations@nshealth.ca",
+    "photoUrl": "https://media-cdn.socastsrm.com/wordpress/wp-content/blogs.dir/3041/files/2022/12/img-0073-scaled-1.jpg",
+    "type": "Public",
+    "services": ["Inpatient medical", "Critical Care", "General Surgery", "Orthopaedic", "Ear, Nose & Throat Surgery", "General Radiography", "Gynacology", "Urology", "CT scanning", "Mammography", "Plastic Surgery", "Endoscopy", "Ambulance Service", "Laboratory Services", "Renal Dialysis", "Pulmonary Rehabilitation", "Mental Health"],
+    "comment": ["The hospital offers wheelchair-accessible entrances and parking.", "The hospital is home to the Fred Smithers Centre for Orthopedic Care and was the first hospital in Canada to perform a total hip replacement surgery using the Mako SmartRobotics™ System.", "Dartmouth General opened the first pelvic health suite in Atlantic Canada, bringing various urology and gynecology procedures together in one location."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "273",
+    "name": "Cape Breton Regional Hospital",
+    "address": {"street": "1482 George St, Sydney", "city": "Nova Scotia", "state": "Canada"},
+    "phoneNumber": "+1 902-564-5566, +1 902-567-8000",
+    "website": "https://www.nshealth.ca/locations-and-facilities/cape-breton-regional-hospital",
+    "email": "EZpatientrelations@nshealth.ca",
+    "photoUrl": "https://www.nshealth.ca/sites/default/files/styles/wide/public/2023-09/2023_09_11%20Cape%20Breton%20Regional%20Hospital%2001.jpg?itok=7jXIV6cP",
+    "type": "Public",
+    "services": ["Anaesthesiology", "Cancer and supportive care", "Cardiac respiratory", "Diagnostic imaging", "Diabetes", "Dialysis", "General Surgery", "Emergency medicine", "Geriatric assessment and rehabilitation", "Intensive Care Unit", "Internal Medicine", "Maternal/child support services", "Neonatal care", "Laboratory Services", "Nutrition and diabetic counseling", "Opthalmology", "Obstetrics and Gynaecology", "Otolaryngology", "Occupational therapy", "Physiotherapy", "Plastic surgery", "Palliative Care"],
+    "comment": ["The CBRH is the primary referral and trauma center for all of Cape Breton Island.", "The hospital has approximately 250 beds and a staff of over 3,000 along with more than 150 physicians.", "The hospital, particularly the emergency department, is described as a very busy and stressful place. Patients have noted long wait times, but also praise the dedication and care provided by the staff."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
+  },
+  {
+    "id": "274",
+    "name": "Joseph Brant Hospital",
+    "address": {"street": "1245 Lakeshore Rd, Burlington", "city": "Ontario", "state": "Canada"},
+    "phoneNumber": "+1 905-632-3737",
+    "website": "https://www.josephbranthospital.ca",
+    "email": "info@josephbranthospital.ca, accessibility@josephbranthospital.ca",
+    "photoUrl": "https://mariannemeedward.ca/wp-content/uploads/elementor/thumbs/STOCK_Joseph_Brant_Hospital-ozckcrvy587yybmuwle0c4a9xwr17n08c1ohqwr1jc.jpg",
+    "type": "Public",
+    "services": ["Breathe Easy COPD Program", "Diagnostic Imaging", "Endoscopy", "General Internal Medicine", "Fracture Clinic", "Dialysis Center", "Infectious Diseases", "Integrated Comprehensive Care", "Diabetes", "Heart Function Clinic", "Integrated Stroke Unit", "Maternal and Child Program", "Medical Diagnostic Unit", "Laboratory Services", "Mental health", "Musculoskeletal Central Intake and Assessment Centre", "Oncology and Medical Day Care Clinic", "Rehabilitation", "Speech Language Pathology", "Palliative Care"],
+    "comment": ["The hospital has achieved Accreditation with Exemplary Standing by Accreditation Canada, which is the highest designation and recognizes organizations that go above and beyond requirements in quality improvement and safety.", "Joseph Brant Hospital was the first in Canada to build and implement a pandemic response unit during the COVID-19 pandemic, which housed patients to relieve pressure on the main hospital and allow scheduled surgeries to continue.", "The hospital's commitment to patient-centered care and partnerships, such as the 'DREAM Team' (Dementia Resources Education Advocacy Mentorship) in the Emergency Department, has received positive feedback for improving specific care areas.", "Overall, the hospital strives for a culture of caring and continuous improvement, working with patient and family input to shape its strategic direction."],
+    "hours": [
+      {"day":"Monday", "open":"24h"},
+      {"day":"Tuesday", "open":"24h"},
+      {"day":"Wednesday", "open":"24h"},
+      {"day":"Thursday", "open":"24h"},
+      {"day":"Friday","open":"24h"},
+      {"day":"Saturday","open":"24h"},
+      {"day":"Sunday","open":"24h"}
+    ],
+    "isFeatured": true
   }
 ]
