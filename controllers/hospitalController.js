@@ -246,7 +246,9 @@ const getNearbyHospitals = async (req, res) => {
   }
 };
 
-// ✅ Hospital by ID
+// @desc Get hospital by ID
+// @route GET /hospitals/:id
+// @access Public
 const getHospitalById = async (req, res) => {
   const { id } = req.params;
 
@@ -837,8 +839,6 @@ export default {
   searchHospitals,
   getNearbyHospitals,
   getHospitalById,
-  // getHospitalBySlug,
-  // redirectHospitalById,
   getTopHospitals,
   getHospitalsGroupedByCountryTop,
   getHospitalsGroupedByCountry,

@@ -15,7 +15,7 @@ export async function getCoordinates(fullAddress, retries = 2, delay = 3000) {
     return { longitude: null, latitude: null };
   }
 
-  // small helper for waiting between retries
+  // helper for waiting between retries
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   for (let attempt = 1; attempt <= retries + 1; attempt++) {
@@ -34,14 +34,14 @@ export async function getCoordinates(fullAddress, retries = 2, delay = 3000) {
         return { longitude: coords[0], latitude: coords[1] };
       } else {
         console.warn(`No coordinates found for address: ${fullAddress}`);
-        break; // No point retrying if address is invalid
+        break;
       }
     } catch (err) {
       console.warn(
         `Attempt ${attempt} failed for "${fullAddress}": ${err.message}`
       );
       if (attempt <= retries) {
-        await sleep(delay); // wait before retrying
+        await sleep(delay);
       } else {
         console.warn(
           `All ${retries + 1} attempts failed for "${fullAddress}".`

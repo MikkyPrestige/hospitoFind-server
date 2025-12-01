@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
-import Hospital from "../models/hospitalsModel.js"
+import Hospital from "../models/hospitalsModel.js";
 import { sanitize } from "../config/sanitize.js";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 async function run() {
-  await mongoose.connect(process.env.MongoDB_URI, {
+  await mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
