@@ -6544,7 +6544,7 @@
     "photoUrl": "https://www.charite.de/fileadmin/user_upload/portal/charite/presse/fotomaterial/Standardbilder_f_Download/CCM/WPE_3636.jpg",
     "type": "Public",
     "services": ["General Medicine", "Surgery", "Pediatrics", "Neurology", "Oncology"],
-    "comment": ["One of Europe's oldest and largest hospitals", "The Doctors are very good, and blood tests and scans are done quickly"],
+    "comments": ["One of Europe's oldest and largest hospitals", "The Doctors are very good, and blood tests and scans are done quickly"],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6566,7 +6566,7 @@
     "photoUrl": "https://www.karolinska.se/49ece8/contentassets/ce1ff1fbe55145428525632704372b99/nya_sjukhusbyggnaden_solna_fr_solnavagen_webb.jpg?preset=850-ratio-16x9",
     "type": "Public",
     "services": ["Cardiology", "Orthopedics", "Emergency Care", "Transplantation"],
-    "comment": ["Known for cutting-edge medical research and treatment"],
+    "comments": ["Known for cutting-edge medical research and treatment"],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6588,7 +6588,7 @@
     "photoUrl": "https://example.com/photos/usz.jpg",
     "type": "Public",
     "services": ["Breast Cancer", "Parkinson's Treatment", "Gastric Bypass Surgery", "Gynecology & Obstetrics", "Prostate Cancer", "Chemotherapy", "Heart Valve Repair", "Hernia surgery", " Liver Cancer", "Vitreoretinal Surgery", "Spine Surgery", " Pediatric Liver Disease"],
-    "comment": ["Premier medical center in Switzerland with roots dating back to 1204", "900 hospital beds and nearly 300,000 days of care and Open to all"],
+    "comments": ["Premier medical center in Switzerland with roots dating back to 1204", "900 hospital beds and nearly 300,000 days of care and Open to all"],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6609,7 +6609,7 @@
     "photoUrl": "http://cdn.ymaws.com/www.csu-als.org/resource/resmgr/adrian_images/center_images/europe/spain/hospital_clinic_de_barcelona.png",
     "type": "Public",
     "services": ["Infectious Diseases", "Hepatology", "Nephrology", "Dermatology"],
-    "comment": ["Leading hospital in Spain for research and clinical care", "In 2020 it was ranked by Newsweek as the best hospital in Spain and one of the 25 best in the world.", "It has been awarded by IASIST for 10 consecutive years as a top 20 hospital in Spain."],
+    "comments": ["Leading hospital in Spain for research and clinical care", "In 2020 it was ranked by Newsweek as the best hospital in Spain and one of the 25 best in the world.", "It has been awarded by IASIST for 10 consecutive years as a top 20 hospital in Spain."],
     "hours": [
      {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6630,7 +6630,7 @@
     "photoUrl": "https://en.wikipedia.org/wiki/Rigshospitalet#/media/File:Rigshospitalet_20130427_0004F_(8739514693).jpg",
     "type": "Public",
     "services": ["Trauma Surgery", "Cardiac Surgery", "Pediatric Care"],
-    "comment": ["Denmark's largest hospital with specialized care units"],
+    "comments": ["Denmark's largest hospital with specialized care units"],
     "hours": [
      {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6651,7 +6651,7 @@
     "photoUrl": "https://en.wikipedia.org/wiki/King%27s_College_Hospital#/media/File:King's_College_Hospital1.jpg",
     "type": "Public",
     "services": ["Liver Transplantation", "Neurosurgery", "Obstetrics", "Fetal Medicine", "Haemato-Oncology", "Dentistry"],
-    "comment": ["Famous UK hospital with advanced surgical care", "Prominent Accident and Emergency (A&E) department"],
+    "comments": ["Famous UK hospital with advanced surgical care", "Prominent Accident and Emergency (A&E) department"],
     "hours": [
      {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6672,7 +6672,7 @@
         "photoUrl": "https://archello.com/story/72914/attachments/photos-videos/1",
         "type": "Public",
         "services": ["Oncology", "Cardiology", "Neurology", "Pediatrics", "Psychiatric trauma center"],
-        "comment": ["Aarhus University Hospital is the local hospital for citizens in Aarhus city and the island of Samso", "One of the biggest hospitals in Denmark and among the biggest in Europe"],
+        "comments": ["Aarhus University Hospital is the local hospital for citizens in Aarhus city and the island of Samso", "One of the biggest hospitals in Denmark and among the biggest in Europe"],
         "hours": [
            {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6693,7 +6693,7 @@
         "photoUrl": "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSxznWkiaYURDGzVyfnb4u7tWK0lMoGevKkqY5sQAHMM0o5oZsfAS6v3-gqHPOKeYaMcGi_NQ5h0-bJ_l-er6-fAU5DmckJsWV600DOrvvtGy08ydMHGLpjt1BxtGu8ac5Xkvq0_qA=w243-h174-n-k-no-nu",
         "type": "Public",
         "services": ["Emergency Care", "Cardiovascular", "Maternity", "Sexual Health", "Urology", "Dental"],
-        "comment": ["Renowned for its emergency and trauma services", "Mini museum", "Free Wifi"],
+        "comments": ["Renowned for its emergency and trauma services", "Mini museum", "Free Wifi"],
         "hours": [
            {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6715,7 +6715,7 @@
         "photoUrl": "https://cdn.prod.website-files.com/6342ba1ab6d884209d46c1b7/64ddea30545a4598ad045bf5_642-lumc-loc-1024x576.jpg",
         "type": "Public",
         "services": ["Orthopedic medicine", "Cardiothoracic surgery", "Neurosurgery", "Pediatric oncology", "Regenerative Medicine", "Neonatal and pediatric surgery and intensive care", "Ophthalmology", "Biliary surgery", "Rheumatology", "Level I trauma center"],
-        "comment": ["Leading Dutch hospital with a focus on research and education", "LUMC is recognized for its high-quality clinical care and strong scientific orientation."],
+        "comments": ["Leading Dutch hospital with a focus on research and education", "LUMC is recognized for its high-quality clinical care and strong scientific orientation."],
         "hours": [
                 {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6736,7 +6736,7 @@
         "photoUrl": "https://endo-ern.eu/wp-content/uploads/2018/07/599-uzleuven-loc-1024x576.jpg",
         "type": "Public",
         "services": ["General internal medicine", "Gastroenterology and Hepatology", "Gynaecology and Obstetrics", "Ophthalmology", "Pediatrics", "Orthopaedics", "Cardiovascular diseases", "Radiology"],
-        "comment": ["Belgium's largest academic and teaching hospital", "Recognized as one of the best hospitals in the world, ranking 40th in the World's Best Hospitals 2025 list by Newsweek and Statista."],
+        "comments": ["Belgium's largest academic and teaching hospital", "Recognized as one of the best hospitals in the world, ranking 40th in the World's Best Hospitals 2025 list by Newsweek and Statista."],
         "hours": [
             {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6757,7 +6757,7 @@
         "photoUrl": "https://www.uzgent.be/sites/default/files/styles/4_3_xl/public/2024-03/centraal%20onthaal.webp?h=be93b3f5&itok=jJoAyQTb",
         "type": "Public",
         "services": ["Oncology", "Cardiology", "Neurology", "Pediatrics"],
-        "comment": ["The hospital offers extensive facilities, including more than 1,000 beds for both day and multi-day admissions.", "The hospital is a center for scientific research and training, where doctors and specialists are trained.", "Patients have access to a full spectrum of high-quality, specialised care."],
+        "comments": ["The hospital offers extensive facilities, including more than 1,000 beds for both day and multi-day admissions.", "The hospital is a center for scientific research and training, where doctors and specialists are trained.", "Patients have access to a full spectrum of high-quality, specialised care."],
         "hours": [
            {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6778,7 +6778,7 @@
     "photoUrl": "https://endo-ern.eu/wp-content/uploads/2018/08/632-ospedale-san-raffaele-loc-1024x576.jpg",
     "type": "private",
     "services": ["Orthopedics and Traumatology", "Neurology", "Cardiovascular", "Urology", "Oncology", "Clinical services", "Dentistry"],
-    "comment": ["Top private hospital in Italy", "The Institute specializes in Rehabilitation and is able to offer care support to individuals of all ages.", "The institute was first recognized by the Italian Ministry of Health as a research hospital in 1972, for its expertise in diabetes research and cure. The recognition was then extended to the entire field of molecular medicine in 2001."],
+    "comments": ["Top private hospital in Italy", "The Institute specializes in Rehabilitation and is able to offer care support to individuals of all ages.", "The institute was first recognized by the Italian Ministry of Health as a research hospital in 1972, for its expertise in diabetes research and cure. The recognition was then extended to the entire field of molecular medicine in 2001."],
     "hours": [
         {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6799,7 +6799,7 @@
     "photoUrl": "https://ern-euro-nmd.eu/wp-content/uploads/2024/02/hautepierre.jpg",
     "type": "Public",
     "services": ["Emergency services", "Hematology", "Rheumatology", "Infectious Diseases", "Advanced medical and surgical care", "Maternity and Obstetrics"],
-    "comment": ["Leading hospital in France's Grand Est region", "First centre in France to be awarded this internationally renowned quality assurance seal in interventional oncology, as well as being the second centre in the world to be certified! In the IR department"],
+    "comments": ["Leading hospital in France's Grand Est region", "First centre in France to be awarded this internationally renowned quality assurance seal in interventional oncology, as well as being the second centre in the world to be certified! In the IR department"],
     "hours": [
         {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6820,7 +6820,7 @@
     "photoUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTDp9633G1ubDHQi3Djpbtz9J8hWR87ejvvLkFhjgKcBLNje0CwpWyHzHw59QIjG2AhBXaM1-n3dXJ8OE9sm1QNhr7voS8f1Xmwmt8okp0gAQ",
     "type": "Public",
     "services": ["Providing advanced patient care", " Conducting academic medical research", "Educating medical students and other healthcare professionals"],
-    "comment": ["Dutch hospital known for research and patient care", "Amsterdam UMC's two medical faculties are consistently ranked in the world's top 100 medical schools by both the Times Higher Education World University Rankings and by QS Rankings", "Formed in June 2018, it is the result of the administrative merger of the AMC and VUmc."],
+    "comments": ["Dutch hospital known for research and patient care", "Amsterdam UMC's two medical faculties are consistently ranked in the world's top 100 medical schools by both the Times Higher Education World University Rankings and by QS Rankings", "Formed in June 2018, it is the result of the administrative merger of the AMC and VUmc."],
     "hours": [
         {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6841,7 +6841,7 @@
 "photoUrl":"https://askannie.tortoisepath.com/wp-content/uploads/2024/08/The-Nairobi-West-Hospital-Nairobi-Kenya-AskAnnie-TortoisePathcom-8-1152x1536.jpeg",
 "type": "Private",
 "services":["Cancer Care", "Orthopaedics", "Cardiology", "Radiology", "Gynecology", "Internal Medicine", "Urology", "Oncology", "Pediatrics", "Endocrinology", "Dermatology", "Dental", "Neonatal", "Obstetrics and Gynaecology", "Rheumatology", "Psychiatry", "Physiotherapy", "ENT", "Ophthalmology", "Nephrology", "Neurology"],
-"comment":["Multispeciality hospital with 40+ years of providing high-quality medical care.", "Full-fledged 24 hour ultra-modern facility"],
+"comments":["Multispeciality hospital with 40+ years of providing high-quality medical care.", "Full-fledged 24 hour ultra-modern facility"],
 "hours":[
  {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6862,7 +6862,7 @@
     "photoUrl": "https://www.kavacare.id/assets/uploads/2024/02/SIngapore-general-Hospital.jpg",
     "type": "Public",
     "services": ["General Medicine", "Orthopaedic Surgery", "Colorectal Surgery", "Total Hip Replacement", "Stroke", "Systemic Lupus Erythematosus", "Benign Prostatic Hyperplasia (BPH)", "Diabetes", "In-Vitro Fertilisation (IVF)", "Kidney Transplant", "Nuclear Medicine And Molecular Imaging", "Obstetrics and Gynaecology", "Urology", "ENT (Ear, Nose & Throat) Centre"],
-    "comment": ["SGH is the largest acute tertiary hospital in Singapore and ranked among the world’s best.", "It provides the most comprehensive patient-centred care with over 50 clinical specialties on its campus"],
+    "comments": ["SGH is the largest acute tertiary hospital in Singapore and ranked among the world’s best.", "It provides the most comprehensive patient-centred care with over 50 clinical specialties on its campus"],
     "hours": [
         {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6884,7 +6884,7 @@
     "photoUrl": "https://www.u-tokyo.ac.jp/content/400020411.jpg",
     "type": "Public",
     "services": ["Gynecology", "Neuropsychiatry", "Radiology", "Stomach and Esophagus Surgery", "Gastroenterology", "Cardiovascular Medicine", "Orthopaedic and Spinal Surgery", "Pediatrics"],
-    "comment": ["Until 2000, there were three hospitals in The University of Tokyo. In 2001, the University Branch Hospital was merged with the University (Main) Hospital to innovate the New University Hospital.", "The hospital has 1,210 beds (1,150 in the general ward, 60 in the psychiatric ward)", "Tokyo University Hospital is the best hospital in Japan due to its national ranking and holds the 8th position in the world hospitals ranking according to Newsweek magazine."],
+    "comments": ["Until 2000, there were three hospitals in The University of Tokyo. In 2001, the University Branch Hospital was merged with the University (Main) Hospital to innovate the New University Hospital.", "The hospital has 1,210 beds (1,150 in the general ward, 60 in the psychiatric ward)", "Tokyo University Hospital is the best hospital in Japan due to its national ranking and holds the 8th position in the world hospitals ranking according to Newsweek magazine."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6905,7 +6905,7 @@
         "photoUrl": "https://cdn.prod.website-files.com/60cea99e195f0ec37e721fe1/60f633152ca6f4b81002acca_60469b3c4928d7f13c3e71e0_John%20Hopkins%20Hospital%201-p-800.jpeg",
         "type": "Private",
         "services": ["Cancer Services", "Gynaecology and Obstetrics", "Hematology", "Psychiatry", "Dermatology", "Ophthalmology", "Breast Cancer", "Bloodless Medicine", "Neurology & Neurosurgery", "Cardiology", "Diabetes center", "Rheumatology", "Sleep Medicine", "Rehabilation services", "Endocrinology", "Gastroenterology", "Pediatrics", "Urology", "General internal medicine", "Palliative Medicine", "Genetic Medicine", "Infectious Diseases", "Clinecal Nutrition", "Imaging & Radiology", "Plastic surgery", "Geriatric Medicine", "Transplant", "Sweat disorders", "Pulmonary and Critical care medicine"],
-        "comment": ["Johns Hopkins Hospital is a world renowned leader in patient care", "Nationally ranked in 15 adult and 10 pediatric specialties and rated high performing in 19 adult procedures and conditions", "For 21 consecutive years from 1991 to 2020, it was ranked as the best overall hospital in the United States by U.S. News & World Report."],
+        "comments": ["Johns Hopkins Hospital is a world renowned leader in patient care", "Nationally ranked in 15 adult and 10 pediatric specialties and rated high performing in 19 adult procedures and conditions", "For 21 consecutive years from 1991 to 2020, it was ranked as the best overall hospital in the United States by U.S. News & World Report."],
         "hours": [
               {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6927,7 +6927,7 @@
         "photoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Massachusetts_General_Hospital_main_entrance.jpg/1280px-Massachusetts_General_Hospital_main_entrance.jpg",
         "type": "Public",
         "services": ["Anesthesiology", "Cancer Institute", "Pediatrics & Pediatric Surgery", "Heart Center", "Otolaryngology (ENT)", "Orthopaedic Surgery", "Digestive Health Care", "Emergency Medicine", "Neurology", "Pathology", "Obstetrics and Gynaecology", "Psychiatry", "Physical Medicine & Rehabilitation", "Ophthalmology", "Nursing & Patient Care Services", "Neurosurgery", "Interventional Radiology", "Transplant Center", "Trauma Center", "Radiation oncology", "Primary Care"],
-        "comment": ["Recognized as a top hospital in the nation by U.S. News & World Report for 2025-2026.", "It is the third-oldest general hospital in the United States with a patient capacity of 999 beds.", "It is the original and largest clinical education and research facility of Harvard Medical School/Harvard University, and houses the world's largest hospital-based research program"],
+        "comments": ["Recognized as a top hospital in the nation by U.S. News & World Report for 2025-2026.", "It is the third-oldest general hospital in the United States with a patient capacity of 999 beds.", "It is the original and largest clinical education and research facility of Harvard Medical School/Harvard University, and houses the world's largest hospital-based research program"],
         "hours": [
               {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6948,7 +6948,7 @@
         "photoUrl": "https://static01.nyt.com/images/2021/07/14/multimedia/14-aduhelm-promo-2sub/14-aduhelm-promo-2sub-superJumbo-v2.jpg?quality=75&auto=webp",
         "type": "Private",
         "services": ["Cardiology", "Urology", "Gastroenterology", "Orthopaedics", "Neurology", "Anesthesiology", "Breast Health Center", "Cancer Services", "Hematology", "Brain tumor", "Heart and Vascular", "Pediatrics", "Medical Oncology", "Infertility", "Infectious Diseases", "Integrative Medicine", "Psychiatry", "Psycology", "Internal Medicine", "Interstitial Lung Disease (ILD)", "Endocrinology", "Diabetes", "Reconstructive Surgery", "Rheumatology", "Primary Care"],
-        "comment": ["Performed the first coronary artery bypass surgery and the first face transplant in the U.S.", "In 2018–2019, the U.S. News & World Report ranked Cleveland Clinic as the number 2 hospital in the Best Hospitals Honor Roll, as it was nationally ranked in 14 adult and 10 pediatric specialties.", "As of 2025, it has been named the No. 2 hospital in the world for the seventh consecutive year by Newsweek.", "Internationally facilities in places like Toronto, Abu Dhabi, London, and Florida."],
+        "comments": ["Performed the first coronary artery bypass surgery and the first face transplant in the U.S.", "In 2018–2019, the U.S. News & World Report ranked Cleveland Clinic as the number 2 hospital in the Best Hospitals Honor Roll, as it was nationally ranked in 14 adult and 10 pediatric specialties.", "As of 2025, it has been named the No. 2 hospital in the world for the seventh consecutive year by Newsweek.", "Internationally facilities in places like Toronto, Abu Dhabi, London, and Florida."],
         "hours": [
               {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -6970,7 +6970,7 @@
     "photoUrl": "https://www.healthcareitnews.com/sites/hitn/files/styles/wide/public/2025-07/DSC08951.jpg.webp?itok=ojjwkETH",
     "type": "Public",
     "services": ["Emergency services", "Outpatient Services", "Neurosurgery", "Homecare service", "Inpatient Services", "Health Screening Programs"],
-    "comment": ["Leading hospital in South Korea", "The South Korean government's Ministry of Education and Human Resources partly supervises management of the hospital.", "24-hour emergency contact service to respond promptly to emergency situations", "More than 30,000 patients from over 80 countries per year.", "Cashless billing service and coordination with national embassies and international insurance companies"],
+    "comments": ["Leading hospital in South Korea", "The South Korean government's Ministry of Education and Human Resources partly supervises management of the hospital.", "24-hour emergency contact service to respond promptly to emergency situations", "More than 30,000 patients from over 80 countries per year.", "Cashless billing service and coordination with national embassies and international insurance companies"],
     "hours": [
       {"day": "Monday","open":"9:00 AM - 5:30 PM"},
       {"day": "Tuesday","open": "9:00 AM - 5:30 PM"},
@@ -6992,7 +6992,7 @@
     "photoUrl": "https://www.jointreplacementsurgeryhospitalindia.com/hospital/apollo-images/apollo-hospital-image.jpg",
     "type": "private",
     "services": ["Cardiology", "Orthopedics", "Neurology", "Oncology", "Gastroenterology", "Urology", "Nephrology", "Robotic Surgery", "Bariatric Surgery"],
-    "comment": ["Multinational healthcare group headquartered in Bengaluru. It is the largest for-profit private hospital network in India, with a network of 71 owned and managed hospitals.", "The hospital is internationally recognized for clinical excellence and patient safety and caters to over 1,00,000 patients annually, including international medical travelers. It houses state-of-the-art diagnostics, operating rooms, and ICUs to handle complex treatments across specialties."],
+    "comments": ["Multinational healthcare group headquartered in Bengaluru. It is the largest for-profit private hospital network in India, with a network of 71 owned and managed hospitals.", "The hospital is internationally recognized for clinical excellence and patient safety and caters to over 1,00,000 patients annually, including international medical travelers. It houses state-of-the-art diagnostics, operating rooms, and ICUs to handle complex treatments across specialties."],
     "hours": [
         {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7014,7 +7014,7 @@
     "photoUrl": "https://uploads-ssl.webflow.com/6604aa5c50bdb3ab7413f2b5/665614d042d96dea0e6a4dbc_13.png",
     "type": "private",
     "services": ["Teleconsultation with our Doctors", "Book Appointment", "See Conditions and Treatments", "View Our Clinics and Centers", "Laboratory Services", "BI-IRB", "Healthcare to your home", "Refill Medicine", "Health Risk Assessment", "Bumrungrad Wallet"],
-    "comment": ["Thailand's top international hospital", "Bumrungrad International Hospital has been a global pioneer in providing world-class healthcare services and international patient support for nearly four decades", " One of the largest private hospitals in Southeast Asia, Bumrungrad International Hospital cares for over 1.1 million patients from more than 190 countries annually."],
+    "comments": ["Thailand's top international hospital", "Bumrungrad International Hospital has been a global pioneer in providing world-class healthcare services and international patient support for nearly four decades", " One of the largest private hospitals in Southeast Asia, Bumrungrad International Hospital cares for over 1.1 million patients from more than 190 countries annually."],
     "hours": [
         {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7036,7 +7036,7 @@
     "photoUrl": "https://ml.globenewswire.com/Resource/Download/83d04605-9a75-41cb-8947-81c858209621/king-faisal-specialist-hospital-and-research-centre-welcomes-new-deputy-ceo-amid-strategic-transformations.jpg",
     "type": "Public",
     "services": ["Oncology", "Organ Transplantations", "Cardiac Surgery", "Genetic Diseases", "In-Vitro Fertilization", "Interventional Radiology", "Children's Cancer Center & Research", "Urology", "Radiology", "Anesthology", "Neuroscience", "Orthopaedic Surgery", "Dentistry", "Obstetrics and Gynaecology", "Pediatrics"],
-    "comment": ["Saudi Arabia's leading referral hospital", "KFSH&RC is a leading healthcare, research, and education institution recognized throughout Saudi Arabia and the Middle East."],
+    "comments": ["Saudi Arabia's leading referral hospital", "KFSH&RC is a leading healthcare, research, and education institution recognized throughout Saudi Arabia and the Middle East."],
     "hours": [
         {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7058,7 +7058,7 @@
     "photoUrl": "https://eng.amc.seoul.kr/gb/images/lang/main/img_ags.png",
     "type": "Private",
     "services": ["Acute Care Surgery", "Anesthesiology and Pain Medicine", "Neurology", "Cardiology", "Hepatobiliary and Pancreatic Surgery", "Dentistry", "Gastroenterology", "Dermatology", "Infectious Diseases", "Gastrointestinal Surgery", "Neurology", "Nephrology", "Neurosurgery", "Kidney and Pancreas Transplantation", "Ophthalmology", "Oncology", "Psychiatry", "Liver Transplantation and Hepatobiliary Surgery", "Ophthalmology", "Orthopaedic Surgery", "Urology", "Radiation oncology", "Thoracic and Cardiovascular Surgery", "Rheumatology", "Rehabilation Medicine", "Pathology", "Plastic surgery", "Vascular Surgery"],
-    "comment": ["AMC is the largest and most advanced hospital in South Korea and is considered a global leader in specialized medical care", "Asan Medical Center is the parent hospital of the eight hospitals under the ASAN foundation.", "The hospital complex occupies approximately 85,000 square meters and has more than 2,700 patient beds. It treats millions of outpatients and inpatients annually."],
+    "comments": ["AMC is the largest and most advanced hospital in South Korea and is considered a global leader in specialized medical care", "Asan Medical Center is the parent hospital of the eight hospitals under the ASAN foundation.", "The hospital complex occupies approximately 85,000 square meters and has more than 2,700 patient beds. It treats millions of outpatients and inpatients annually."],
     "hours": [
           {"day": "Monday","open":"9:00 AM - 5:30 PM"},
       {"day": "Tuesday","open": "9:00 AM - 5:30 PM"},
@@ -7078,7 +7078,7 @@
     "photoUrl": "https://static.ffx.io/images/$zoom_0.194%2C$multiply_1.3975%2C$ratio_1.776846%2C$width_1059%2C$x_0%2C$y_95/t_crop_custom/q_62%2Cf_auto/b246d01fc0f7f57397db46095c10e9cb1c569957",
     "type": "Public",
     "services": ["Emergency, trauma & intensive care", "Alfred Cancer", "Aged care", "Mental health", "Diagnosis & investigation", "Medical & surgical", "Rehabilitation", "Specialised support services", "Community services"],
-    "comment": ["Named in honor of Prince Alfred, Duke of Edinburgh, who survived an assassination attempt during a visit to Australia in 1868.", "The hospital is one of two major adult trauma centres in Victoria and houses the largest intensive care unit in Australia.", "Provides a comprehensive range of specialist medical and surgical services including Australia’s busiest trauma centre.", "Operate's one of the largest and most advanced intensive care units (ICU) in the southern hemisphere"],
+    "comments": ["Named in honor of Prince Alfred, Duke of Edinburgh, who survived an assassination attempt during a visit to Australia in 1868.", "The hospital is one of two major adult trauma centres in Victoria and houses the largest intensive care unit in Australia.", "Provides a comprehensive range of specialist medical and surgical services including Australia’s busiest trauma centre.", "Operate's one of the largest and most advanced intensive care units (ICU) in the southern hemisphere"],
     "hours": [
        {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7099,7 +7099,7 @@
         "photoUrl": "https://www.gsh.co.za/files/2011/11/Groote-Schuur-Hospital.jpg",
         "type": "Public",
         "services": ["Paediatrics (Endocrinology)", "Dermatology", "Neurology", "General Surgery", "Ophthalmology", "Obstetrics and Gynaecology", "Psychiatry", "Cardio-thoracic Surgery", "Trauma", "Orthopaedic Surgery", "Emergency (Medical)", "Infectious diseases/HIV Medicine", "Neurosurgery", "Radiology", "Physiotherapy and Occupational Therapy", "Otolaryngology (ENT)", "Forensic Medicine", "Plastic surgery"],
-        "comment": ["Famous for the first human heart transplant", "The hospital is internationally renowned as the training ground for some of South Africa's best doctors, surgeons and nurses.", "Groote Schuur is Dutch for 'Great Barn' and is named after the original Groote Schuur estate laid out by Dutch settlers when the city of Cape Town was founded in the 17th century."],
+        "comments": ["Famous for the first human heart transplant", "The hospital is internationally renowned as the training ground for some of South Africa's best doctors, surgeons and nurses.", "Groote Schuur is Dutch for 'Great Barn' and is named after the original Groote Schuur estate laid out by Dutch settlers when the city of Cape Town was founded in the 17th century."],
         "hours": [
                {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7120,7 +7120,7 @@
         "photoUrl": "https://www.wits.ac.za/media/wits-university/faculties-and-schools/health-sciences/clinical-medicine/images/ChrisHani.png",
         "type": "Public",
         "services": ["Allied Medical Services", "Anesthesiology", "Internal Medicine", "Blood Bank", "Burn Units", "Obstetrics and Gynaecology", "ICU (Intensive Care Unit)", "Surgery", "Orthopaedic Surgery", "Radiology & Radiography", "Pediatrics"],
-        "comment": ["The World's 3rd Biggest Hospital", "The hospital has a capacity of around 3,400 beds, employs over 6,700 staff members, and features approximately 10 km of corridors.", "Originally known as Baragwanath Hospital, it was renamed in 1993 to honor Chris Hani, an anti-apartheid activist who was assassinated earlier that year.", "It serves as a major teaching hospital for the University of the Witwatersrand Medical School."],
+        "comments": ["The World's 3rd Biggest Hospital", "The hospital has a capacity of around 3,400 beds, employs over 6,700 staff members, and features approximately 10 km of corridors.", "Originally known as Baragwanath Hospital, it was renamed in 1993 to honor Chris Hani, an anti-apartheid activist who was assassinated earlier that year.", "It serves as a major teaching hospital for the University of the Witwatersrand Medical School."],
         "hours": [
                {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7142,7 +7142,7 @@
         "photoUrl": "https://cisp.cachefly.net/assets/articles/images/resized/0001093826_resized_tygerberghospital21022.jpg",
         "type": "Public",
         "services": ["26 bed Private Ward", "Oncology", "Clinical Nutrition and Vitaminology Service.", "Cochlear Implant Unit.", "Endocrinology", "In-Vitro Fertilization", "Hyperbaric Oxygen Facility.", "Kidney Transplant", "Neuropsychiatry", "Neonatal Intensive Care Unit", "Open Heart Surgery Unit", "Tuberculosis Clinical Work Unit", "Only Adult Burns Unit", "Mental health"],
-        "comment": ["Largest hospital in the Western Cape and the second largest hospital in South Africa.", "Each year more than 107 215 patients are admitted in Tygerberg Hospital, while more than 492 670 patients visit Tygerberg Hospital annually.", "To become a patient at Tygerberg, a person must be referred by a primary or secondary health care facility."],
+        "comments": ["Largest hospital in the Western Cape and the second largest hospital in South Africa.", "Each year more than 107 215 patients are admitted in Tygerberg Hospital, while more than 492 670 patients visit Tygerberg Hospital annually.", "To become a patient at Tygerberg, a person must be referred by a primary or secondary health care facility."],
         "hours": [
                {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7163,7 +7163,7 @@
         "photoUrl": "https://nuflow.co.za/wp-content/uploads/2019/04/Netcare-Milpark.jpg",
         "type": "Private",
         "services": ["Cardiology", "Dermatology", "Plastic and reconstructive surgery", "General Surgery", "Emergency Medicine", "ENT Surgery", "Internal Medicine", "Neurology", "Ophthalmology", "Hyperbaric Medicine", "Neurosurgery", "Orthopaedics", "Maxillo- facial surgery", "Vascular Surgery", "Psychiatry", "Urology", "Specialised Burns Centre"],
-        "comment": ["Nelson Mandela was treated at the hospital for an acute respiratory infection in January 2011 and underwent a laparoscopy there in February 2012.", "The first private facility in South Africa, and one of only three to date, to achieve level 1 accreditation by the Trauma Society of South Africa.", "The hospital also houses the only Gamma Knife unit in South Africa"],
+        "comments": ["Nelson Mandela was treated at the hospital for an acute respiratory infection in January 2011 and underwent a laparoscopy there in February 2012.", "The first private facility in South Africa, and one of only three to date, to achieve level 1 accreditation by the Trauma Society of South Africa.", "The hospital also houses the only Gamma Knife unit in South Africa"],
         "hours": [
                {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7184,7 +7184,7 @@
 "photoUrl": "https://www.swissmedical.net/site/assets/files/1151/mcc-pkb-header-screen-1300x450-margin-35.1300x0.webp",
 "type":"private",
 "services":["Robotic Heart Bypass Surgery", " Hip Replacement Surgery", "Balloon Mitral Valvuloplasty", "Kidney Stones", "Facelift Surgery", "Heart Bypass Surgery", "Bentall Procedure", "Atherosclerosis Treatment", "Colposcopy", "Parkinson's Treatment"],
-"comment":["As the first Swiss hospital certified by ISO 9002, it prioritizes delivering the highest quality services, meeting the standards of ISO 9001:2015", "Since February 2022, Privatklinik Bethanien has been equipped with a Papillon 50 device", "A prominent multi-specialty hospital in Switzerland with 470 beds, the hospital serves over 5,000 patients annually, with approximately 500 births in the maternity wards."],
+"comments":["As the first Swiss hospital certified by ISO 9002, it prioritizes delivering the highest quality services, meeting the standards of ISO 9001:2015", "Since February 2022, Privatklinik Bethanien has been equipped with a Papillon 50 device", "A prominent multi-specialty hospital in Switzerland with 470 beds, the hospital serves over 5,000 patients annually, with approximately 500 births in the maternity wards."],
 "hours": [
      {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7205,7 +7205,7 @@
 "photoUrl":"https://mediclinic.scene7.com/is/image/mediclinic/hirslanden-aussenansicht-klinik:4-1?wid=1920&hei=480&fit=fit%2C1&_ck=1638368388226",
 "type": "private",
 "services":["Heart Bypass Surgery", "Heart Valve Repair", "Scoliosis Spine Surgery", "Hip Replacement Surgery", "Endoscopic Sinus", "Spine Surgery", "Gynecology & Obstetrics", "Hematopoietic Stem Cell Transplantation (HSCT)"],
-"comment":["Founded in 212 it operates as a private medical facility offering modern infrastructure and medical expertise accessible to patients across all insurance classes."],
+"comments":["Founded in 212 it operates as a private medical facility offering modern infrastructure and medical expertise accessible to patients across all insurance classes."],
 "hours":[
  {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7226,7 +7226,7 @@
 "photoUrl":"https://rare-liver.eu/mediatypes/location-detail/aou_composit.jpg",
 "type": "Public",
 "services":["Orthopedics and Robotics", "Oncology", "Cardiology and Cardiac Surgery", "Internal Medicine", "Emergency Medicine"],
-"comment":["The Gastroenterology and Hepatology Division of Modena University Hospital is a national reference center for diagnosis and treatment of liver diseases"],
+"comments":["The Gastroenterology and Hepatology Division of Modena University Hospital is a national reference center for diagnosis and treatment of liver diseases"],
 "hours":[
  {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7247,7 +7247,7 @@
     "photoUrl": "https://oxysystems.co.uk/wp-content/uploads/2024/06/Korle-Bu.jpg",
 "type": "Public",
     "services": ["Accident & Emergency Centre", "Department of Child Health ", "Gynaecology and Obstetrics", "Surgery", "Dental", "Physiotherapy", "Pharmacy", "Eye Centre", "Medicine & Therapeutics", "Nutrition & Dietetics", "Polyclinic & Family Medicine", "Trauma & Orthopaedics", "Cardiothoracic Centre", "Radiology", "ENT (Ear, Nose & Throat) Centre", "Psychiatry" ],
-    "comment": ["It is currently the third largest hospital in Africa and the leading national referral centre in Ghana.", "Korle Bu, which means the valley of the Korle lagoon, was established as a General Hospital to address the health needs of the indigenous people under Sir Gordon Guggisberg’s administration,the then Governor of the Gold Coast."],
+    "comments": ["It is currently the third largest hospital in Africa and the leading national referral centre in Ghana.", "Korle Bu, which means the valley of the Korle lagoon, was established as a General Hospital to address the health needs of the indigenous people under Sir Gordon Guggisberg’s administration,the then Governor of the Gold Coast."],
 "hours":[
  {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7268,7 +7268,7 @@
     "photoUrl": "https://accrastreetjournal.com/wp-content/uploads/2024/11/37-Military-Hospital-Accra-Street-Journal.jpg",
     "type": "Military",
     "services": ["Accident & Emergency", "Dental Division", "Public Health Division", "Medical Division", "Obstetrics & Gynaecology", "Pathology", "Paediatric Division", "Pharmacy Division", "Radio Diagnosis, Radiography & X-Ray" ,"Surgical Division", "Veterinary Division", "Health Training School (Medical Education)", "Renal Dialysis Unit[13]", "Ophthalmology Division", "Ear,Nose and Throat Division"],
-    "comment": ["Well-known military hospital", "It was named 37 because it was the 37th military hospital to be built in the British colony of West Africa.", " As a military hospital, its primary objective is to provide health care to military personnel and their families, civilian employees of the Ministry of Defence and their families and ex-service personnel, all of whom are grouped as Entitled Personnel."],
+    "comments": ["Well-known military hospital", "It was named 37 because it was the 37th military hospital to be built in the British colony of West Africa.", " As a military hospital, its primary objective is to provide health care to military personnel and their families, civilian employees of the Ministry of Defence and their families and ex-service personnel, all of whom are grouped as Entitled Personnel."],
     "hours": [
     {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7289,7 +7289,7 @@
     "photoUrl": "https://askannie.tortoisepath.com/wp-content/uploads/2024/06/Tema-General-Hospital-Tema-Ghana-AskAnnie-TortoisePathcom-2-1536x864.jpeg",
     "type": "Public",
     "services": ["General Surgery", "Paediatrics", "Obstetrics", "Theatre", "Accident & Emergency", "Gynecological", "Eye Centre", "Dental", "Dermatology", "Sickle Cell", "Blood Bank", "Radiology", "Pharmacy", "Physiotherapy", "Ultrasound Scan", "Hypertensive", "Chest", "Anaesthetic"],
-    "comment": ["Main hospital serving Tema and surrounding areas", "Tema General Hospital is a referral hospital that provides excellent clinical services with research orientation, excellence and innovation."],
+    "comments": ["Main hospital serving Tema and surrounding areas", "Tema General Hospital is a referral hospital that provides excellent clinical services with research orientation, excellence and innovation."],
     "hours": [{"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
       {"day":"Wednesday","open":"24h"},
@@ -7308,7 +7308,7 @@
     "photoUrl": "https://scontent-los2-1.xx.fbcdn.net/v/t39.30808-6/475282106_922330053405865_4702215375054044992_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=Msy2T9efrmkQ7kNvwH244rr&_nc_oc=AdmqGgBbti4RTiJSDmt9pefc0BhGgjA53NPmRp5-p36xIK4VbXSKB16BOmQGbxicU3s&_nc_zt=23&_nc_ht=scontent-los2-1.xx&_nc_gid=JCvgz7PF2jBn6W_DJzb81w&oh=00_AfeheZum8tBu6HeB9_d_eVrh_rO7F6P0eDcd7MGIA_e6PA&oe=68FEE363",
     "type": "Public",
     "services": ["Obstetrics & Gynaecology", "General Surgery", "Paediatrics", "Internal Medicine", "Medical Imaging","Pharmacy", "Diabetes", "Endoscopy", "Laboratory", "Renal Dialysis", "Eye"],
-    "comment": ["Regional referral hospital in the Eastern Region", "The hospital's emergency ward was renovated in 2020 to make room for more patients during the COVID-19 pandemic."],
+    "comments": ["Regional referral hospital in the Eastern Region", "The hospital's emergency ward was renovated in 2020 to make room for more patients during the COVID-19 pandemic."],
     "hours": [{"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
       {"day":"Wednesday","open":"24h"},
@@ -7327,7 +7327,7 @@
       "photoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tamale_Teaching_Hospital_4.jpg/1200px-Tamale_Teaching_Hospital_4.jpg",
       "type": "Teaching",
       "services": ["Emergency Room", "Inpatient Hospitalization", "Outpatient Clinic", "Surgical Procedures", "Laboratory & Diagnostic Imaging", "Maternity and Delivery", "Pediatric Care", "Mental Health", "Public Health"],
-      "comment": ["Major teaching hospital in the Northern Region", "The Tamale Teaching Hospital (TTH) was commissioned in 1974 as a Regional Hospital to provide health care services to the people of Tamale and its environs."],
+      "comments": ["Major teaching hospital in the Northern Region", "The Tamale Teaching Hospital (TTH) was commissioned in 1974 as a Regional Hospital to provide health care services to the people of Tamale and its environs."],
       "hours": [{"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
       {"day":"Wednesday","open":"24h"},
@@ -7346,7 +7346,7 @@
     "photoUrl": "https://sth.gov.gh/build/img/hospital/front2.jpg",
     "type": "Public",
     "services": ["Obstetrics & Gynaecology", "Paediatrics", "Imaging", "Laboratory", "Phamaceutical", "Accident & Emergency", "General Clinic", "Specialised Care", "Public Health", "Rehabilitation", "Surgical", "Allied Surgery", "Nursing"],
-    "comment": ["The Regional Hospital was established on 11th May 1927 by the then Colonial Masters as a Hospital for the people of Western Ashanti.", " Currently the hospital has 350 beds and it is strategically located to provide advanced health services to the people of the Bono, Ahafo, Bono East regions beyond including clients from Cote d'ivoire and Burkina Faso."],
+    "comments": ["The Regional Hospital was established on 11th May 1927 by the then Colonial Masters as a Hospital for the people of Western Ashanti.", " Currently the hospital has 350 beds and it is strategically located to provide advanced health services to the people of the Bono, Ahafo, Bono East regions beyond including clients from Cote d'ivoire and Burkina Faso."],
     "hours": [{"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
       {"day":"Wednesday","open":"24h"},
@@ -7365,7 +7365,7 @@
     "photoUrl": "http://www.ccthghana.org/wp-content/uploads/2015/02/afb4.jpg",
     "type": "Public",
     "services": ["GENERAL CLINIC CARE", "SPECIALIZED CLINIC CARE", "Public Health", "Surgical", "DEENT", "REHABILITATION", "Paediatrics", "Obstetrics & Gynaecology", "Imaging", "Laboratory", "Gynecological Oncology"],
-    "comment": ["Major teaching hospital in the Central Region", "A World-Class Leader in Tertiary Health Care, Medical Education and Research", "Cape Coast Teaching Hospital is currently a 400 bed capacity referral Hospital"],
+    "comments": ["Major teaching hospital in the Central Region", "A World-Class Leader in Tertiary Health Care, Medical Education and Research", "Cape Coast Teaching Hospital is currently a 400 bed capacity referral Hospital"],
     "hours": [{"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
       {"day":"Wednesday","open":"24h"},
@@ -7384,7 +7384,7 @@
     "photoUrl": "https://citinewsroom.com/wp-content/uploads/2019/04/Ho-Teaching-Hospital-1024x607.jpg",
     "type": "Public",
     "services": ["Internal Medicine", "Surgery", "Obstetrics & Gynaecology", "Public Health", "Child Health"],
-    "comment": ["The hospital is patronised by clients from the Republic of Togo, Benin and the Federal Republic of Nigeria.", "The Hospital is poised to serve as the premium Medical Tourist centre with Innovative Tertiary Health Care, Medical Education and Research."],
+    "comments": ["The hospital is patronised by clients from the Republic of Togo, Benin and the Federal Republic of Nigeria.", "The Hospital is poised to serve as the premium Medical Tourist centre with Innovative Tertiary Health Care, Medical Education and Research."],
     "hours": [{"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
       {"day":"Wednesday","open":"24h"},
@@ -7403,7 +7403,7 @@
     "photoUrl": "https://www.enrh.org.gh/wp-content/uploads/Effia-Nkwanta-594x424-1.jpg",
     "type": "Public",
     "services": ["Anaesthetic", "Haematology-Oncology", "Dentistry & Maxillofacial Surgery", "Nephrology", "Internal Medicine", "Emergency / Disaster Medicine", "Ophthalmology", "Orthopaedics", "Infectious & Tropical Diseases", "Paediatrics", "Psychiatry", "Otolaryngology", "Surgery", "Urology", "Pathology & Laboratory Medicine", "Physical Medicine & Rehabilitation", "Radiology & Nuclear Medicine", "Women's Health, Obstetrics & Gynecology"],
-    "comment": ["This is the only public secondary level health facility in the Western and Western North Regions of Ghana.", "Multi-specialty hospital with more than 300 beds and 60 doctors,"],
+    "comments": ["This is the only public secondary level health facility in the Western and Western North Regions of Ghana.", "Multi-specialty hospital with more than 300 beds and 60 doctors,"],
     "hours": [{"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
       {"day":"Wednesday","open":"24h"},
@@ -7422,7 +7422,7 @@
     "photoUrl": "https://www.ghanayello.com/img/gh/s/_1616668470-72-winneba-municipal-hospital.jpg",
     "type": "Public",
     "services": ["Emergency", "Surgical", "DIAGNOSTIC", "Outpatient / Inpatient", "Pharmacy", "DISEASE CONTROL / CHEST", "AMBULANCE", "COUNCELLING", "MOTHER'S HOSTEL", "WELLNESS CLINIC", "FAMILY PLANNING"],
-    "comment": ["Providing a comprehensive, accessible and high quality care which is client centered"],
+    "comments": ["Providing a comprehensive, accessible and high quality care which is client centered"],
     "hours": [{"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
       {"day":"Wednesday","open":"24h"},
@@ -7441,7 +7441,7 @@
     "photoUrl": "https://www.a1radioonline.com/wp-content/uploads/2022/10/Bawku-Presby-Hospital.jpg",
     "type": "Missionary",
     "services": ["Obstetrics & Gynaecology", "General Surgery", "ENT (Ear, Nose & Throat)", "Orthopedics and Physiotherapy", "Paediatrics", "FAMILY PLANNING", "Dental"],
-    "comment": ["NHIS accredited Presbyterian hospital", "Basic health services, which are community driven and accessible to all manner of persons", "331-bed facility managed by the Presbyterian Church"],
+    "comments": ["NHIS accredited Presbyterian hospital", "Basic health services, which are community driven and accessible to all manner of persons", "331-bed facility managed by the Presbyterian Church"],
     "hours": [{"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
       {"day":"Wednesday","open":"24h"},
@@ -7460,7 +7460,7 @@
     "photoUrl": "https://scontent-los2-1.xx.fbcdn.net/v/t1.6435-9/109583891_762369794536717_7105654114161645802_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=-Mj5abZdr2sQ7kNvwGcsCxn&_nc_oc=AdllbvjUTu7edygSxVuZbAgiIZJEAW85Lsa4_h6_NSPZ5f15FgNwF0tYnXVw8RbYWkU&_nc_zt=23&_nc_ht=scontent-los2-1.xx&_nc_gid=dRB6fbrGDfrmg8-a0bhR_w&oh=00_AffXVRNApnBqDbwc9UUoh6Q-5uBjdLUT1nIW2ymiJUAasA&oe=6920D16C",
     "type": "Primary",
     "services": ["Emergency", "General Medical Care", "Maternal and Child Health"],
-    "comment": ["Serves as the primary hospital for residents of Ejura and the surrounding communities. "],
+    "comments": ["Serves as the primary hospital for residents of Ejura and the surrounding communities. "],
     "hours": [{"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
       {"day":"Wednesday","open":"24h"},
@@ -7479,7 +7479,7 @@
 "photoUrl":"https://ashantidevelopment.org/wp-content/uploads/2022/02/IMG-20211204-WA0004-488x650.jpg",
 "type": "Primary",
 "services": ["Emergency", "Antenatal care", "Maternity", "Mothers & Babies' Unit", "Outpatient and inpatient services"],
-    "comment": ["An academic paper notes the hospital has provided free maternal care and improved maternal enrollment."],
+    "comments": ["An academic paper notes the hospital has provided free maternal care and improved maternal enrollment."],
     "hours": [
      {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7500,7 +7500,7 @@
     "photoUrl": "https://hospitals.aku.edu/nairobi/PublishingImages/heartt%20cancer%20img1.jpg",
     "type": "Private",
     "services": ["​Critical Care", "Cardiology", "Oncology", "Advanced diagnostics"],
-    "comment": ["first in East Africa to hold JCI accreditation", "Patient Welfare Programme off​ers financial assistance to uninsured and low-income patients who would otherwise be unable to afford the medical care they require.​"],
+    "comments": ["first in East Africa to hold JCI accreditation", "Patient Welfare Programme off​ers financial assistance to uninsured and low-income patients who would otherwise be unable to afford the medical care they require.​"],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7522,7 +7522,7 @@
     "photoUrl": "https://ichef.bbci.co.uk/news/1024/cpsprodpb/E063/production/_100434475_gettyimages-927562894.jpg.webp",
     "type": "public",
     "services": ["Paediatrics", "Dermatology", "Cancer Treatment Centre", "Nutrition", "Endoscopy", "Haemophilia", "Respiratory infectious diseases", "Mental Health", "Renal", "Nursing", "Surgical", "Pharmacy"],
-    "comment": ["Kenyatta National Hospital is the oldest hospital in Nairobi", "It is the largest hospital in the country and East Africa as well."] ,
+    "comments": ["Kenyatta National Hospital is the oldest hospital in Nairobi", "It is the largest hospital in the country and East Africa as well."] ,
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7543,7 +7543,7 @@
     "photoUrl": "https://www.turnerandtownsend.com/media/hv5jmbsm/aar-hospital-kenya-2560px-x-1440px.webp?rxy=0.5683641370531006,0.5374067871144004&width=1280&height=512&v=1dac5747e7ab4a0",
     "type": "Private",
     "services": ["Radiology & Imaging", "Dental", "Obstetrics & Gynaecology", "Laboratory", "Emergency Care", "Renal Unit / Dialysis", "Nutrition", "Rehabilitation", "Critical Care (ICU, NICU & HDU)", "Surgical", "Pharmacy", "Executive Clinics"],
-    "comment": ["140-bed private hospital in Nairobi", "Within each ward, the rooms are divided into a single bed, 2-bed, 3-beds, and the largest 4-bed units all ensuite."] ,
+    "comments": ["140-bed private hospital in Nairobi", "Within each ward, the rooms are divided into a single bed, 2-bed, 3-beds, and the largest 4-bed units all ensuite."] ,
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7564,7 +7564,7 @@
     "photoUrl": "https://scontent-los2-1.xx.fbcdn.net/v/t1.6435-9/119511465_3321035814651431_4198414232340206191_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=0WXWKlXRAg8Q7kNvwFiMYYY&_nc_oc=AdlLmx877nyyAnFlKEqPhN1JjNybQ4xBU0sz3Y8EfNUWxOSOyDTEM45MustIcpruxaw&_nc_zt=23&_nc_ht=scontent-los2-1.xx&_nc_gid=H5t5I-bpm1RrGnwciWGxnA&oh=00_Afd1b7uogT2nzmYcXVv2ZG_ZlG22B5-yA1GfdM913z5P6A&oe=6920EF2A",
     "type": "private",
     "services": ["Well Person Clinic", "Pediatrics", "Antenatal", "Radiology", "Pharmacy", "Physiotherapy", "Renal Unit", "Day Care Center", "Counselling", "Accident & Emergency", "Nutrition", "Oncology", "Mater Comprehensive Care Clinic (MCCC)", "Sexual Gender Based Violence(SGBV) Survivor Center & PITC", "Pastoral Care and Missions", "Nursing School"],
-    "comment": ["Well-known private hospital in Kenya", "A 164- bed tertiary-level facility, widely recognised for its maternity and cardiac care services.", "General physicians in Nairobi and Specialist doctors in Kenya provide multidisciplinary medical services at Mater Misericordiae Hospital."] ,
+    "comments": ["Well-known private hospital in Kenya", "A 164- bed tertiary-level facility, widely recognised for its maternity and cardiac care services.", "General physicians in Nairobi and Specialist doctors in Kenya provide multidisciplinary medical services at Mater Misericordiae Hospital."] ,
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7585,7 +7585,7 @@
     "photoUrl": "https://www.n1.ma/images/clinique_4538.jpg",
     "type": "private",
     "services": ["Anesthesiologist-resuscitator", "Cosmetic and plastic surgeon", "Andrologist", "Hand surgeon", "Gastroenterologist", "Gynecologist", "Obstetrician-gynecologist", "Gerontologist - Geriatrician", "Hepatologist", "Cosmetic doctor", "General practitioner", "Neurologist", "Pediatric Neurologist", "Ophthalmologist", "Osteopath", "Proctologist","Pediatrician", "Sexologist", "Traumatologist-orthopedist", "Urologist", "Pediatric Urologist"],
-    "comment": ["Private clinic listed among international hospitals in Africa"] ,
+    "comments": ["Private clinic listed among international hospitals in Africa"] ,
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7606,7 +7606,7 @@
     "photoUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqdQzWCyDFXL8ptEg4_IHpeOsEWq2kvRLA2ZsQoyvfYAJHdv3oOZfCH46w0rh-Z2rFJDh7z6Xa80sNtNmj2LYzLTiavz3oXI7A4iiRw-ZXF1ysudJoEz82tbnaw32g3IPnIS5Kz=w243-h406-n-k-no-nu",
     "type": "Private",
     "services": ["Surgery", "Medicine", "Child Birth"],
-    "comment": ["Well-known private clinic in Casablanca"] ,
+    "comments": ["Well-known private clinic in Casablanca"] ,
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7627,7 +7627,7 @@
     "photoUrl": "https://imc.eventyonline.com/wp-content/uploads/2024/05/20161205_1c00551_fingers_01-2048x1365.jpg",
     "type": "Military",
     "services": ["Cancer Centre", "Geriatric medicine", "Cardiac Surgery", "Transplantation", "LG & Immunology Center", "Eye care Center", "Gastroenterology", "Endoscopy", "Neurology", "Neurosurgery", "Obstetrics & Gynaecology", "Urology", "Vascular Surgery", " Urodynamics unit", "Plastic surgery", "ENT", "Paediatrics Center & Neonatal ICU"],
-    "comment": ["Leading private hospital in Egypt", "One of the largest tertiary health care hospitals in the Middle East.", "Was established by the Egyptian Armed Forces with American expertise and cooperation from the US Army Corps of Engineers.", "The IMC serves both military personnel and the general public, including international patients. It has also received JCI accreditation, indicating that it operates at international standards for patient care."] ,
+    "comments": ["Leading private hospital in Egypt", "One of the largest tertiary health care hospitals in the Middle East.", "Was established by the Egyptian Armed Forces with American expertise and cooperation from the US Army Corps of Engineers.", "The IMC serves both military personnel and the general public, including international patients. It has also received JCI accreditation, indicating that it operates at international standards for patient care."] ,
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7648,7 +7648,7 @@
     "photoUrl": "https://www.medpharo.com/storage/2023/02/27/misr-international-hospentrance-1677482119.jpg",
     "type": "Private",
     "services": ["Emergency", "Neurology", "Intensive care units", "Internal Medicine", "Surgery", "Dental and maxillofacial surgery", "Cardiology", "Physiotherapy", "Radiology", "Obstetrics & Gynaecology", "ENT", "Nutrition", "Dermatology", "Ophthalmology", "Pediatrics and pediatric surgery", "Anesthesiology"],
-    "comment": ["A renowned hospital that provides quality medical care to patients from all over Egypt and the Middle East.", "The hospital has 10 operating rooms equipped with state-of-the-art medical technology. It is provided with the latest western scientific equipment from Europe and the United States."],
+    "comments": ["A renowned hospital that provides quality medical care to patients from all over Egypt and the Middle East.", "The hospital has 10 operating rooms equipped with state-of-the-art medical technology. It is provided with the latest western scientific equipment from Europe and the United States."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7669,7 +7669,7 @@
     "photoUrl": "https://www.climedweb.com/wp-content/uploads/2021/05/DSC_3494.jpg",
     "type": "Private",
     "services": ["IMAGING (Ultrasounds and X-rays)", "Internal Medicine", "General Surgery", "ENT", "Orthopaedics", "Paediatrics", "Geriatrics", "Dermatology", "Laboratory", "STOMATOLOGY", "Gynaecology and Obstetrics", "Urology", "Neurology", "Rheumatology"],
-    "comment": ["A well-established institution with over 20 years of experience in the Angolan market, providing both private and corporate services", "A diverse team comprised of both Angolan and international employees"] ,
+    "comments": ["A well-established institution with over 20 years of experience in the Angolan market, providing both private and corporate services", "A diverse team comprised of both Angolan and international employees"] ,
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7690,7 +7690,7 @@
     "photoUrl": "https://cdn.getforge.com/orintl.com/1633544230/images/main-bot2.jpg",
     "type": "Private",
     "services": ["Chemotherapy & Nuclear Medicine", "Cardiac Catheterisation Laboratory", "Dialysis Unit", "High-dose Iodine Treatment", "Vascular Surgery", "Cardiothoracic Surgery", "Paediatrics", "General Medical and Surgical Disciplines"],
-    "comment": ["In addition to the above, Bokamoso Private Hospital is also the only hospital outside of the USA to receive Heart Failure accreditation"] ,
+    "comments": ["In addition to the above, Bokamoso Private Hospital is also the only hospital outside of the USA to receive Heart Failure accreditation"] ,
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7711,7 +7711,7 @@
     "photoUrl": "https://pbs.twimg.com/media/GGPH33zW4AAUfNn?format=jpg&name=900x900",
     "type": "Public",
     "services": ["Referral & General Care", "Cardiac surgeries", "Maternal care", "Emergency department"],
-    "comment": ["The hospital has 200 beds and gives medical services to people from all over Eritrea with critical condition", "The hospital frequently collaborates with international medical experts from countries like Italy and Germany to conduct specialized surgeries and provide training.", "The Hospital stands as a beacon of healthcare excellence in Eritrea, fostering a culture of research, education, and patient-centered care."] ,
+    "comments": ["The hospital has 200 beds and gives medical services to people from all over Eritrea with critical condition", "The hospital frequently collaborates with international medical experts from countries like Italy and Germany to conduct specialized surgeries and provide training.", "The Hospital stands as a beacon of healthcare excellence in Eritrea, fostering a culture of research, education, and patient-centered care."] ,
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7732,7 +7732,7 @@
     "photoUrl": "https://hnniamey.wordpress.com/wp-content/uploads/2020/08/img-20200218-wa0023.jpg",
     "type": "Public",
     "services": ["General Medicine", "Radiology", "Psychiatry", "Neurosurgery", "Cardiology", "Surgical", "Ophthalmology", "Otolaryngology", "Dermatology", "Obstetrics & Gynaecology"],
-    "comment": ["This is Niamey's largest hospital, with all branches of medicine. Resources are often lacking, despite the dedication of its staff.", "It has 244 beds and was founded in 1922."],
+    "comments": ["This is Niamey's largest hospital, with all branches of medicine. Resources are often lacking, despite the dedication of its staff.", "It has 244 beds and was founded in 1922."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7753,7 +7753,7 @@
     "photoUrl": "https://info.health.nz/assets/Locations/Auckland/Auckland-City-Hospital/auckland-city-hospital__ScaleWidthWzk2Nl0_ExtRewriteWyJqcGciLCJ3ZWJwIl0.webp",
     "type": "Public",
     "services": ["Emergency", "Children’s hospital", "Tertiary birthing unit", "Mental Health", "Cardiology", "Anaesthesia", "Neurology", "Orthopaedics", "Neurosurgery", "Gynaecology", "Haematology", "Gastroenterology","Infectious Diseases"],
-    "comment": ["New Zealand's largest public hospital as well as one of the oldest medical facilities in the country"],
+    "comments": ["New Zealand's largest public hospital as well as one of the oldest medical facilities in the country"],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7775,7 +7775,7 @@
     "photoUrl": "https://thermh.imgix.net/files/images/Places/main-entrance.jpg?ar=2:1.2&fit=crop&width=1000&crop=faces,center&auto=compress,format",
     "type": "Public",
     "services": ["Emergency", "Diabetes and Endocrinology", "Intensive Care", "Kidney Care", "Cardiology", "Major Trauma", "Medical Imaging", "Mental Health", "Metabolic Diseases", "Neurology and Stroke", "Victorian Infectious Disease", "Gastroenterology","Infectious Diseases"],
-    "comment": ["The hospital also cares and treats many people from regional and rural Victoria as well as interstate through a number of specialist services.", "It is the major trauma centre for northern and western Victoria and receives patients from as far as Tasmania and southern New South Wales."],
+    "comments": ["The hospital also cares and treats many people from regional and rural Victoria as well as interstate through a number of specialist services.", "It is the major trauma centre for northern and western Victoria and receives patients from as far as Tasmania and southern New South Wales."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7797,7 +7797,7 @@
     "photoUrl": "https://www.clevelandclinicabudhabi.ae/-/media/MicrosoftTeams-image-(13).png",
     "type": "Public",
     "services": ["Allergy and Immunology", "General Internal Medicine", "Bariatric Surgery", "Anaesthesiology", "Critical Care Medicine", "Neurological Restoration", "Head and Neck", "General Surgery", "Head and Neck", "Heart and Vascular", "Physical Therapy", "Rehabilitation","Rheumatology", "Eye Care", "Endoscopy", "Endocrinology", "Epilepsy", "Nuclear Medicine", "Pediatric Ophthalmology", "Emergency", "Digestive Diseases", "Transplant Center", "Surgical Oncology", "Speech Pathology", "Urology"],
-    "comment": ["The hospital is part of the Cleveland Clinic Foundation in the United States and offers advanced medical care across various specialties.", "It is known for its state-of-the-art facilities and highly skilled medical professionals."],
+    "comments": ["The hospital is part of the Cleveland Clinic Foundation in the United States and offers advanced medical care across various specialties.", "It is known for its state-of-the-art facilities and highly skilled medical professionals."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday","open":"24h"},
@@ -7819,7 +7819,7 @@
     "photoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Toronto_-_ON_-_Toronto_General_Hospital.jpg/1280px-Toronto_-_ON_-_Toronto_General_Hospital.jpg",
     "type": "Public",
     "services": ["Acute care", "Cardiac care", "Transplantation", "Surgery and Critical care", "Eating Disorder Program", "Labs and Test Services", "Inpatient Services", "Outpatient Clinics", "Emergency Care","Diagnostic Imaging", "Pharmacy Services"],
-    "comment": ["Toronto General Hospital (TGH) is leading the way in cardiac care, organ transplants and the treatment of complex patient needs."],
+    "comments": ["Toronto General Hospital (TGH) is leading the way in cardiac care, organ transplants and the treatment of complex patient needs."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -7841,7 +7841,7 @@
     "photoUrl": "https://assets.mayoclinic.org/content/dam/media/global/images/2024/03/08/photo_campus_arizona-campus-sunset_1296x555.jpg",
     "type": "Private",
     "services": ["Cardiology and heart surgery", "Cancer (oncology)", "Digestive diseases", "Endocrinology", "Neurology and neurosurgery", "Orthopaedics", "Transplant medicine and surgery", "Pulmonology", "Urology"],
-    "comment": ["Mayo Clinic is renowned for its comprehensive medical care, cutting-edge research, and education.", "It consistently ranks among the top hospitals in the United States and globally.", "Mayo Clinic Health System operates more than 70 smaller hospitals and clinics across Minnesota, Iowa, and Wisconsin, providing healthcare close to home in those communities"],
+    "comments": ["Mayo Clinic is renowned for its comprehensive medical care, cutting-edge research, and education.", "It consistently ranks among the top hospitals in the United States and globally.", "Mayo Clinic Health System operates more than 70 smaller hospitals and clinics across Minnesota, Iowa, and Wisconsin, providing healthcare close to home in those communities"],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -7863,7 +7863,7 @@
     "photoUrl": "https://cdn-attachments.timesofmalta.com/fa3b0416032aab3511cb6a69e576497e32e8de04-1733311779-6f6653d0-1920x1280.jpg",
     "type": "Private",
     "services": ["Cardiology", "Paediatric", "General Surgery", "Gastroenterology", "Weight Loss Surgery", "Orthopaedics", "Health Screening", "Pain Management", "Urology", "Gynacology", "ENT", "Dermatology"],
-    "comment": ["St Thomas Hospital Malta is a leading private healthcare institution in Malta, known for its state-of-the-art facilities and comprehensive medical services.", "St Thomas Hospital Malta is committed to providing high-quality patient care and has a team of experienced medical professionals dedicated to ensuring the well-being of their patients."],
+    "comments": ["St Thomas Hospital Malta is a leading private healthcare institution in Malta, known for its state-of-the-art facilities and comprehensive medical services.", "St Thomas Hospital Malta is committed to providing high-quality patient care and has a team of experienced medical professionals dedicated to ensuring the well-being of their patients."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -7885,7 +7885,7 @@
     "photoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Peking_Union_Medical_College_Hospital_Dongdan_Campus_2.jpg/1200px-Peking_Union_Medical_College_Hospital_Dongdan_Campus_2.jpg?20230527030636",
     "type": "Public",
     "services": ["Internal Medicine", "Obstetrics & Gynaecology", "General Surgery", "Paediatric", "ENT", "Stomatology", "Cardiology", "Gastroenterology", "Endoscopy", "Rheumatology", "Immunology", "Gynecological Endocrinology and Reproduction Center", "Cosmetic Medicine Center", "Health Management Center"],
-    "comment": ["PUMCH ranks No. 1 in the National Tertiary Public Hospital Performance Evaluation.", "It has two locations: the Dongdan Campus in Wangfujing, Dongcheng District and the Xidan Campus in Damucang Hutong, Xicheng District."],
+    "comments": ["PUMCH ranks No. 1 in the National Tertiary Public Hospital Performance Evaluation.", "It has two locations: the Dongdan Campus in Wangfujing, Dongcheng District and the Xidan Campus in Damucang Hutong, Xicheng District."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -7907,7 +7907,7 @@
     "photoUrl": "https://lfs.au-pida.org/imager/files/12911/Screenshot-2025-09-22-at-16.07.30_9a53617452ba80bd8ee75dd1b49df6f6.webp",
     "type": "Public",
     "services": ["Anaesthesiology", "Critical Care Medicine", "Gastroenterology", "Endocrinology", "Nephrology", "Neurology", "Cardiology", "Ophthalmology", "Pediatric surgery", "Clinical psychology", "Orthopaedic", "Radiology", "General surgery"],
-    "comment": ["It is the oldest and largest state hospital in Angola and considered the best health facility in the country and is an important historical monument.", "The hospital was originally built between 1865 and 1883 as a military hospital named Maria Pia, after the Queen Maria Pia of Savoy. It was renamed Hospital Josina Machel in 1977 to honor the Mozambican resistance fighter Josina Machel."],
+    "comments": ["It is the oldest and largest state hospital in Angola and considered the best health facility in the country and is an important historical monument.", "The hospital was originally built between 1865 and 1883 as a military hospital named Maria Pia, after the Queen Maria Pia of Savoy. It was renamed Hospital Josina Machel in 1977 to honor the Mozambican resistance fighter Josina Machel."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -7929,7 +7929,7 @@
     "photoUrl": "https://encyclosource.com/link/api/v1/image/ESDA/3FN4/3FN4L.jpg",
 "type": "Missionary",
     "services": ["Outpatient consultations", "Dental consultation", "Laboratory Service", "Pharmacy"],
-    "comment": ["The hospital has a long history of serving its community and remains a key medical facility in the southwestern region of Angola."],
+    "comments": ["The hospital has a long history of serving its community and remains a key medical facility in the southwestern region of Angola."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -7950,7 +7950,7 @@
     "photoUrl": "https://climatepromise.undp.org/sites/default/files/photo_stories/IMG_7475.jpeg",
     "type": "Public",
     "services": ["International General Practice", "Neurology", "Dermatology", "NeuroSurgery", "Infectious Diseases", "Urology", "Rehabilitative Medicine", "Hand Surgery", "Cardiology", "Orthopedic Surgery", "Endocrinology", "General Surgery", "Sports Medicine", "Nephrology", "Rheumatology", "Gastroenterology", "Oncology", "Integrated TCM and Western Medicine", "Hematology", "Cardiothoracic Surgery", "Maxillofacial Surgery", "Otorhinolaryngology", "Respiratory Medicine", "Opthalmology", "Dentistry", "Intensive Care Unit", "Emergency Medicine", "Clinical Nutrition"],
-    "comment": ["The hospital is a prestigious teaching hospital located in Shanghai, China, affiliated with Fudan University. It was founded in 1907 and is highly regarded in China for its clinical services, education, and research."],
+    "comments": ["The hospital is a prestigious teaching hospital located in Shanghai, China, affiliated with Fudan University. It was founded in 1907 and is highly regarded in China for its clinical services, education, and research."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -7972,7 +7972,7 @@
     "photoUrl": "https://www.sinaihealth.ca/sites/default/files/styles/hospital_info_lg/public/2024-03/MSH-facility-exterior.jpg?h=a92f03cd&itok=DGWlXPDF",
     "type": "Private",
     "services": ["Emergency department", "Women's and infants' health", "Cancer care", "Rehabilitation", "Mental health"],
-    "comment": ["The hospital is part of the Sinai Health System and is affiliated with the University of Toronto.", "In 2025, Newsweek and Statista ranked Mount Sinai Hospital third among Canadian hospitals and 32nd globally."],
+    "comments": ["The hospital is part of the Sinai Health System and is affiliated with the University of Toronto.", "In 2025, Newsweek and Statista ranked Mount Sinai Hospital third among Canadian hospitals and 32nd globally."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -7994,7 +7994,7 @@
     "photoUrl": "https://ik.imagekit.io/clinic4all/logos/profile/fc72285cf6d4e1d57be8ae549d949916.jpeg",
     "type": "Private",
     "services": ["Accident & Emergency", "ICU (Intensive Care Unit-Adult)", "NICU (Neonatal Intensive Care Unit)", "Paediatrics Unit", "Concierge Services", "Laboratory", "Obstetric & Gynaecology", "Pharmacy", "Dialysis Unit", "Oncology", "Radiology & Imaging Department", "Haematology", "Operating Theatres", "Medical Ward", "Rehabilitation", "Surgical Unit"],
-    "comment": ["Sidilega is the first citizen-owned private hospital in the Botswana.", "The facility is equipped with 110 beds and aims to provide high-quality, cost-effective health services."],
+    "comments": ["Sidilega is the first citizen-owned private hospital in the Botswana.", "The facility is equipped with 110 beds and aims to provide high-quality, cost-effective health services."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8016,7 +8016,7 @@
     "photoUrl": "https://ik.imagekit.io/clinic4all/logos/profile/fc72285cf6d4e1d57be8ae549d949916.jpeg",
     "type": "Private",
     "services": ["Accident & Emergency", "ICU (Intensive Care Unit-Adult)", "NICU (Neonatal Intensive Care Unit)", "Paediatrics Unit", "Concierge Services", "Laboratory", "Obstetric & Gynaecology", "Pharmacy", "Dialysis Unit", "Oncology", "Radiology & Imaging Department", "Haematology", "Operating Theatres", "Medical Ward", "Rehabilitation", "Surgical Unit"],
-    "comment": ["Sidilega is the first citizen-owned private hospital in the Botswana.", "The facility is equipped with 110 beds and aims to provide high-quality, cost-effective health services."],
+    "comments": ["Sidilega is the first citizen-owned private hospital in the Botswana.", "The facility is equipped with 110 beds and aims to provide high-quality, cost-effective health services."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8038,7 +8038,7 @@
     "photoUrl": "https://shabait.com/wp-content/uploads/2017/06/june-29-news-2017-halibet.jpg",
     "type": "Public",
     "services": ["General Medical and Surgical Services", "Burn Care", "Orthopedic Care", "Emergency Services", "HIV/AIDS", "Hepatitis", "Intestinal and Abdominal cases", "TB cases", "Diabetes and High blood pressure"],
-    "comment": ["As of December 2023, the hospital has deployed modern medical equipment, which has been instrumental in improving its services.", "It is described as one of Eritrea's largest public hospitals."],
+    "comments": ["As of December 2023, the hospital has deployed modern medical equipment, which has been instrumental in improving its services.", "It is described as one of Eritrea's largest public hospitals."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8059,7 +8059,7 @@
     "photoUrl": "https://s3-media0.fl.yelpcdn.com/bphoto/IBf-85OOwbH8ZGPPbnrwww/o.jpg",
     "type": "Public",
     "services": ["Diagnostic and Treatment Center", "Sports Medicine", "Sexual Health Center", "Sleep and Vigilance Disorders Center", "Interdisciplinary Center for Therapy and Education", "Imaging", "Immunology-Infectious Diseases", "Women's House", "Adult psychiatry", "Adult and Child Medico-Legal Unit (UMJ)", "Outpatient Pharmaceutical Unit", "Ophthalmologist"],
-    "comment": ["Founded in 651 AD, it is considered the oldest hospital in the city and is part of the Assistance Publique–Hôpitaux de Paris (AP-HP) network."],
+    "comments": ["Founded in 651 AD, it is considered the oldest hospital in the city and is part of the Assistance Publique–Hôpitaux de Paris (AP-HP) network."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8081,7 +8081,7 @@
     "photoUrl": "https://www.helios-gesundheit.de/content/uwsrelaunch/de/de/standorte-angebote/kliniken/erfurt/_jcr_content/root/container/container_1362788709/carousel/teaser_stage.coreimg.jpeg/1738962868579/hel-erfurt-cz-aussen.jpeg",
     "type": "Public",
     "services": ["General & visceral surgery", "Angiology", "Gynaecology and Obstetrics", "Dermatology & Allergology", "Vascular surgery & endovascular surgery", "Geriatrics", "Gastroenterology / Hepatology, Endocrinology / Diabetology, Rheumatology", "Ear, nose and throat medicine, plastic surgery", "Hand Surgery", "Hematology, stem cell transplantation, oncology, hemostaseology", "Opthalmology", "Cardiology", "Interdisciplinary Intensive Care & Intermediate Care", "Pediatric surgery & pediatric urology", "Pediatric surgery & pediatric urology", "Nephrology", "Neurology", "Neurosurgery", "Neuroradiology", "Radiology", "Spinal surgery", "Oral and maxillofacial surgery, plastic surgery, aesthetic facial surgery", "Emergency department", "Trauma Surgery"],
-    "comment": ["With nearly 1,300 beds, we are the largest hospital in the region", "The Helios Clinic Erfurt is a maximum care hospital and an academic teaching hospital of the Jena University Hospital."],
+    "comments": ["With nearly 1,300 beds, we are the largest hospital in the region", "The Helios Clinic Erfurt is a maximum care hospital and an academic teaching hospital of the Jena University Hospital."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8103,7 +8103,7 @@
     "photoUrl": "https://www.artemishospitals.com/newhtml/images/img/hospital-img.jpg",
     "type": "Private",
     "services": ["Spine", "Orthopaedics", "Neuroservices", "Pediatric Orthopedics", "Cardiac services", "Urology", "Oncology", "IVF", "Cyber Knife", "Kidney Transplant", "Liver Transplant", "Bone Marrow Transplant"],
-    "comment": ["Artemis Hospitals is a large, multi-specialty hospital, It is JCI and NABH accredited and was established in 2007"],
+    "comments": ["Artemis Hospitals is a large, multi-specialty hospital, It is JCI and NABH accredited and was established in 2007"],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8125,7 +8125,7 @@
     "photoUrl": "https://www.japanhospitalsearch.org/contents/wp-content/uploads/2017/06/%E8%81%96%E8%B7%AF%E5%8A%A0_960x580.jpg",
     "type": "Missionary",
     "services": ["Cardiovascular Center", "Gastroenterology Center", "Ambulatory Care Center for Children", "Breast Center", "Center for Integrated Sports Medicine", "Neurology & Neurosurgery Center", "Kidney Center", "Immuno-Rheumatology Center", "Liaison Center", "Patholgy", "Otolaryngology", "Psychiatry", "Plastic and reconstructive surgery", "Opthalmology", "Infectious Diseases", "Haematology", "Endocrinology", "Emergency Care", "Dermatology", "Oral Surgery", "Clinical Laboratory"],
-    "comment": ["Today it is one of central Tokyo's largest and most comprehensive medical care facility, having played a significant role in advancing medical care, education, and public health in modern Japan.", "As an affiliate of St. Luke’s International University, the hospital continually strives to provide patient-centered care that respects individual values and backgrounds."],
+    "comments": ["Today it is one of central Tokyo's largest and most comprehensive medical care facility, having played a significant role in advancing medical care, education, and public health in modern Japan.", "As an affiliate of St. Luke’s International University, the hospital continually strives to provide patient-centered care that respects individual values and backgrounds."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8147,7 +8147,7 @@
     "photoUrl": "https://cdn.newsbook.com.mt/wp-content/uploads/2022/10/24145506/Budget-2023-Mater-Dei-Hospital-Sptar-scaled.jpg",
     "type": "Public",
     "services": ["Accident & Emergency", "Surgical Services", "Medical Services", "Maternity and Neonatal Care", "Critical Care", "Diagnostics and Imaging", "Cardiology and Cardiac Rehabilitation", "Oncology & Haematology", "Physiotherapy and Occupational Therapy", "Pharmacy", "Dental Surgery", "Dermatology", "Psychology", "Breast Clinic", "Pain Clinic", "Speech and Language services", "Social work services."],
-    "comment": ["Mater Dei Hospital is the only, state-run, acute general teaching hospital in Malta."],
+    "comments": ["Mater Dei Hospital is the only, state-run, acute general teaching hospital in Malta."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8169,7 +8169,7 @@
     "photoUrl": "https://stgeorges.imgix.net/assets/images/cancer-care/Exterior_SG10485-1.jpg?auto=compress%2Cformat&fit=max&q=75&w=2198",
     "type": "Private",
     "services": ["Bariatric", "Cardiac", "Cardiology", "Dental", "Colorectal", "Gastroenterology", "General Paediatrics", "Endocrinology", "Gynaecologic Oncologist", "Haematology, Pathology, Internal Medicine", "Medical Oncology", "Neurosurgery", "Obstetric & Gynaecology", "Oral & Maxillofacial", "Opthalmology", "Otolaryngology", "Plastic and Reconstructive", "Orthopaedic", "Respiratory Physician", "Upper GI Surgeon", "Urology"],
-    "comment": ["It is one of the largest and most modern private hospitals in the country", "St George’s looks after more than 13,000 patients each year and accepts all major health insurers."],
+    "comments": ["It is one of the largest and most modern private hospitals in the country", "St George’s looks after more than 13,000 patients each year and accepts all major health insurers."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8191,7 +8191,7 @@
     "photoUrl": "https://ussaudi.org/wp-content/uploads/2021/03/sau-Kingdom-Hospital_BINARY_603952.jpg",
     "type": "Private",
     "services": ["Genral surgery", "ENT", "Dentistry", "Dermatology", "Paediatrics", "Nutrition", "Heart Center", "Obesity Surgery", "Physiotherapy", "Obstetric & Gynaecology", "Spine Surgery", "Opthalmology", "Wound care clinic", "Orthopaedic", "Urology", "Internal Medicine"],
-    "comment": ["Opened in 2000, it offers a wide range of comprehensive medical services, and is known for its modern facilities and advanced technology."],
+    "comments": ["Opened in 2000, it offers a wide range of comprehensive medical services, and is known for its modern facilities and advanced technology."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8213,7 +8213,7 @@
     "photoUrl": "https://static.medigence.com/uploads/hospital/images/1744032915_0cf7cb58b6cb1faaeaba.jpg",
     "type": "Private",
     "services": ["Genral surgery", "Intensive Care Unit (ICU)", "Neonatal Intensive Care Unit (NICU)", "Radiology", "Paediatrics", "Laboratory", "Pharmacy", "Physiotherapy", "Obstetric & Gynaecology", "Endoscopy", "Dialysis", "Emergency department", "Fertility Treatment", "Internal Medicine"],
-    "comment": ["Equipped with advanced medical technology. It is accredited by the Central Board for Accreditation of Healthcare Institutions (CBAHI) and CHI.", "RH covers over 80,000 square meters across ten buildings and offers parking for more than 560 cars."],
+    "comments": ["Equipped with advanced medical technology. It is accredited by the Central Board for Accreditation of Healthcare Institutions (CBAHI) and CHI.", "RH covers over 80,000 square meters across ten buildings and offers parking for more than 560 cars."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8234,7 +8234,7 @@
     "photoUrl": "https://ehr.meditech.com/sites/default/files/images/news/2024TMCSingapore_Article.jpg",
     "type": "Private",
     "services": ["Genral surgery", "Women's Health", "Children's Health", "Fertility & Family Planning", "Opthalmology", "Orthopaedics", "Preventive Health & Healthy Ageing (Health Screening)", "Breast Health", "Urology", "Diagnostic Imaging", "Cardiology", "Endocrinology", "Dermatology", "Respiratory Medicine & Critical Care", "Counselling and Therapy", "Surgical Care", "Traditional Chinese Medicine (TCM)", "Day Surgery (Outpatient Specialist Care)"],
-    "comment": ["Thomson Medical Centre is a 190-bed private hospital in Singapore. It has been in operation since 1979.", "It broke history in 2000 when it became the first clinic in the world to produce twins from frozen eggs and frozen sperm.", "It is the first private hospital in Singapore to set up an IVF clinic and in 1998 it delivered Singapore's first IVF triplets.", "It has the International Patient Relations Officers who assist prospective patients with appointments, treatments, length of stay, accommodations, transportation, food, budget estimates, and visas among many things."],
+    "comments": ["Thomson Medical Centre is a 190-bed private hospital in Singapore. It has been in operation since 1979.", "It broke history in 2000 when it became the first clinic in the world to produce twins from frozen eggs and frozen sperm.", "It is the first private hospital in Singapore to set up an IVF clinic and in 1998 it delivered Singapore's first IVF triplets.", "It has the International Patient Relations Officers who assist prospective patients with appointments, treatments, length of stay, accommodations, transportation, food, budget estimates, and visas among many things."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8256,7 +8256,7 @@
     "photoUrl": "https://isanidad.com/wp-content/uploads/2020/05/77698113-65DF-488A-BBC6-13A8B2AFF5E8.jpeg",
     "type": "Private",
     "services": ["Stomatology / Dentistry", "Intensive Care Units (ICU and Neonatal ICU)", "Gynaecology and Obstetrics", "Pathological Anatomy", "Opthalmology", "Resuscitation and Chronic Pain Unit", "Digestive System", "Cardiovascular Surgery", "Orthopedic Surgery and Traumatology", "Preventive medicine", "Nuclear Medicine", "Nephrology and Hypertension", "NeuroSurgery", "Pulmonology", "Interventional neuroradiology", "Neurology", "Rehabitation", "Plastic surgery", "Endocrinology and Nutrition", "Dermatology", "Psycology", "Paediatric", "Otolaryngology", "Overweight & Obesity", "Microbiology", "Epidemiology", "Hematology and Hemotherapy", "Clinical Immunology", "Rheumatology", "Aesthetic Medicine", "Vascular and Interventional Radiology"],
-    "comment": ["It is well-regarded for its commitment to patient care, teaching, and research.", "It has an associated Health Research Institute (IIS-FJD) and collaborates with the Universidad Autónoma de Madrid"],
+    "comments": ["It is well-regarded for its commitment to patient care, teaching, and research.", "It has an associated Health Research Institute (IIS-FJD) and collaborates with the Universidad Autónoma de Madrid"],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8278,7 +8278,7 @@
     "photoUrl": "https://www.norrbotten.se/imagevault/publishedmedia/2z5ksqawcxycocovzorh/D2323-025.jpg",
     "type": "Public",
     "services": ["Physical therapy and occupational therapy", "Diabetes and blood pressure clinics", "Maternal and child health care", "Psychosocial team", "Laboratory and testing services", "Cardiology","Neurology", "Gastroenterology",  "Nephrology", "Urology", "Internal medicine"],
-    "comment": ["It is operated by Region Norrbotten and serves the municipality of Kiruna.", "Due to mining-related ground subsidence, the city of Kiruna is being moved, and a new hospital is being designed. The existing hospital building has been affected by cracks, although they have not compromised its structural integrity. Sweco is the engineering firm responsible for designing the new hospital."],
+    "comments": ["It is operated by Region Norrbotten and serves the municipality of Kiruna.", "Due to mining-related ground subsidence, the city of Kiruna is being moved, and a new hospital is being designed. The existing hospital building has been affected by cracks, although they have not compromised its structural integrity. Sweco is the engineering firm responsible for designing the new hospital."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8300,7 +8300,7 @@
     "photoUrl": "https://www.vejthani.com/wp-content/uploads/2020/08/IMG_3547-vejthani-1024x682.jpg",
     "type": "Private",
     "services": ["Orthopedics", "Rehabitation", "Oncology", "Neurology and Neurosurgery", "Executive Healthcare Center", "Infertility Program", "Gastroenterology and Hepatology", "Pediatric Neuroscience and Rehabilitation Center", "ENT", "Endocrinology", "Diabetes", "Clinical Nutrition", "Opthalmology", "Hepato Pancreato Biliary", "Hematology", "Heamodialysis"],
-    "comment": ["Vejthani Hospital is JCI-accredited tertiary care hospital, known for its services to international patients.", "It is a 24-hour facility that offers a wide range of medical services with a focus on specialized centers and advanced technology.", "It was named 'Hospital of the Year' in Thailand at the Healthcare Asia Awards in 2022 and 2023."],
+    "comments": ["Vejthani Hospital is JCI-accredited tertiary care hospital, known for its services to international patients.", "It is a 24-hour facility that offers a wide range of medical services with a focus on specialized centers and advanced technology.", "It was named 'Hospital of the Year' in Thailand at the Healthcare Asia Awards in 2022 and 2023."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8322,7 +8322,7 @@
     "photoUrl": "https://static.zawya.com/view/acePublic/alias/contentid/ZjRiMjQzYzctNjU5ZS00/0/asterhospital-alqusais-jpg.webp?f=3%3A2&q=0.75&w=1080",
     "type": "Private",
     "services": ["Cardiology and Cardiovascular Surgery", "Critical Care and Emergency Medicine", "Dentistry", "Dermatology", "Endocrinology", "General and Laparoscopic Surgery", "Gastroenterology", "Internal Medicine", "Neurology and Neurosurgery", "Nephrology", "Obstetric & Gynaecology", "Oncology", "Opthalmology", "Pediatrics and Neonatology", "Orthopaedics", "Physiotherapy and Rehabilitation", "Plastic Surgery", "Radiology", "Pulmonology", "Vascular Surgery", "Rheumatology"],
-    "comment": ["Aster Hospital, Al Qusais is a 150-bed, multispecialty hospital located in Dubai. It is equipped with a 24-hour emergency department and pharmacy.", "Aster Hospital, Al Qusais is accredited by Canada with the diamond level accreditation status." ],
+    "comments": ["Aster Hospital, Al Qusais is a 150-bed, multispecialty hospital located in Dubai. It is equipped with a 24-hour emergency department and pharmacy.", "Aster Hospital, Al Qusais is accredited by Canada with the diamond level accreditation status." ],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8344,7 +8344,7 @@
     "photoUrl": "https://www.chesterfieldroyal.nhs.uk/application/files/thumbnails/xxl/4817/3073/5178/Chesterfield_Emergency_Departmenrt.jpg",
     "type": "Public",
     "services": ["Accident and emergency (A&E)", "Breast cancer services", "Breast Surgery", "Cardiology", "Cataract Surgery", "Children's & Adolescent Services", "Chronic Obstructive Pulmonary Disease", "Dimentia", "Dermatology", "Diabetic Medicine", "Ear, Nose & Throat", "Endocrinology and Metabolic Medicine", "Obstetrics And Gynaecology", "Ophthalmology", "Orthopaedics", "Physiotherapy", "Paediatric Surgery", "Prostate Cancer Service", "Rehabilitation", "Rheumatology", "Urology", "Vascular surgery"],
-    "comment": ["As of its latest assessment, the hospital has an overall rating of 'Good' from the Care Quality Commission (CQC)", "The hospital has around 500 inpatient beds and employs more than 4,000 staff, supported by approximately 170 volunteers" ],
+    "comments": ["As of its latest assessment, the hospital has an overall rating of 'Good' from the Care Quality Commission (CQC)", "The hospital has around 500 inpatient beds and employs more than 4,000 staff, supported by approximately 170 volunteers" ],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8366,7 +8366,7 @@
     "photoUrl": "http://www.eoeortho.com/wp-content/uploads/2016/02/article-2273150-02525C500000044D-450_634x415.jpg",
     "type": "Public",
     "services": ["Emergency department", "Acute medicine", "Breast Surgery", "General Surgery", "Colorectal surgery", "Maternity & Neonatal services", "Trauma and orthopaedics", "Heart and lung conditions", "Cancer Care", "Imaging and diagnostics", "Mental Health", "Oral and Maxillofacial Surgery", "Obstetrics And Gynaecology", "Neurology", "Opthalmology", "Endocrinology", "Dermatology", "Nephrology", "Rheumatology", "Vascular surgery", "Haematology", "Elderly care"],
-    "comment": ["This is a large NHS district general hospital managed by the East Suffolk and North Essex NHS Foundation Trust.", "The hospital has around 500 inpatient beds and employs more than 4,000 staff, supported by approximately 170 volunteers" ],
+    "comments": ["This is a large NHS district general hospital managed by the East Suffolk and North Essex NHS Foundation Trust.", "The hospital has around 500 inpatient beds and employs more than 4,000 staff, supported by approximately 170 volunteers" ],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8388,7 +8388,7 @@
     "photoUrl": "https://www.bartshealth.nhs.uk/media/images/versions/img94joktmu754417.jpg",
     "type": "Public",
     "services": ["Accident & Emergency (A&E)", "Acute Admissions Units (AAU)", "Barts Heart Centre", "Cancer Treatment", "Children's Hospital (Young Barts Health)", "Critical Care", "Dental Clinic", "Dermatology", "Diagnostic and Screening Procedures", "Gastroenterology and Hepatology", "Gynacology", "Haematology", "HIV and Infectious Diseases", "Maternity and Midwifery Services", "Neuroscience", "Orthopaedic", "Plastics and Reconstructive Surgery", "Renal and Urology", "Respiratory Medicine", "Stroke Care", "Surgical Procedures", "Vascular Surgery", "Elderly care"],
-    "comment": ["The Royal London Hospital is an internationally renowned teaching hospital and the busiest major trauma centre in the UK, providing critical care for severely injured patients across London", "The hospital moved into a new, state-of-the-art building in 2012, designed to support modern healthcare delivery with 1,248 beds and 34 wards", "The hospital's rooftop helipad serves as the operational base for London's Air Ambulance, allowing for rapid transport of critical patients"],
+    "comments": ["The Royal London Hospital is an internationally renowned teaching hospital and the busiest major trauma centre in the UK, providing critical care for severely injured patients across London", "The hospital moved into a new, state-of-the-art building in 2012, designed to support modern healthcare delivery with 1,248 beds and 34 wards", "The hospital's rooftop helipad serves as the operational base for London's Air Ambulance, allowing for rapid transport of critical patients"],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8410,7 +8410,7 @@
     "photoUrl": "https://www.lsiarchitects.co.uk/wp-content/uploads/2018/07/LSI_Architects_BMI_TheAlexandraHospital_Entrance_02.jpg",
     "type": "Private",
     "services": ["Allergy and immunology", "Cardiology", "Dermatology", "Cancer Treatment", "Audiology", "Breast Surgery", "Paediatrics (outpatient services and inpatient/day case procedures for children from ages 3 to 18)", "Orthopaedics", "Neurology", "Spinal surgery", "Fertility Treatment", "Physiotherapy", "Diagnostic imaging (including MRI and CT scans)", "Private GP services", "Endocrinology", "Ear Nose and Throat (ENT Surgery)", "Gastroenterology treatment", "Gynacology", "Rheumatology", "Nephrology", "Surgical Procedures", "Vascular Surgery", "Urology"],
-    "comment": ["Over 500 consultants, many with international reputations and teaching responsibilities, choose to practice at the hospital, attracting patients from around the world.", "The hospital has been awarded the iWantGreatCare certificate of excellence for delivering outstanding care.", "Patients frequently mention the hospital is spotless, clean, light, and airy, with comfortable en-suite rooms and good food.", "The Care Quality Commission (CQC) has rated The Alexandra Hospital as 'Good' overall. This rating extends to all key areas: safety, effectiveness, care, responsiveness, and leadership.", "It has a comprehensive facility including seven operating theatres, a hybrid catheter lab, a five-bed intensive care unit (Level 3) and a dedicated paediatric ward"],
+    "comments": ["Over 500 consultants, many with international reputations and teaching responsibilities, choose to practice at the hospital, attracting patients from around the world.", "The hospital has been awarded the iWantGreatCare certificate of excellence for delivering outstanding care.", "Patients frequently mention the hospital is spotless, clean, light, and airy, with comfortable en-suite rooms and good food.", "The Care Quality Commission (CQC) has rated The Alexandra Hospital as 'Good' overall. This rating extends to all key areas: safety, effectiveness, care, responsiveness, and leadership.", "It has a comprehensive facility including seven operating theatres, a hybrid catheter lab, a five-bed intensive care unit (Level 3) and a dedicated paediatric ward"],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8432,7 +8432,7 @@
     "photoUrl": "https://www.lchfoundation.ca/public/uploads/images/leduccommunityhealthcentre.jpg",
     "type": "Public",
     "services": ["Addiction and Mental Health - Domestic Abuse Response Team", "Breathe Easy Program - Pulmonary Rehabilitation", "Community Audiology Services", "Emergency Services", "Endoscopy", "Anaesthesiology", "Colonoscopy", "Computed Tomography", "Echocardiography", "Fluoroscopy", "Gastroscopy", "General Internal Medicine Clinic", "General Radiography (X-Ray)", "Laboratory Services", "Nutrition Counselling - Adult, Pregnancy and Pediatrics", "Respiratory Therapy", "Surgical Services", "Ultrasound", "Sexual Assault Response Team", "Inpatient Services (Family Medicine)", "Sigmoidoscopy"],
-    "comment": ["The hospital is a 70-bed facility, part of the Canadian universal health care system and managed by Alberta Health Services (AHS).", "To support patients and families, the hospital has removed formal visiting hours, basing visit times on the patient's expressed wishes and care needs."],
+    "comments": ["The hospital is a 70-bed facility, part of the Canadian universal health care system and managed by Alberta Health Services (AHS).", "To support patients and families, the hospital has removed formal visiting hours, basing visit times on the patient's expressed wishes and care needs."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8454,7 +8454,7 @@
     "photoUrl": "https://media-cdn.socastsrm.com/wordpress/wp-content/blogs.dir/3041/files/2022/12/img-0073-scaled-1.jpg",
     "type": "Public",
     "services": ["Inpatient medical", "Critical Care", "General Surgery", "Orthopaedic", "Ear, Nose & Throat Surgery", "General Radiography", "Gynacology", "Urology", "CT scanning", "Mammography", "Plastic Surgery", "Endoscopy", "Ambulance Service", "Laboratory Services", "Renal Dialysis", "Pulmonary Rehabilitation", "Mental Health"],
-    "comment": ["The hospital offers wheelchair-accessible entrances and parking.", "The hospital is home to the Fred Smithers Centre for Orthopedic Care and was the first hospital in Canada to perform a total hip replacement surgery using the Mako SmartRobotics™ System.", "Dartmouth General opened the first pelvic health suite in Atlantic Canada, bringing various urology and gynecology procedures together in one location."],
+    "comments": ["The hospital offers wheelchair-accessible entrances and parking.", "The hospital is home to the Fred Smithers Centre for Orthopedic Care and was the first hospital in Canada to perform a total hip replacement surgery using the Mako SmartRobotics™ System.", "Dartmouth General opened the first pelvic health suite in Atlantic Canada, bringing various urology and gynecology procedures together in one location."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8476,7 +8476,7 @@
     "photoUrl": "https://www.nshealth.ca/sites/default/files/styles/wide/public/2023-09/2023_09_11%20Cape%20Breton%20Regional%20Hospital%2001.jpg?itok=7jXIV6cP",
     "type": "Public",
     "services": ["Anaesthesiology", "Cancer and supportive care", "Cardiac respiratory", "Diagnostic imaging", "Diabetes", "Dialysis", "General Surgery", "Emergency medicine", "Geriatric assessment and rehabilitation", "Intensive Care Unit", "Internal Medicine", "Maternal/child support services", "Neonatal care", "Laboratory Services", "Nutrition and diabetic counseling", "Opthalmology", "Obstetrics and Gynaecology", "Otolaryngology", "Occupational therapy", "Physiotherapy", "Plastic surgery", "Palliative Care"],
-    "comment": ["The CBRH is the primary referral and trauma center for all of Cape Breton Island.", "The hospital has approximately 250 beds and a staff of over 3,000 along with more than 150 physicians.", "The hospital, particularly the emergency department, is described as a very busy and stressful place. Patients have noted long wait times, but also praise the dedication and care provided by the staff."],
+    "comments": ["The CBRH is the primary referral and trauma center for all of Cape Breton Island.", "The hospital has approximately 250 beds and a staff of over 3,000 along with more than 150 physicians.", "The hospital, particularly the emergency department, is described as a very busy and stressful place. Patients have noted long wait times, but also praise the dedication and care provided by the staff."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},
@@ -8498,7 +8498,7 @@
     "photoUrl": "https://mariannemeedward.ca/wp-content/uploads/elementor/thumbs/STOCK_Joseph_Brant_Hospital-ozckcrvy587yybmuwle0c4a9xwr17n08c1ohqwr1jc.jpg",
     "type": "Public",
     "services": ["Breathe Easy COPD Program", "Diagnostic Imaging", "Endoscopy", "General Internal Medicine", "Fracture Clinic", "Dialysis Center", "Infectious Diseases", "Integrated Comprehensive Care", "Diabetes", "Heart Function Clinic", "Integrated Stroke Unit", "Maternal and Child Program", "Medical Diagnostic Unit", "Laboratory Services", "Mental health", "Musculoskeletal Central Intake and Assessment Centre", "Oncology and Medical Day Care Clinic", "Rehabilitation", "Speech Language Pathology", "Palliative Care"],
-    "comment": ["The hospital has achieved Accreditation with Exemplary Standing by Accreditation Canada, which is the highest designation and recognizes organizations that go above and beyond requirements in quality improvement and safety.", "Joseph Brant Hospital was the first in Canada to build and implement a pandemic response unit during the COVID-19 pandemic, which housed patients to relieve pressure on the main hospital and allow scheduled surgeries to continue.", "The hospital's commitment to patient-centered care and partnerships, such as the 'DREAM Team' (Dementia Resources Education Advocacy Mentorship) in the Emergency Department, has received positive feedback for improving specific care areas.", "Overall, the hospital strives for a culture of caring and continuous improvement, working with patient and family input to shape its strategic direction."],
+    "comments": ["The hospital has achieved Accreditation with Exemplary Standing by Accreditation Canada, which is the highest designation and recognizes organizations that go above and beyond requirements in quality improvement and safety.", "Joseph Brant Hospital was the first in Canada to build and implement a pandemic response unit during the COVID-19 pandemic, which housed patients to relieve pressure on the main hospital and allow scheduled surgeries to continue.", "The hospital's commitment to patient-centered care and partnerships, such as the 'DREAM Team' (Dementia Resources Education Advocacy Mentorship) in the Emergency Department, has received positive feedback for improving specific care areas.", "Overall, the hospital strives for a culture of caring and continuous improvement, working with patient and family input to shape its strategic direction."],
     "hours": [
       {"day":"Monday", "open":"24h"},
       {"day":"Tuesday", "open":"24h"},

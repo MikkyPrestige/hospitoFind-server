@@ -11,11 +11,11 @@ const staticPages = [
   "/country",
   "/login",
   "/signup",
-  "/dashboard",
   "/nearby",
   "/news",
   "/outbreaks",
   "/dailyTips",
+  "/questions",
   "/policy",
 ];
 
