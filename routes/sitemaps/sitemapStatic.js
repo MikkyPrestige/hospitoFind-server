@@ -15,7 +15,7 @@ const staticPages = [
   "/news",
   "/outbreaks",
   "/dailyTips",
-  "/questions",
+  "/faq",
   "/policy",
 ];
 
