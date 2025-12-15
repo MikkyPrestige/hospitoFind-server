@@ -222,7 +222,7 @@ const getHealthTips = async (req, res) => {
 
   try {
     const response = await fetch(
-      "https://health.gov/myhealthfinder/api/v3/topicsearch.json?lang=en"
+      "https://health.gov/myhealthfinder/api/v4/topicsearch.json?lang=en"
     );
     const data = await response.json();
 
@@ -244,10 +244,8 @@ const getHealthTips = async (req, res) => {
 
     const formattedTips = selected.map((tip) => ({
       Title: tip.Title || "Stay Healthy Today!",
-      Description:
-        tip.MyHFDescription ||
-        "Remember to stay active and eat balanced meals.",
       ImageUrl: tip.ImageUrl || null,
+      ImageAlt: tip.ImageAlt || null,
       Link:
         tip.AccessibleVersion ||
         "https://health.gov/myhealthfinder/topics/everyday-healthy-living",
@@ -263,9 +261,63 @@ const getHealthTips = async (req, res) => {
       Title: "Stay Hydrated 💧",
       Description: "Drink at least 8 cups of water daily to stay healthy.",
       ImageUrl: null,
+      ImageAlt: null,
       Link: "https://health.gov/myhealthfinder",
     });
   }
 };
+
+// const getHealthTips = async (req, res) => {
+//   const today = new Date().toISOString().split("T")[0];
+
+//   // Disable caching in development
+//   const isDev = process.env.NODE_ENV === "development";
+
+//   if (!isDev && cachedTips && lastFetchedDate === today) {
+//     return res.json(cachedTips);
+//   }
+
+//   try {
+//     const response = await fetch(
+//       "https://health.gov/myhealthfinder/api/v4/topicsearch.json?lang=en",
+//       { cache: "no-store" }
+//     );
+//     const data = await response.json();
+
+//     let resources = [];
+//     if (Array.isArray(data?.Result?.Resources?.Resource)) {
+//       resources = data.Result.Resources.Resource;
+//     } else if (data?.Result?.Resources?.Resource) {
+//       resources = [data.Result.Resources.Resource];
+//     }
+
+//     if (!resources.length) {
+//       return res.status(404).json({ error: "No tips available" });
+//     }
+
+//     const shuffled = resources.sort(() => 0.5 - Math.random());
+//     const selected = shuffled.slice(0, 3);
+
+//     const formattedTips = selected.map((tip) => ({
+//       Title: tip.Title || "Stay Healthy Today!",
+//       MyHFDescription: tip.MyHFDescription,
+//       ImageUrl: tip.ImageUrl || null,
+//       ImageAlt: tip.ImageAlt || null,
+//       Link:
+//         tip.AccessibleVersion ||
+//         "https://health.gov/myhealthfinder/topics/everyday-healthy-living",
+//     }));
+
+//     if (!isDev) {
+//       cachedTips = formattedTips;
+//       lastFetchedDate = today;
+//     }
+
+//     res.json(formattedTips);
+//   } catch (error) {
+//     console.error("❌ Error fetching health tips:", error);
+//     res.status(500).json({ error: "Failed to fetch health tips" });
+//   }
+// };
 
 export default { getGlobalHealthNews, getHealthAlerts, getHealthTips };

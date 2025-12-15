@@ -224,7 +224,7 @@ const getNearbyHospitals = async (req, res) => {
 
       if (nearby.length > 0) {
         results = nearby;
-        fallbackMessage = "Based on your location.";
+        fallbackMessage = "Showing hospitals near your location.";
       } else {
         console.log("⚠️ No hospitals within radius, falling back globally.");
       }
