@@ -9,7 +9,7 @@ dotenv.config();
 
 const uri = process.env.MONGODB_URI;
 if (!uri) {
-  console.error("❌ MONGODB_URI is missing in .env");
+  console.error("MONGODB_URI is missing in .env");
   process.exit(1);
 }
 
@@ -17,26 +17,26 @@ mongoose.connect(uri);
 
 async function seed() {
   try {
-    // 1️⃣ CLEAR COLLECTION
-    console.log("🗑️ Clearing old hospitals...");
+    //  CLEAR COLLECTION
+    console.log("Clearing old hospitals...");
     await Hospital.deleteMany({});
-    console.log("✔️ Old hospitals deleted.\n");
+    console.log("Old hospitals deleted.\n");
 
-    // 2️⃣ VALIDATE JSON DATA
-    console.log("🔍 Validating hospital data...");
+    // VALIDATE JSON DATA
+    console.log("Validating hospital data...");
     const invalid = hospitalsData.filter(
       (h) => !h.name || !h.address || !h.address.city || !h.address.state
     );
 
     if (invalid.length > 0) {
-      console.warn(`⚠️ Found ${invalid.length} invalid hospital entries.`);
+      console.warn(`Found ${invalid.length} invalid hospital entries.`);
       process.exit(1);
     }
 
-    console.log(`✅ Validated ${hospitalsData.length} hospitals.\n`);
+    console.log(`Validated ${hospitalsData.length} hospitals.\n`);
 
-    // 3️⃣ CREATE SLUGS BEFORE INSERT
-    console.log("🔧 Generating slugs...");
+    // CREATE SLUGS BEFORE INSERT
+    console.log("Generating slugs...");
     const slugMap = new Set();
 
     const withSlugs = hospitalsData.map((h) => {
@@ -55,15 +55,15 @@ async function seed() {
       return { ...h, slug };
     });
 
-    console.log("✔️ Slugs generated.\n");
+    console.log("Slugs generated.\n");
 
-    // 4️⃣ INSERT FRESH DATA
-    console.log("📥 Importing hospitals...");
+    // INSERT FRESH DATA
+    console.log("Importing hospitals...");
     await Hospital.insertMany(withSlugs, { ordered: false });
-    console.log("🎉 Imported successfully.\n");
+    console.log("Imported successfully.\n");
 
-    // 5️⃣ ADD COORDINATES IF MISSING
-    console.log("📍 Checking for hospitals missing coordinates...");
+    // ADD COORDINATES IF MISSING
+    console.log("Checking for hospitals missing coordinates...");
 
     const missing = await Hospital.find({
       $or: [
@@ -74,7 +74,7 @@ async function seed() {
       ],
     });
 
-    console.log(`➡️ ${missing.length} hospitals need coordinates.\n`);
+    console.log(`${missing.length} hospitals need coordinates.\n`);
 
     for (const hospital of missing) {
       const fullAddress = `${hospital.address.street || ""}, ${
@@ -86,19 +86,19 @@ async function seed() {
         hospital.longitude = longitude;
         hospital.latitude = latitude;
         await hospital.save();
-        console.log(`📌 Added coords → ${hospital.name}`);
+        console.log(`Added coords → ${hospital.name}`);
       } else {
-        console.log(`⚠️ Could not locate → ${hospital.name}`);
+        console.log(`Could not locate → ${hospital.name}`);
       }
 
       await new Promise((r) => setTimeout(r, 350)); // rate-limit safety
     }
 
-    console.log("\n🎯 All done. DB is now fully synced.");
+    console.log("\n All done. DB is now fully synced.");
     mongoose.disconnect();
-    console.log("🔌 Disconnected from MongoDB.");
+    console.log("Disconnected from MongoDB.");
   } catch (err) {
-    console.error("❌ Error:", err);
+    console.error("Error:", err);
     mongoose.disconnect();
     process.exit(1);
   }

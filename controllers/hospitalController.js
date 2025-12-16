@@ -89,7 +89,7 @@ function escapeRegex(text = "") {
 const findHospitals = asyncHandler(async (req, res) => {
   let { term } = req.query;
 
-  console.log("🧭 findHospitals term:", JSON.stringify(term)); // DEBUG LINE
+  // console.log(" findHospitals term:", JSON.stringify(term));
 
   // normalize and validate term
   if (!term || typeof term !== "string") {
@@ -122,7 +122,7 @@ const findHospitals = asyncHandler(async (req, res) => {
 
   const hospitals = await Hospital.find(query).lean().limit(200);
 
-  console.log(`✅ Found ${hospitals.length} hospitals for "${term}"`);
+  // console.log(`Found ${hospitals.length} hospitals for "${term}"`);
 
   return res.status(200).json(hospitals || []);
 });
@@ -143,7 +143,7 @@ const searchHospitals = asyncHandler(async (req, res) => {
   if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
 
   const hospitals = await Hospital.find(query);
-  console.log(`✅ /search matched ${hospitals.length} hospitals for`, query);
+  // console.log(` /search matched ${hospitals.length} hospitals for`, query);
 
   if (hospitals === 0) {
     return res.status(400).json({
@@ -171,33 +171,33 @@ const getNearbyHospitals = async (req, res) => {
     "unknown";
   const cacheKey = userLat && userLon ? `${userLat},${userLon}` : `ip:${ip}`;
 
-  // ✅ Check cache
+  // Check cache
   const cached = nearbyCache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-    console.log(`⚡ Serving cached hospitals for ${cacheKey}`);
+    // console.log(`Serving cached hospitals for ${cacheKey}`);
     return res.json(cached.data);
   }
 
   try {
-    // 🧩 Try MongoDB first
+    //  Try MongoDB first
     let hospitals = [];
     try {
       hospitals = await Hospital.find().lean();
       if (!Array.isArray(hospitals) || hospitals.length === 0) {
-        console.warn("⚠️ MongoDB has no hospitals, using local JSON fallback.");
+        // console.warn("MongoDB has no hospitals, using local JSON fallback.");
         hospitals = hospitalsData;
       } else {
-        console.log(`✅ Loaded ${hospitals.length} hospitals from MongoDB.`);
+        console.log(`Loaded ${hospitals.length} hospitals from MongoDB.`);
       }
     } catch (err) {
-      console.warn("⚠️ MongoDB query failed, using local JSON fallback:", err);
+      // console.warn("MongoDB query failed, using local JSON fallback:", err);
       hospitals = hospitalsData;
     }
 
     let results = [];
     let fallbackMessage = "Showing popular hospitals globally.";
 
-    // 📍 User provided location
+    // User provided location
     if (!isNaN(userLat) && !isNaN(userLon)) {
       const withDistances = hospitals.map((h) => {
         if (typeof h.latitude !== "number" && typeof h.lat !== "number") {
@@ -226,11 +226,11 @@ const getNearbyHospitals = async (req, res) => {
         results = nearby;
         fallbackMessage = "Showing hospitals near your location.";
       } else {
-        console.log("⚠️ No hospitals within radius, falling back globally.");
+        console.log("No hospitals within radius, falling back globally.");
       }
     }
 
-    // 🌍 Fallback to random/global
+    // Fallback to random/global
     if (results.length === 0) {
       results = hospitals.sort(() => 0.5 - Math.random()).slice(0, max);
     }
@@ -238,10 +238,10 @@ const getNearbyHospitals = async (req, res) => {
     const responseData = { results, fallback: true, message: fallbackMessage };
     nearbyCache.set(cacheKey, { data: responseData, timestamp: Date.now() });
 
-    console.log(`💾 Cached hospitals for ${cacheKey}`);
+    // console.log(`Cached hospitals for ${cacheKey}`);
     res.json(responseData);
   } catch (err) {
-    console.error("❌ Error fetching nearby hospitals:", err);
+    // console.error("Error fetching nearby hospitals:", err);
     res.status(500).json({ message: "Failed to fetch hospitals" });
   }
 };
@@ -279,7 +279,7 @@ const getHospitalById = async (req, res) => {
 
     res.status(404).json({ message: "Hospital not found" });
   } catch (err) {
-    console.error("❌ Error fetching hospital:", err);
+    // console.error("Error fetching hospital:", err);
     res.status(500).json({ message: "Server error fetching hospital" });
   }
 };
@@ -294,7 +294,7 @@ const getTopHospitals = async (req, res) => {
 
   // Serve from cache if fresh
   if (cachedFeatured.length && now - lastFeaturedFetch < FEATURED_CACHE_TTL) {
-    console.log("⚡ Using cached featured hospitals");
+    // console.log(" Using cached featured hospitals");
   } else {
     try {
       const hospitals = await Hospital.find({ isFeatured: true })
@@ -302,7 +302,7 @@ const getTopHospitals = async (req, res) => {
         .lean();
 
       if (!hospitals.length) {
-        console.warn("⚠️ No featured hospitals found — using random fallback.");
+        // console.warn(" No featured hospitals found — using random fallback.");
         const fallback = await Hospital.aggregate([{ $sample: { size: 20 } }]);
         cachedFeatured = fallback;
       } else {
@@ -310,14 +310,14 @@ const getTopHospitals = async (req, res) => {
       }
 
       lastFeaturedFetch = now;
-      console.log(`🏥 Cached ${cachedFeatured.length} featured hospitals`);
+      // console.log(`Cached ${cachedFeatured.length} featured hospitals`);
     } catch (err) {
-      console.error("❌ Error fetching featured hospitals:", err);
+      // console.error("Error fetching featured hospitals:", err);
       return res.status(500).json({ message: "Failed to load top hospitals" });
     }
   }
 
-  // ✅ Randomize and limit results to 3
+  // Randomize and limit results to 3
   const randomized = cachedFeatured.sort(() => 0.5 - Math.random()).slice(0, 3);
 
   res.json(randomized);
@@ -800,7 +800,7 @@ const updateHospital = asyncHandler(async (req, res) => {
       hospital.longitude = longitude;
       hospital.latitude = latitude;
     } else {
-      console.warn(`⚠️ Keeping old coordinates for ${hospital.name}`);
+      console.warn(` Keeping old coordinates for ${hospital.name}`);
     }
   }
 

@@ -11,7 +11,7 @@ const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
  */
 export async function getCoordinates(fullAddress, retries = 2, delay = 3000) {
   if (!fullAddress || !MAPBOX_TOKEN) {
-    console.warn("Missing address or Mapbox token");
+    // console.warn("Missing address or Mapbox token");
     return { longitude: null, latitude: null };
   }
 
@@ -30,10 +30,10 @@ export async function getCoordinates(fullAddress, retries = 2, delay = 3000) {
       const coords = geoRes.data.features[0]?.center;
       if (coords) {
         if (attempt > 1)
-          console.log(`Retried ${attempt - 1}x but succeeded: ${fullAddress}`);
+          // console.log(`Retried ${attempt - 1}x but succeeded: ${fullAddress}`);
         return { longitude: coords[0], latitude: coords[1] };
       } else {
-        console.warn(`No coordinates found for address: ${fullAddress}`);
+        // console.warn(`No coordinates found for address: ${fullAddress}`);
         break;
       }
     } catch (err) {
