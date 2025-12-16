@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
 /* =====================================================
-   🧠  SHARED HELPERS & CACHE
+    SHARED HELPERS & CACHE
 ===================================================== */
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 global.cachedNewsData = global.cachedNewsData || {
@@ -25,7 +25,7 @@ const dedupeByTitle = (arr) => {
 };
 
 /* =====================================================
-   🌍  GLOBAL HEALTH NEWS
+    GLOBAL HEALTH NEWS
 ===================================================== */
 async function getCachedNewsData() {
   const now = Date.now();
@@ -33,10 +33,10 @@ async function getCachedNewsData() {
     global.cachedNewsData.results.length &&
     now - global.cachedNewsData.lastFetched < CACHE_TTL_MS
   ) {
-    console.log(
-      "🗂️ Using cached NewsData results:",
-      global.cachedNewsData.results.length
-    );
+    // console.log(
+    //   "Using cached NewsData results:",
+    //   global.cachedNewsData.results.length
+    // );
     return global.cachedNewsData.results;
   }
 
@@ -48,20 +48,20 @@ async function getCachedNewsData() {
   const url = `https://newsdata.io/api/1/news?category=health&language=en&q=${queryKeywords}&apikey=${API_KEY}`;
 
   try {
-    console.log("🌐 Fetching fresh NewsData...");
+    // console.log("Fetching fresh NewsData...");
     const res = await fetch(url);
     const data = await res.json();
 
     if (data.status === "error" || !Array.isArray(data.results)) {
-      console.warn("⚠️ NewsData error:", data.message);
+      // console.warn("NewsData error:", data.message);
       return [];
     }
 
     global.cachedNewsData = { results: data.results, lastFetched: now };
-    console.log("📰 Cached fresh NewsData results:", data.results.length);
+    // console.log("Cached fresh NewsData results:", data.results.length);
     return data.results;
   } catch (err) {
-    console.error("❌ NewsData fetch failed:", err);
+    // console.error("NewsData fetch failed:", err);
     return [];
   }
 }
@@ -79,7 +79,7 @@ const getGlobalHealthNews = async (req, res) => {
 
   res.json(dedupeByTitle(articles));
   if (!news.length) {
-    console.warn("⚠️ No NewsData results — sending fallback articles");
+    // console.warn("No NewsData results — sending fallback articles");
     return res.json([
       {
         title: "Stay informed about your health",
@@ -93,7 +93,7 @@ const getGlobalHealthNews = async (req, res) => {
 };
 
 /* =====================================================
-   🚨  HEALTH ALERTS (WHO + NewsData)
+   HEALTH ALERTS (WHO + NewsData)
 ===================================================== */
 const getHealthAlerts = async (req, res) => {
   const WHO_URL = "https://www.who.int/api/news/diseaseoutbreaknews";
@@ -104,7 +104,7 @@ const getHealthAlerts = async (req, res) => {
   let whoCount = 0;
   let newsCount = 0;
 
-  // 1️⃣ WHO Alerts
+  // 1️WHO Alerts
   try {
     const resp = await fetch(WHO_URL);
     const data = await resp.json();
@@ -155,7 +155,7 @@ const getHealthAlerts = async (req, res) => {
     console.warn("WHO fetch failed:", e);
   }
 
-  // 2️⃣ NewsData Alerts
+  // NewsData Alerts
   const news = await getCachedNewsData();
   const outbreakKeywords = [
     "outbreak",
@@ -198,20 +198,20 @@ const getHealthAlerts = async (req, res) => {
   alerts = alerts.concat(mappedOutbreakNews);
   newsCount = mappedOutbreakNews.length;
 
-  // 3️⃣ Cleanup + Sort
+  // 3️Cleanup + Sort
   const unique = dedupeByTitle(alerts).sort(
     (a, b) => new Date(b.date) - new Date(a.date)
   );
   const top = unique.slice(0, 9);
 
-  console.log(
-    `✅ Health Alerts: ${whoCount} WHO + ${newsCount} NewsData = ${top.length}`
-  );
+  // console.log(
+  //   ` Health Alerts: ${whoCount} WHO + ${newsCount} NewsData = ${top.length}`
+  // );
   res.json(top);
 };
 
 /* =====================================================
-   💡  HEALTH TIPS (MyHealthFinder API)
+     HEALTH TIPS (MyHealthFinder API)
 ===================================================== */
 const getHealthTips = async (req, res) => {
   const today = new Date().toISOString().split("T")[0];
@@ -234,11 +234,11 @@ const getHealthTips = async (req, res) => {
     }
 
     if (!resources.length) {
-      console.warn("⚠️ No resources found in MyHealthfinder response");
+      // console.warn("No resources found in MyHealthfinder response");
       return res.status(404).json({ error: "No tips available" });
     }
 
-    // 🎲 Randomly select 3
+    // Randomly select 3
     const shuffled = resources.sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, 3);
 
@@ -256,9 +256,9 @@ const getHealthTips = async (req, res) => {
 
     res.json(formattedTips);
   } catch (error) {
-    console.error("❌ Error fetching health tips:", error);
+    // console.error("Error fetching health tips:", error);
     res.status(500).json({
-      Title: "Stay Hydrated 💧",
+      Title: "Stay Hydrated",
       Description: "Drink at least 8 cups of water daily to stay healthy.",
       ImageUrl: null,
       ImageAlt: null,
