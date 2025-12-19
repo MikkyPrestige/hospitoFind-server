@@ -195,7 +195,7 @@ const getNearbyHospitals = async (req, res) => {
     }
 
     let results = [];
-    let fallbackMessage = "Showing popular hospitals globally.";
+    let fallbackMessage = "Location access denied — Showing popular hospitals globally.";
 
     // User provided location
     if (!isNaN(userLat) && !isNaN(userLon)) {
