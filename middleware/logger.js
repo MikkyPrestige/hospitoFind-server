@@ -4,29 +4,39 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const id = ids.generate()
-const fsPromises = fs.promises
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const fsPromises = fs.promises;
 
 const logEvents = async (message, logFileName) => {
-  const dateTime = format(new Date(), 'yyyy/MM/dd\tHH:mm:ss')
-  const logItem = `${dateTime}\t${id}\t${message}\n`
+  const dateTime = format(new Date(), "yyyy/MM/dd\tHH:mm:ss");
+  const logItem = `${dateTime}\t${message}\n`;
 
   try {
-    if (!fs.existsSync(path.join(__dirname, '..', 'logs'))) {
-      await fsPromises.mkdir(path.join(__dirname, '..', 'logs'))
+    const logDir = path.join(__dirname, "..", "logs");
+    if (!fs.existsSync(logDir)) {
+      await fsPromises.mkdir(logDir);
     }
-    await fsPromises.appendFile(path.join(__dirname, '..', 'logs', logFileName), logItem)
+    await fsPromises.appendFile(path.join(logDir, logFileName), logItem);
   } catch (err) {
-    console.log(err)
+    console.error("Logging Error:", err);
   }
-}
+};
 
 const logger = (req, res, next) => {
-  logEvents(`${req.method}\t${req.url}\t${req.headers.origin}`, 'reqLog.log')
-  console.log(`${req.method} ${req.path}`)
-  next()
-}
+  // Generate a unique request ID
+  req.reqId = ids.generate();
 
-export { logger, logEvents }
+  const clientIp = req.ip || req.headers["x-forwarded-for"] || "unknown-ip";
+  const origin = req.headers.origin || "no-origin";
+
+  // Log the request details with the request ID included
+  const logMsg = `${req.method}\t${req.url}\t${clientIp}\t${origin}\tID: ${req.reqId}`;
+
+  logEvents(logMsg, "reqLog.log");
+
+  console.log(`[${req.reqId}] ${req.method} ${req.path}`);
+  next();
+};
+
+export { logger, logEvents };

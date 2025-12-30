@@ -1,23 +1,14 @@
 import asyncHandler from "express-async-handler";
 import ids from "short-id";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import papa from "papaparse";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
 import Hospital from "../models/hospitalsModel.js";
 import ShareableLink from "../models/shareModel.js";
 import { getCoordinates } from "../config/geocode.js";
+import { normalizeCountry } from "../config/locationHelper.js";
+import User from "../models/userModel.js";
 
 dotenv.config();
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const hospitalsData = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "../data/hospitals.json"), "utf-8")
-);
 
 // In-memory cache for nearby hospitals
 const nearbyCache = new Map();
@@ -35,45 +26,135 @@ const haversine = (a, b) => {
   return R * 2 * Math.atan2(Math.sqrt(d), Math.sqrt(1 - d));
 };
 
-// @desc Get all hospitals
+// @desc Get all hospitals (Verified Only)
 // @route GET /hospitals
 // @access Public
 const getHospitals = asyncHandler(async (req, res) => {
-  const hospitals = await Hospital.find({}).lean();
-  // If no hospitals
-  if (!hospitals) {
-    return res.status(400).json({ message: "No Hospital found" });
+  const hospitals = await Hospital.find({ verified: true }).lean();
+  if (!hospitals || hospitals.length === 0) {
+    return res.status(404).json({ message: "No verified hospitals found" });
   }
   return res.json(hospitals);
 });
 
-// get total hospital count
+// @desc Get hospitals submitted by the authenticated user
+// @route GET /hospitals/mine
+// @access Private (Registered User)
+const getMySubmissions = asyncHandler(async (req, res) => {
+  if (!req.userId) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: Missing user identity" });
+  }
+  const userObjectId = new mongoose.Types.ObjectId(req.userId);
+  const myHospitals = await Hospital.find({ createdBy: userObjectId }).sort({
+    createdAt: -1,
+  });
+
+  res.status(200).json(myHospitals);
+});
+
+// @desc Get total hospital count (Verified Only)
 const getHospitalCount = asyncHandler(async (req, res) => {
-  const count = await Hospital.countDocuments();
+  const count = await Hospital.countDocuments({ verified: true });
   res.json({ total: count });
+});
+
+// @desc Get hospital counts grouped by country (Verified Only)
+// @route GET /hospitals/stats/countries
+// @access Public
+const getCountryStats = asyncHandler(async (req, res) => {
+  const hospitals = await Hospital.find(
+    { verified: true },
+    { "address.state": 1 }
+  ).lean();
+
+  const stats = {};
+
+  hospitals.forEach((h) => {
+    const country = normalizeCountry(h.address?.state);
+    stats[country] = (stats[country] || 0) + 1;
+  });
+
+  const result = Object.entries(stats)
+    .map(([country, count]) => ({
+      country,
+      count,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  res.json(result);
 });
 
 // @desc Get hospitals randomly
 // @route GET /hospitals/random
 // @access Public
 const getRandomHospitals = asyncHandler(async (req, res) => {
-  const hospitals = await Hospital.aggregate([{ $sample: { size: 8 } }]);
-  // If no hospitals
-  if (!hospitals) {
+  const hospitals = await Hospital.aggregate([
+    { $match: { verified: true } },
+    { $sample: { size: 8 } },
+  ]);
+
+  if (!hospitals || hospitals.length === 0) {
     return res.status(400).json({ message: "No Hospital found" });
   }
   return res.json(hospitals);
 });
 
-// @desc Get hospital by name
+// @desc Get unverified hospitals for community contribution
+// @route GET /hospitals/sandbox
+// @access Public
+const getUnverifiedHospitals = asyncHandler(async (req, res) => {
+  const hospitals = await Hospital.find({ verified: false }).lean();
+
+  if (!hospitals || hospitals.length === 0) {
+    return res.status(200).json([]);
+  }
+
+  return res.json(hospitals);
+});
+
+// @desc Admin-only fetch for pending approvals
+// @route GET /hospitals/admin/pending
+// @access Private (Admin)
+const getPendingHospitals = asyncHandler(async (req, res) => {
+  const pending = await Hospital.find({ verified: false })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return res.json(pending);
+});
+
+// @desc Approve a hospital (Toggle verified to true)
+// @route PATCH /hospitals/:id/approve
+// @access Private (Admin)
+const approveHospital = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const hospital = await Hospital.findById(id);
+  if (!hospital) {
+    return res.status(404).json({ message: "Hospital not found" });
+  }
+
+  hospital.verified = true;
+  await hospital.save();
+
+  return res.json({
+    message: `${hospital.name} is now verified and live!`,
+    hospital,
+  });
+});
+
+// @desc Get hospital by name (Verified Only)
 // @route GET /hospitals/:name
 // @access Public
 const getHospitalByName = asyncHandler(async (req, res) => {
   const { name } = req.params;
-  const hospital = await Hospital.findOne({ name }).lean();
-  // If no hospital
+  const hospital = await Hospital.findOne({ name, verified: true }).lean();
   if (!hospital) {
-    return res.status(400).json({ message: "Hospital not found" });
+    return res
+      .status(404)
+      .json({ message: "Hospital not found or pending review" });
   }
   return res.json(hospital);
 });
@@ -89,29 +170,17 @@ function escapeRegex(text = "") {
 const findHospitals = asyncHandler(async (req, res) => {
   let { term } = req.query;
 
-  // console.log(" findHospitals term:", JSON.stringify(term));
-
-  // normalize and validate term
-  if (!term || typeof term !== "string") {
-    return res.status(400).json({ message: "Search term is required" });
-  }
-
-  term = term.trim();
-  if (term.length === 0) {
-    return res.status(400).json({ message: "Search term is required" });
-  }
-
-  if (term.length < 2) {
+  if (!term || typeof term !== "string" || term.trim().length < 2) {
     return res
       .status(400)
       .json({ message: "Please enter at least 2 characters" });
   }
 
-  // escape regex special chars to prevent "match everything"
-  const safe = escapeRegex(term);
+  const safe = escapeRegex(term.trim());
   const searchRegex = new RegExp(safe, "i");
 
   const query = {
+    verified: true,
     $or: [
       { name: { $regex: searchRegex } },
       { "address.street": { $regex: searchRegex } },
@@ -121,9 +190,6 @@ const findHospitals = asyncHandler(async (req, res) => {
   };
 
   const hospitals = await Hospital.find(query).lean().limit(200);
-
-  // console.log(`Found ${hospitals.length} hospitals for "${term}"`);
-
   return res.status(200).json(hospitals || []);
 });
 
@@ -132,83 +198,82 @@ const findHospitals = asyncHandler(async (req, res) => {
 // @access Public
 const searchHospitals = asyncHandler(async (req, res) => {
   const { address, city, state } = req.query;
-  const query = {};
+
+  const query = { verified: true };
+
   if (address) {
     query["$or"] = [
       { name: { $regex: new RegExp(address, "i") } },
       { "address.street": { $regex: new RegExp(address, "i") } },
     ];
   }
+
   if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
   if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
 
-  const hospitals = await Hospital.find(query);
-  // console.log(` /search matched ${hospitals.length} hospitals for`, query);
+  const hospitals = await Hospital.find(query).lean();
 
-  if (hospitals === 0) {
-    return res.status(400).json({
-      success: false,
-      error: "No matching records",
-    });
+  if (hospitals.length === 0) {
+    return res
+      .status(404)
+      .json({ success: false, message: "No matching records" });
   }
 
   return res.json(hospitals);
 });
 
-//  @desc Get nearby hospitals based on lat/lon or IP
-//  @route GET /hospitals/nearby?lat=..&lon=..&limit=..
-//  @access Public
+// @desc Get nearby hospitals based on lat/lon or IP
+// @route GET /hospitals/nearby?lat=..&lon=..&limit=..
+// @access Public
 const getNearbyHospitals = async (req, res) => {
   const { lat, lon, limit } = req.query;
   const userLat = parseFloat(lat);
   const userLon = parseFloat(lon);
   const max = parseInt(limit) || 3;
-  const maxRadiusKm = 500;
+  const maxRadiusKm = 500; // 500km radius
 
+  // Generate a Cache Key based on location or IP
   const ip =
     req.headers["x-forwarded-for"]?.split(",")[0] ||
     req.connection.remoteAddress ||
     "unknown";
   const cacheKey = userLat && userLon ? `${userLat},${userLon}` : `ip:${ip}`;
 
-  // Check cache
+  // Check in-memory cache first
   const cached = nearbyCache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-    // console.log(`Serving cached hospitals for ${cacheKey}`);
     return res.json(cached.data);
   }
 
   try {
-    //  Try MongoDB first
-    let hospitals = [];
-    try {
-      hospitals = await Hospital.find().lean();
-      if (!Array.isArray(hospitals) || hospitals.length === 0) {
-        // console.warn("MongoDB has no hospitals, using local JSON fallback.");
-        hospitals = hospitalsData;
-      } else {
-        console.log(`Loaded ${hospitals.length} hospitals from MongoDB.`);
-      }
-    } catch (err) {
-      // console.warn("MongoDB query failed, using local JSON fallback:", err);
-      hospitals = hospitalsData;
+    let hospitals = await Hospital.find({ verified: true }).lean();
+
+    if (!hospitals || hospitals.length === 0) {
+      return res.json({
+        results: [],
+        fallback: true,
+        message: "No verified hospitals currently available in the directory.",
+      });
     }
 
     let results = [];
-    let fallbackMessage = "Location access denied — Showing popular hospitals globally.";
+    let fallbackMessage =
+      "Location access denied — Showing popular verified hospitals.";
 
-    // User provided location
+    // Calculate Distance if user provided lat/lon
     if (!isNaN(userLat) && !isNaN(userLon)) {
       const withDistances = hospitals.map((h) => {
-        if (typeof h.latitude !== "number" && typeof h.lat !== "number") {
+        // Handle cases where lat/lon might be missing or under different keys
+        const hLat = h.latitude ?? h.lat;
+        const hLon = h.longitude ?? h.lon;
+
+        if (typeof hLat !== "number" || typeof hLon !== "number") {
           return { ...h, distance: null, distanceValue: Infinity };
         }
 
         const km =
-          haversine(
-            { lat: userLat, lon: userLon },
-            { lat: h.latitude ?? h.lat, lon: h.longitude ?? h.lon }
-          ) / 1000;
+          haversine({ lat: userLat, lon: userLon }, { lat: hLat, lon: hLon }) /
+          1000;
 
         return {
           ...h,
@@ -217,6 +282,7 @@ const getNearbyHospitals = async (req, res) => {
         };
       });
 
+      // Filter by radius and sort by closest first
       const nearby = withDistances
         .filter((h) => h.distanceValue <= maxRadiusKm)
         .sort((a, b) => a.distanceValue - b.distanceValue)
@@ -224,157 +290,91 @@ const getNearbyHospitals = async (req, res) => {
 
       if (nearby.length > 0) {
         results = nearby;
-        fallbackMessage = "Showing hospitals near your location.";
-      } else {
-        console.log("No hospitals within radius, falling back globally.");
+        fallbackMessage = "Showing verified hospitals near your location.";
       }
     }
 
-    // Fallback to random/global
+    //  Fallback: If no hospital is within 500km, show random verified hospitals
     if (results.length === 0) {
       results = hospitals.sort(() => 0.5 - Math.random()).slice(0, max);
     }
 
-    const responseData = { results, fallback: true, message: fallbackMessage };
-    nearbyCache.set(cacheKey, { data: responseData, timestamp: Date.now() });
+    const responseData = {
+      results,
+      fallback: results.length > 0,
+      message: fallbackMessage,
+    };
 
-    // console.log(`Cached hospitals for ${cacheKey}`);
-    res.json(responseData);
+    // Cache the results
+    nearbyCache.set(cacheKey, { data: responseData, timestamp: Date.now() });
+    return res.json(responseData);
   } catch (err) {
-    // console.error("Error fetching nearby hospitals:", err);
-    res.status(500).json({ message: "Failed to fetch hospitals" });
+    // console.error("Nearby search error:", err);
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch nearby hospitals" });
   }
 };
 
-// @desc Get hospital by ID
+// @desc Get hospital by ID (Verified Only)
 // @route GET /hospitals/:id
 // @access Public
 const getHospitalById = async (req, res) => {
   const { id } = req.params;
-
   try {
-    // Try MongoDB first
-    const hospital = await Hospital.findById(id).lean();
-
+    const hospital = await Hospital.findOne({ _id: id, verified: true }).lean();
     if (hospital) {
-      let locationString = "";
-      if (hospital.address && typeof hospital.address === "object") {
-        const { street, city, state } = hospital.address;
-        locationString = [street, city, state].filter(Boolean).join(", ");
-      }
-
+      const { street, city, state } = hospital.address || {};
+      const locationString = [street, city, state].filter(Boolean).join(", ");
       return res.json({
         ...hospital,
         location: locationString || "Location unavailable",
       });
     }
-
-    // Fallback to JSON file
-    const localHospitals = JSON.parse(
-      fs.readFileSync(path.join(__dirname, "../data/hospitals.json"), "utf-8")
-    );
-    const fallback = localHospitals.find((h) => h._id === id || h.id === id);
-
-    if (fallback) return res.json(fallback);
-
-    res.status(404).json({ message: "Hospital not found" });
+    res.status(404).json({ message: "Hospital not found or pending review" });
   } catch (err) {
-    // console.error("Error fetching hospital:", err);
     res.status(500).json({ message: "Server error fetching hospital" });
   }
 };
 
+// @desc Get top featured hospitals (Verified Only)
 let cachedFeatured = [];
 let lastFeaturedFetch = 0;
 const FEATURED_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
 
-// @desc Fallback — return top hospitals (no location access)
 const getTopHospitals = async (req, res) => {
   const now = Date.now();
-
-  // Serve from cache if fresh
   if (cachedFeatured.length && now - lastFeaturedFetch < FEATURED_CACHE_TTL) {
-    // console.log(" Using cached featured hospitals");
-  } else {
-    try {
-      const hospitals = await Hospital.find({ isFeatured: true })
-        .limit(20)
-        .lean();
-
-      if (!hospitals.length) {
-        // console.warn(" No featured hospitals found — using random fallback.");
-        const fallback = await Hospital.aggregate([{ $sample: { size: 20 } }]);
-        cachedFeatured = fallback;
-      } else {
-        cachedFeatured = hospitals;
-      }
-
-      lastFeaturedFetch = now;
-      // console.log(`Cached ${cachedFeatured.length} featured hospitals`);
-    } catch (err) {
-      // console.error("Error fetching featured hospitals:", err);
-      return res.status(500).json({ message: "Failed to load top hospitals" });
-    }
+    return res.json(cachedFeatured.sort(() => 0.5 - Math.random()).slice(0, 3));
   }
 
-  // Randomize and limit results to 3
-  const randomized = cachedFeatured.sort(() => 0.5 - Math.random()).slice(0, 3);
+  try {
+    const hospitals = await Hospital.find({ isFeatured: true, verified: true })
+      .limit(20)
+      .lean();
 
-  res.json(randomized);
+    cachedFeatured = hospitals.length
+      ? hospitals
+      : await Hospital.aggregate([
+          { $match: { verified: true } },
+          { $sample: { size: 20 } },
+        ]);
+
+    lastFeaturedFetch = now;
+    res.json(cachedFeatured.sort(() => 0.5 - Math.random()).slice(0, 3));
+  } catch (err) {
+    return res.status(500).json({ message: "Failed to load top hospitals" });
+  }
 };
 
 // GET /hospitals/explore/top
 const getHospitalsGroupedByCountryTop = asyncHandler(async (req, res) => {
-  const hospitals = await Hospital.find().lean();
-
-  const nigeriaStates = [
-    "Abia",
-    "Adamawa",
-    "Akwa Ibom",
-    "Anambra",
-    "Bauchi",
-    "Bayelsa",
-    "Benue",
-    "Borno",
-    "Cross River",
-    "Delta",
-    "Ebonyi",
-    "Edo",
-    "Ekiti",
-    "Enugu",
-    "Gombe",
-    "Imo",
-    "Jigawa",
-    "Kaduna",
-    "Kano",
-    "Katsina",
-    "Kebbi",
-    "Kogi",
-    "Kwara",
-    "Lagos",
-    "Nasarawa",
-    "Ogun",
-    "Ondo",
-    "Osun",
-    "Oyo",
-    "Plateau",
-    "Rivers",
-    "Sokoto",
-    "Taraba",
-    "Yobe",
-    "Zamfara",
-    "FCT",
-    "Abuja",
-  ];
+  const hospitals = await Hospital.find({ verified: true }).lean();
 
   const grouped = {};
 
   hospitals.forEach((h) => {
-    let state = h.address?.state?.trim();
-    if (!state) state = "Unknown";
-
-    // Normalize Nigerian states → Nigeria
-    const country = nigeriaStates.includes(state) ? "Nigeria" : state;
+    const country = normalizeCountry(h.address?.state);
 
     if (!grouped[country]) grouped[country] = [];
     grouped[country].push({
@@ -395,56 +395,12 @@ const getHospitalsGroupedByCountryTop = asyncHandler(async (req, res) => {
 
 // GET /hospitals/explore
 const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
-  const hospitals = await Hospital.find().lean();
-
-  const nigeriaStates = [
-    "Abia",
-    "Adamawa",
-    "Akwa Ibom",
-    "Anambra",
-    "Bauchi",
-    "Bayelsa",
-    "Benue",
-    "Borno",
-    "Cross River",
-    "Delta",
-    "Ebonyi",
-    "Edo",
-    "Ekiti",
-    "Enugu",
-    "Gombe",
-    "Imo",
-    "Jigawa",
-    "Kaduna",
-    "Kano",
-    "Katsina",
-    "Kebbi",
-    "Kogi",
-    "Kwara",
-    "Lagos",
-    "Nasarawa",
-    "Ogun",
-    "Ondo",
-    "Osun",
-    "Oyo",
-    "Plateau",
-    "Rivers",
-    "Sokoto",
-    "Taraba",
-    "Yobe",
-    "Zamfara",
-    "FCT",
-    "Abuja",
-  ];
+  const hospitals = await Hospital.find({ verified: true }).lean();
 
   const grouped = {};
 
   hospitals.forEach((h) => {
-    let state = h.address?.state?.trim();
-    if (!state) state = "Unknown";
-
-    // Normalize Nigerian states → Nigeria
-    const country = nigeriaStates.includes(state) ? "Nigeria" : state;
+    const country = normalizeCountry(h.address?.state);
 
     if (!grouped[country]) grouped[country] = [];
     grouped[country].push({
@@ -455,6 +411,7 @@ const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
 
   const result = Object.keys(grouped)
     .sort((a, b) => {
+      // Sort by the number of hospitals (highest first)
       const diff = grouped[b].length - grouped[a].length;
       return diff !== 0 ? diff : a.localeCompare(b);
     })
@@ -474,47 +431,6 @@ const getHospitalsForCountry = asyncHandler(async (req, res) => {
   const skip = (page - 1) * limit;
 
   const countryParam = rawParam.toLowerCase();
-
-  const nigeriaStates = [
-    "abia",
-    "adamawa",
-    "akwa ibom",
-    "anambra",
-    "bauchi",
-    "bayelsa",
-    "benue",
-    "borno",
-    "cross river",
-    "delta",
-    "ebonyi",
-    "edo",
-    "ekiti",
-    "enugu",
-    "gombe",
-    "imo",
-    "jigawa",
-    "kaduna",
-    "kano",
-    "katsina",
-    "kebbi",
-    "kogi",
-    "kwara",
-    "lagos",
-    "nasarawa",
-    "ogun",
-    "ondo",
-    "osun",
-    "oyo",
-    "plateau",
-    "rivers",
-    "sokoto",
-    "taraba",
-    "yobe",
-    "zamfara",
-    "fct",
-    "abuja",
-  ];
-
   const orConditions = [];
 
   if (countryParam === "nigeria") {
@@ -524,36 +440,25 @@ const getHospitalsForCountry = asyncHandler(async (req, res) => {
       })
     );
     orConditions.push({ "address.state": { $regex: /nigeria/i } });
-    orConditions.push({ "address.country": { $regex: /nigeria/i } });
   } else {
     orConditions.push({
       "address.state": { $regex: new RegExp(`^${rawParam}$`, "i") },
     });
-    orConditions.push({
-      "address.country": { $regex: new RegExp(`^${rawParam}$`, "i") },
-    });
   }
 
-  const query = { $or: orConditions };
+  const query = {
+    verified: true,
+    $or: orConditions,
+  };
 
-  // count total hospitals before limiting
   const total = await Hospital.countDocuments(query);
   const hospitals = await Hospital.find(query).skip(skip).limit(limit).lean();
 
   const formatted = hospitals.map((doc) => {
-    const rawState = (doc.address?.state || "").trim();
-    const isNigeriaState = nigeriaStates.includes(rawState.toLowerCase());
-    const country = isNigeriaState
-      ? "Nigeria"
-      : doc.address?.country
-      ? doc.address.country
-      : rawState;
+    const country = normalizeCountry(doc.address?.state);
     return {
       ...doc,
-      address: {
-        ...doc.address,
-        country,
-      },
+      address: { ...doc.address, country },
     };
   });
 
@@ -566,12 +471,14 @@ const getHospitalsForCountry = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc share hospitals
+// @desc share hospitals by generating a shareable link (Verified Only)
 // @route POST /hospitals/share
 // @access Public
 const shareHospitals = asyncHandler(async (req, res) => {
-  const { address, city, state } = req.body.searchParams;
-  const query = {};
+  const { address, city, state } = req.body?.searchParams || {};
+
+  const query = { verified: true };
+
   if (address) {
     query["$or"] = [
       { name: { $regex: new RegExp(address, "i") } },
@@ -582,13 +489,22 @@ const shareHospitals = asyncHandler(async (req, res) => {
   if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
 
   const searchedHospitals = await Hospital.find(query).lean();
-  // Generate a unique link identifier
+
+  if (!searchedHospitals || searchedHospitals.length === 0) {
+    return res
+      .status(404)
+      .json({ message: "No verified hospitals found to share." });
+  }
+
+  // Generate unique ID for the shareable link
   const linkId = ids.generate();
 
+  // Create and save the shareable link document
   const shareableLink = new ShareableLink({
     linkId,
+    createdBy: req.userId ? req.userId : null,
     hospitals: searchedHospitals.map((hospital) => ({
-      id: hospital.id,
+      hospitalId: hospital._id,
       name: hospital.name,
       slug: hospital.slug,
       address: {
@@ -598,18 +514,18 @@ const shareHospitals = asyncHandler(async (req, res) => {
       },
       phone: hospital.phoneNumber,
       website: hospital.website,
-      email: hospital.email,
       photoUrl: hospital.photoUrl,
-      type: hospital.type,
       services: hospital.services,
-      comments: hospital.comments,
-      hours: hospital.hours,
+      verified: hospital.verified,
     })),
   });
 
   await shareableLink.save();
-  // Return the generated shareable link to the client
-  return res.status(200).json({ shareableLink: linkId });
+
+  return res.status(201).json({
+    message: "Shareable link created",
+    linkId: linkId,
+  });
 });
 
 // @desc Retrieve the hospital list associated with a shareable link
@@ -617,24 +533,27 @@ const shareHospitals = asyncHandler(async (req, res) => {
 // @access Public
 const getSharedHospitals = asyncHandler(async (req, res) => {
   const { linkId } = req.params;
-  const link = await ShareableLink.findOne({ linkId });
+
+  // Find the shareable link document by linkId
+  const link = await ShareableLink.findOne({ linkId }).lean();
 
   if (!link) {
-    return res.status(404).json({ error: "Link not found" });
+    return res
+      .status(404)
+      .json({ message: "This share link has expired or does not exist." });
   }
 
-  const hospitals = link.hospitals;
-  // Return the hospital list to the client
-  return res.status(200).json(hospitals);
+  return res.status(200).json(link.hospitals);
 });
 
-// @dec export hospital
+// @dec export hospitals to CSV (Verified Only)
 // @route GET /hospitals/export
 // @access Public
 const exportHospitals = asyncHandler(async (req, res) => {
   const { address, city, state } = req.query;
 
-  const query = {};
+  const query = { verified: true };
+
   if (address) {
     query["$or"] = [
       { name: { $regex: new RegExp(address, "i") } },
@@ -646,16 +565,20 @@ const exportHospitals = asyncHandler(async (req, res) => {
 
   const hospitals = await Hospital.find(query).lean();
 
-  // ✅ Safe mapping (avoid crashes on missing fields)
+  if (!hospitals || hospitals.length === 0) {
+    return res
+      .status(404)
+      .json({ message: "No verified records found to export." });
+  }
+  // Map hospital data to CSV format
   const csvData = hospitals.map((hospital) => ({
     name: hospital.name || "",
     street: hospital.address?.street || "",
     city: hospital.address?.city || "",
-    state: hospital.address?.state || "",
+    country: normalizeCountry(hospital.address?.state),
     phone: hospital.phoneNumber || "",
     website: hospital.website || "",
     email: hospital.email || "",
-    photoUrl: hospital.photoUrl || "",
     type: hospital.type || "",
     services: Array.isArray(hospital.services)
       ? hospital.services.join(", ")
@@ -666,21 +589,27 @@ const exportHospitals = asyncHandler(async (req, res) => {
     hours: Array.isArray(hospital.hours)
       ? hospital.hours
           .map((hour) => `${hour.day || ""}: ${hour.open || ""}`)
-          .join(", ")
+          .join(" | ")
+          .trim()
       : "",
   }));
 
+  // Convert to CSV string using papa parse library
   const csv = papa.unparse(csvData, { header: true });
 
+  // Set response headers for file download
   res.setHeader("Content-Type", "text/csv");
-  res.setHeader("Content-Disposition", 'attachment; filename="hospitals.csv"');
+  res.setHeader(
+    "Content-Disposition",
+    'attachment; filename="verified_hospitals_export.csv"'
+  );
 
-  res.status(200).send(csv);
+  return res.status(200).send(csv);
 });
 
 // @desc add new hospital
 // @route POST /hospitals
-// @access Public
+// @access Private (Registered User)
 const addHospital = asyncHandler(async (req, res) => {
   const {
     name,
@@ -698,19 +627,31 @@ const addHospital = asyncHandler(async (req, res) => {
   if (!name || !address?.city || !address?.state) {
     return res
       .status(400)
-      .json({ message: "Name, City, and State are required" });
+      .json({ message: "Name, City, and Country (State) are required" });
   }
 
-  const duplicate = await Hospital.findOne({ name, address }).lean().exec();
+  // Check for exact duplicates in the same location
+  const duplicate = await Hospital.findOne({
+    name,
+    "address.city": address.city,
+    "address.state": address.state,
+  })
+    .lean()
+    .exec();
+
   if (duplicate) {
-    return res.status(400).json({ message: "Hospital already exists" });
+    return res
+      .status(400)
+      .json({ message: "This hospital already exists in our records" });
   }
 
+  // Get coordinates for the new facility
   const fullAddress = `${address.street || ""}, ${address.city}, ${
     address.state
   }`.trim();
   const { longitude, latitude } = await getCoordinates(fullAddress);
 
+  // Create the record in the "Sandbox" state
   const hospital = await Hospital.create({
     name,
     address,
@@ -724,10 +665,13 @@ const addHospital = asyncHandler(async (req, res) => {
     hours,
     longitude,
     latitude,
+    verified: false, // New submissions are unverified by default
+    isFeatured: false,
+    createdBy: req.userId,
   });
 
   return res.status(201).json({
-    message: "New hospital created",
+    message: "Hospital submitted successfully and is pending review.",
     hospital,
   });
 });
@@ -736,104 +680,102 @@ const addHospital = asyncHandler(async (req, res) => {
 // @route PATCH /hospitals/:id
 // @access Public
 const updateHospital = asyncHandler(async (req, res) => {
-  const {
-    id,
-    name,
-    address,
-    phoneNumber,
-    website,
-    email,
-    photoUrl,
-    type,
-    services,
-    comments,
-    hours,
-  } = req.body;
+  const { id } = req.params;
+  const updateData = req.body;
 
-  if (!id || !name || !address?.city || !address?.state) {
-    return res
-      .status(400)
-      .json({ message: "ID, Name, City, and State are required" });
+  if (!id)
+    return res.status(400).json({ message: "Hospital ID is required in URL" });
+
+  const hospital = await Hospital.findById(id);
+  if (!hospital) return res.status(404).json({ message: "Hospital not found" });
+
+  // If a non-admin edits a verified hospital, unverify it
+  if (hospital.verified && req.role !== "admin") {
+    hospital.verified = false;
   }
 
-  const hospital = await Hospital.findById(id).exec();
-  if (!hospital) {
-    return res.status(404).json({ message: "Hospital not found" });
-  }
+  Object.assign(hospital, updateData);
 
-  const duplicate = await Hospital.findOne({
-    name,
-    "address.city": address.city,
-    "address.state": address.state,
-  })
-    .lean()
-    .exec();
-
-  if (duplicate && duplicate._id.toString() !== id) {
-    return res.status(400).json({ message: "Hospital already exists" });
-  }
-
-  const addressChanged =
-    hospital.address.city !== address.city ||
-    hospital.address.state !== address.state ||
-    hospital.address.street !== address.street;
-
-  hospital.name = name;
-  hospital.address = address;
-  hospital.phoneNumber = phoneNumber;
-  hospital.website = website;
-  hospital.email = email;
-  hospital.photoUrl = photoUrl;
-  hospital.type = type;
-  hospital.services = services;
-  hospital.comments = comments;
-  hospital.hours = hours;
-
-  if (addressChanged) {
-    const fullAddress = `${address.street || ""}, ${address.city}, ${
-      address.state
-    }`.trim();
+  // Re-check coordinates if address changed
+  if (updateData.address) {
+    const fullAddress = `${updateData.address.street || ""}, ${
+      updateData.address.city
+    }, ${updateData.address.state}`.trim();
     const { longitude, latitude } = await getCoordinates(fullAddress);
 
-    // Only update if we got valid coords
     if (longitude && latitude) {
       hospital.longitude = longitude;
       hospital.latitude = latitude;
-    } else {
-      console.warn(` Keeping old coordinates for ${hospital.name}`);
     }
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid hospital ID format" });
   }
 
   const updatedHospital = await hospital.save();
   return res.json({
-    message: `${updatedHospital.name} updated successfully`,
+    message: hospital.verified
+      ? "Update saved."
+      : "Update saved and sent for review.",
     updatedHospital,
   });
 });
 
 // @desc delete hospital
 // @route DELETE /hospitals/:id
-// @access Public
+// @access Private (Admin)
 const deleteHospital = asyncHandler(async (req, res) => {
-  // const hospital = await Hospital.findById(req.params.id).exec()
-  const { name } = req.body;
-  const hospital = await Hospital.findOne({ name }).exec();
+  const { id } = req.params;
+
+  const hospital = await Hospital.findById(id).exec();
 
   if (!hospital) {
     return res.status(404).json({ message: "Hospital not found" });
   }
-  const result = await hospital.deleteOne();
-  res.json(`${result.name} hospital deleted`);
+
+  // only admins can delete verified data
+  if (req.role !== "admin") {
+    return res
+      .status(403)
+      .json({ message: "Unauthorized. Only admins can delete records." });
+  }
+
+  const hospitalName = hospital.name;
+  await hospital.deleteOne();
+
+  res.json({
+    message: `Hospital "${hospitalName}" has been permanently removed.`,
+  });
+});
+
+// @desc Get admin dashboard stats
+const getAdminStats = asyncHandler(async (req, res) => {
+  try {
+    const [totalHospitals, pendingHospitals, liveHospitals, totalUsers] =
+      await Promise.all([
+        Hospital.countDocuments(),
+        Hospital.countDocuments({ verified: false }),
+        Hospital.countDocuments({ verified: true }),
+        User.countDocuments(),
+      ]);
+
+    res.status(200).json({
+      totalHospitals,
+      pendingHospitals,
+      liveHospitals,
+      totalUsers,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching dashboard statistics" });
+  }
 });
 
 export default {
   getHospitals,
+  getMySubmissions,
   getHospitalCount,
+  getCountryStats,
   getRandomHospitals,
+  getUnverifiedHospitals,
+  getPendingHospitals,
+  approveHospital,
   getHospitalByName,
   findHospitals,
   searchHospitals,
@@ -849,4 +791,5 @@ export default {
   addHospital,
   updateHospital,
   deleteHospital,
+  getAdminStats,
 };

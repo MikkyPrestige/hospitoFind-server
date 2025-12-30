@@ -1,36 +1,74 @@
 import express from "express";
 import hospitalController from "../controllers/hospitalController.js";
-// import { redirectHospitalById } from "../controllers/redirectController.js";
+import { verifyJWT, verifyAdmin } from "../middleware/verifyRoles.js";
 
 const hospitalRouter = express.Router();
 
-hospitalRouter
-  .route("/")
-  .get(hospitalController.getHospitals)
-  .post(hospitalController.addHospital)
-  .patch(hospitalController.updateHospital)
-  .delete(hospitalController.deleteHospital);
-hospitalRouter.route("/count").get(hospitalController.getHospitalCount);
-hospitalRouter.route("/random").get(hospitalController.getRandomHospitals);
-hospitalRouter.route("/find").get(hospitalController.findHospitals);
-hospitalRouter.route("/search").get(hospitalController.searchHospitals);
-hospitalRouter.route("/export").get(hospitalController.exportHospitals);
-hospitalRouter.route("/share").post(hospitalController.shareHospitals);
-hospitalRouter.route("/nearby").get(hospitalController.getNearbyHospitals);
-hospitalRouter.route("/top").get(hospitalController.getTopHospitals);
-hospitalRouter
-  .route("/explore")
-  .get(hospitalController.getHospitalsGroupedByCountry);
-hospitalRouter
-  .route("/explore/top")
-  .get(hospitalController.getHospitalsGroupedByCountryTop);
-hospitalRouter
-  .route("/country/:country")
-  .get(hospitalController.getHospitalsForCountry);
-hospitalRouter
-  .route("/share/:linkId")
-  .get(hospitalController.getSharedHospitals);
-hospitalRouter.route("/:id").get(hospitalController.getHospitalById);
-hospitalRouter.route("/:name").get(hospitalController.getHospitalByName);
+// --- PUBLIC READ-ONLY ROUTES ---
+hospitalRouter.get("/", hospitalController.getHospitals);
+hospitalRouter.get("/count", hospitalController.getHospitalCount);
+hospitalRouter.get("/random", hospitalController.getRandomHospitals);
+hospitalRouter.get("/find", hospitalController.findHospitals);
+hospitalRouter.get("/search", hospitalController.searchHospitals);
+hospitalRouter.get("/nearby", hospitalController.getNearbyHospitals);
+hospitalRouter.get("/top", hospitalController.getTopHospitals);
+hospitalRouter.get("/explore", hospitalController.getHospitalsGroupedByCountry);
+hospitalRouter.get(
+  "/explore/top",
+  hospitalController.getHospitalsGroupedByCountryTop
+);
+hospitalRouter.get(
+  "/country/:country",
+  hospitalController.getHospitalsForCountry
+);
+hospitalRouter.get("/stats/countries", hospitalController.getCountryStats);
+
+// Sharing & Exporting hospitals routes
+hospitalRouter.post("/share", hospitalController.shareHospitals);
+hospitalRouter.get("/share/:linkId", hospitalController.getSharedHospitals);
+hospitalRouter.get("/export", hospitalController.exportHospitals);
+
+// Specific lookups
+hospitalRouter.get("/id/:id", hospitalController.getHospitalById);
+hospitalRouter.get("/name/:name", hospitalController.getHospitalByName);
+
+// --- COMMUNITY SANDBOX ROUTE ---
+hospitalRouter.get("/sandbox", hospitalController.getUnverifiedHospitals);
+
+// --- PROTECTED USER ACTIONS (Require JWT) ---
+hospitalRouter.post("/", verifyJWT, hospitalController.addHospital);
+hospitalRouter.get(
+  "/submissions",
+  verifyJWT,
+  hospitalController.getMySubmissions
+);
+hospitalRouter.patch("/:id", verifyJWT, hospitalController.updateHospital);
+
+// --- RESTRICTED ADMIN ACTIONS (Require JWT + Admin Role) ---
+hospitalRouter.get(
+  "/admin/stats",
+  verifyJWT,
+  verifyAdmin,
+  hospitalController.getAdminStats
+);
+
+hospitalRouter.get(
+  "/admin/pending",
+  verifyJWT,
+  verifyAdmin,
+  hospitalController.getPendingHospitals
+);
+hospitalRouter.patch(
+  "/approve/:id",
+  verifyJWT,
+  verifyAdmin,
+  hospitalController.approveHospital
+);
+hospitalRouter.delete(
+  "/:id",
+  verifyJWT,
+  verifyAdmin,
+  hospitalController.deleteHospital
+);
 
 export default hospitalRouter;

@@ -3,157 +3,191 @@ import User from "../models/userModel.js";
 import asyncHandler from "express-async-handler";
 
 // @desc    Get all users
-// @route   GET /users
-// @access  Private
-const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select("-password").lean()
-  if (!users) return res.status(404).json({ message: "No users found" })
+// @route   GET /api/users
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find().select("-password").lean();
+  if (!users || users.length === 0)
+    return res.status(404).json({ message: "No users found" });
+
   res.json(users);
 });
 
-const createUser = asyncHandler(async (req, res) => {
-  const { name, username, email, password } = req.body
-  if (!name || !username || !password || !email) {
-    return res.status(400).json({ message: "Please fill in all fields" })
+// @desc    Get user statistics
+// @route   GET /api/users/stats
+const getUserStats = asyncHandler(async (req, res) => {
+  const userId = req.userId;
+
+  const [total, verified] = await Promise.all([
+    Hospital.countDocuments({ createdBy: userId }),
+    Hospital.countDocuments({ createdBy: userId, verified: true }),
+  ]);
+
+  let level = "Beginner Contributor";
+  if (total > 5) level = "Active Contributor";
+  if (total > 20) level = "Directory Expert";
+
+  res.status(200).json({
+    totalSubmissions: total,
+    verifiedSubmissions: verified,
+    pendingSubmissions: total - verified,
+    contributorLevel: level,
+  });
+});
+
+// @desc    Update user role
+// @route   PATCH /api/users/role
+const updateUserRole = asyncHandler(async (req, res) => {
+  const { userId, newRole } = req.body;
+
+  if (!["user", "admin"].includes(newRole)) {
+    return res.status(400).json({ message: "Invalid role type" });
   }
 
-  const duplicateUsername = await User.findOne({ username }).lean().exec()
-  if (duplicateUsername) {
-    return res.status(409).json({ message: "Username already taken" })
-  }
+  const user = await User.findById(userId);
+  if (!user) return res.status(404).json({ message: "User not found" });
 
-  const duplicateEmail = await User.findOne({ email }).lean().exec()
-  if (duplicateEmail) {
-    return res.status(409).json({ message: "Email exists with another user" })
-  }
+  user.role = newRole;
+  await user.save();
 
-  // hash password
-  const hashedPassword = await bcrypt.hash(password, 10)
+  res.json({ message: `User role updated to ${newRole}` });
+});
 
-  // create user
-  const user = await User.create({
-    name,
-    username,
-    password: hashedPassword,
-    email
-  })
-
-  res.status(201).json({ message: `${user.username} user created` })
-})
-
-// @desc    update user
+// @desc    Update user
 // @route   PATCH /users
 // @access  Private
 const updateUser = asyncHandler(async (req, res) => {
-  const { name, username, email, password } = req.body
+  const { name, username, email, password, role } = req.body;
 
-  if (!name && !email) {
-    return res.status(400).json({ message: "Enter Name or Email to update" })
+  // Security check: Only allow the user themselves or an admin to update
+  const userToUpdate = await User.findOne({ username }).exec();
+  if (!userToUpdate) return res.status(404).json({ message: "User not found" });
+
+  const isOwner = req.user === userToUpdate.username;
+  const isAdmin = req.role === "admin";
+
+  if (!isOwner && !isAdmin) {
+    return res
+      .status(403)
+      .json({ message: "Unauthorized to update this profile" });
   }
 
-  if (!password) {
-    return res.status(400).json({ message: "Password is required" })
+  // Security Gate: Regular users CANNOT change their own role to admin
+  if (role && role !== userToUpdate.role && !isAdmin) {
+    return res
+      .status(403)
+      .json({ message: "Only admins can change user roles" });
   }
 
-  const user = await User.findOne({ username }).exec();
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+  // Verify password if the user is updating their own sensitive info
+  if (isOwner) {
+    if (!password)
+      return res
+        .status(400)
+        .json({ message: "Current password required for security" });
+    const isMatch = await bcrypt.compare(password, userToUpdate.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid password" });
   }
 
-  // check if email is already taken by another user
-  if (email !== user.email) {
+  // Update fields
+  if (name) userToUpdate.name = name;
+  if (email) {
     const existingEmailUser = await User.findOne({ email }).exec();
-    if (existingEmailUser) {
+    if (existingEmailUser && existingEmailUser.username !== username) {
       return res.status(409).json({ message: "Email already taken" });
     }
+    userToUpdate.email = email;
   }
+  if (role && isAdmin) userToUpdate.role = role;
 
-  // check if password is correct
-  const isMatch = await bcrypt.compare(password, user.password)
-  if (!isMatch) {
-    return res.status(401).json({ message: "Invalid password" })
-  }
+  const updatedUser = await userToUpdate.save();
 
-  // update user
-  if (name) {
-    user.name = name;
-  }
-  if (username) {
-    user.username = username;
-  }
-  if (email) {
-    user.email = email;
-  }
-
-  const updatedUser = await user.save()
-  res.status(201).json({ message: `${updatedUser.username} user updated` })
-})
+  res.status(200).json({
+    username: updatedUser.username,
+    name: updatedUser.name,
+    email: updatedUser.email,
+    role: updatedUser.role,
+    createdAt: updatedUser.createdAt,
+    updatedAt: updatedUser.updatedAt,
+  });
+});
 
 // @desc Update Password
 // @route PATCH /users/password
 // @access Private
 const updatePassword = asyncHandler(async (req, res) => {
-  const { username, password, newPassword } = req.body
+  const { username, password, newPassword } = req.body;
 
-  if (!username) {
-    return res.status(400).json({ message: "Username is required" })
-  } else if (!password) {
-    return res.status(400).json({ message: "Old password is required" })
-  } else if (!newPassword) {
-    return res.status(400).json({ message: "New password is required" })
+  if (!username || !password || !newPassword) {
+    return res.status(400).json({
+      message: "Username, old password, and new password are required",
+    });
   }
 
-  const user = await User.findOne({ username }).exec()
-  if (!user) {
-    return res.status(404).json({ message: "User does not exist" })
+  const user = await User.findOne({ username }).exec();
+  if (!user) return res.status(404).json({ message: "User does not exist" });
+
+  if (req.user !== user.username) {
+    return res
+      .status(403)
+      .json({ message: "You can only change your own password" });
   }
 
-  // check if password is correct
-  const isMatch = await bcrypt.compare(password, user.password)
+  // Verify Old Password
+  const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(401).json({ message: "Invalid password" })
+    return res.status(401).json({ message: "Invalid current password" });
   }
 
-  // hash password
-  const hashedPassword = await bcrypt.hash(newPassword, 10)
+  //  Hash & Save New Password
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
 
-  // update password
-  user.password = hashedPassword
-  await user.save()
-  res.status(201).json({ message: `${user.username} password updated` })
-})
+  res.status(200).json({ message: "Password updated successfully" });
+});
 
 // @desc    Delete user
 // @route   DELETE /users
 // @access  Private
 const deleteUser = asyncHandler(async (req, res) => {
-  const { username, password } = req.body
+  const { username, password } = req.body;
 
-  if (!username) {
-    return res.status(400).json({ message: "Username is required" })
-  } else if (!password) {
-    return res.status(400).json({ message: "Password is required" })
+  const userToDelete = await User.findOne({ username }).exec();
+  if (!userToDelete) return res.status(404).json({ message: "User not found" });
+
+  // Only admins or the account owner can delete the account
+  const isOwner = req.user === userToDelete.username;
+  const isAdmin = req.role === "admin";
+
+  if (!isOwner && !isAdmin) {
+    return res
+      .status(403)
+      .json({ message: "Unauthorized to delete this account" });
   }
 
-  const user = await User.findOne({ username }).exec()
-  if (!user) {
-    return res.status(404).json({ message: "User not found" })
+  if (isOwner) {
+    if (!password) {
+      return res
+        .status(400)
+        .json({ message: "Password required to delete account" });
+    }
+
+    const isMatch = await bcrypt.compare(password, userToDelete.password);
+    if (!isMatch) {
+      return res
+        .status(401)
+        .json({ message: "Incorrect password. Account not deleted." });
+    }
   }
 
-  // check if password is correct
-  const isMatch = bcrypt.compare(password, user.password)
-  if (!isMatch) {
-    return res.status(401).json({ message: "Invalid password" })
-  }
-
-  const deletedUser = await user.deleteOne()
-  res.status(201).json({ message: `${deletedUser.username} user deleted` })
-})
+  await userToDelete.deleteOne();
+  res.status(200).json({ message: `User ${username} deleted` });
+});
 
 export default {
-  getUsers,
-  createUser,
+  getAllUsers,
+  getUserStats,
+  updateUserRole,
   updateUser,
   updatePassword,
-  deleteUser
-}
+  deleteUser,
+};

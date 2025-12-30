@@ -6,15 +6,14 @@ const FRONTEND_URL = process.env.Frontend_URL;
 // list of static pages to include in the sitemap
 const staticPages = [
   "/",
-  "/findHospital",
+  "/find-hospital",
   "/about",
-  "/country",
+  "/directory",
   "/login",
   "/signup",
-  "/nearby",
-  "/news",
-  "/outbreaks",
-  "/dailyTips",
+  "/health-news",
+  "/disease-outbreaks",
+  "/health-Tips",
   "/faq",
   "/policy",
 ];
