@@ -22,13 +22,20 @@ const hospitalSchema = new Schema(
     comments: { type: [String] },
     hours: { type: [{ day: { type: String }, open: { type: String } }] },
     isFeatured: { type: Boolean, default: false },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     longitude: { type: Number },
     latitude: { type: Number },
   },
   { timestamps: true }
 );
 
-// Compound index to speed lookups by state/city/slug
 hospitalSchema.index({ "address.state": 1, "address.city": 1, slug: 1 });
 
 // Pre-save: auto-generate slug from name if not present
@@ -36,7 +43,6 @@ hospitalSchema.pre("save", async function (next) {
   if (!this.slug && this.name) {
     const base = sanitize(this.name);
     let slug = base;
-    // Use the model that the document belongs to
     const Hospital = this.constructor;
 
     let i = 0;
@@ -54,13 +60,10 @@ hospitalSchema.pre("save", async function (next) {
         break;
       }
     }
-
     this.slug = slug;
   }
-
   next();
 });
 
 const Hospital = mongoose.model("Hospital", hospitalSchema);
-
 export default Hospital;
