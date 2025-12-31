@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
+import Hospital from "../models/hospitalsModel.js";
 import asyncHandler from "express-async-handler";
 
 // @desc    Get all users
@@ -12,8 +13,9 @@ const getAllUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
-// @desc    Get user statistics
+// @desc Get dashboard stats
 // @route   GET /api/users/stats
+// @access  Private
 const getUserStats = asyncHandler(async (req, res) => {
   const userId = req.userId;
 

@@ -5,19 +5,17 @@ import asyncHandler from "express-async-handler";
 
 /**
  * @desc    Get all users for management
- * @route   GET /api/admin/users
+ * @route   GET /api/users
  */
 const getAllUsersAdmin = asyncHandler(async (req, res) => {
-    const users = await User.find({})
-      .select("-password")
-      .sort({ createdAt: -1 });
+  const users = await User.find({}).select("-password").sort({ createdAt: -1 });
   if (!users) return res.status(404).json({ message: "No users found" });
   res.json(users);
 });
 
 /**
  * @desc    Admin manually creates a user
- * @route   POST /api/admin/users
+ * @route   POST /api/users
  */
 const createUserAdmin = asyncHandler(async (req, res) => {
   const { name, username, email, password, role } = req.body;
@@ -57,7 +55,7 @@ const createUserAdmin = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Update any user's role
- * @route   PATCH /api/admin/users/role
+ * @route   PATCH /api/users/role
  */
 const updateUserRoleAdmin = asyncHandler(async (req, res) => {
   const { userId, newRole } = req.body;
@@ -70,10 +68,8 @@ const updateUserRoleAdmin = asyncHandler(async (req, res) => {
   if (!user) return res.status(404).json({ message: "User not found" });
 
   // Prevent admin from demoting themselves (to avoid lockouts)
-  if (user.email === req.user && newRole !== "admin") {
-    return res
-      .status(400)
-      .json({ message: "You cannot demote yourself from Admin status." });
+  if (user._id.toString() === req.userId.toString() && newRole !== "admin") {
+    return res.status(400).json({ message: "You cannot demote yourself." });
   }
 
   user.role = newRole;
@@ -82,30 +78,28 @@ const updateUserRoleAdmin = asyncHandler(async (req, res) => {
 });
 
 // @desc    Toggle user active/suspended status
-// @route   PATCH /api/admin/users/status
+// @route   PATCH /api/users/status
 const toggleUserStatus = asyncHandler(async (req, res) => {
   const { id } = req.params;
+
   const user = await User.findById(id);
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
 
-  // const updatedUser = await User.findByIdAndUpdate(
-  //   id,
-  //   { $set: { isActive: !user.isActive } },
-  //   { new: true, runValidators: false }
-  // );
+  user.isActive = !user.isActive;
 
-user.isActive = !user.isActive;
-await user.save();
+  await user.save();
 
   res.status(200).json({
-    message: `User ${updatedUser.isActive ? "activated" : "suspended"}`,
-    isActive: updatedUser.isActive,
+    message: `User ${user.isActive ? "activated" : "suspended"}`,
+    isActive: user.isActive,
   });
 });
 
 /**
  * @desc    Force delete any user
- * @route   DELETE /api/admin/users/:id
+ * @route   DELETE /api/users/:id
  */
 const deleteUserAdmin = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -124,11 +118,19 @@ const deleteUserAdmin = asyncHandler(async (req, res) => {
   res.json({ message: `User ${user.username} deleted successfully` });
 });
 
-
 // @desc    Get all hospitals (admin view)
-// @route   GET /api/admin/hospitals
+// @route   GET /admin/hospitals
 const getAllHospitalsAdmin = asyncHandler(async (req, res) => {
   const hospitals = await Hospital.find({}).sort({ createdAt: -1 });
+  res.json(hospitals);
+});
+
+// @desc    Get  hospitals pending (admin view)
+// @route   GET /api/hospitals/pending
+const getPendingHospitals = asyncHandler(async (req, res) => {
+  const hospitals = await Hospital.find({ verified: false }).sort({
+    createdAt: -1,
+  });
   res.json(hospitals);
 });
 
@@ -157,21 +159,12 @@ const formatHospitalData = (body) => {
         : [],
     comments: Array.isArray(comments) ? comments.filter(Boolean) : [],
     hours: Array.isArray(hours) ? hours.filter((h) => h.day && h.open) : [],
-    // services:
-    //   typeof services === "string"
-    //     ? services
-    //         .split(",")
-    //         .map((s) => s.trim())
-    //         .filter((s) => s !== "")
-    //     : services || [],
-    // comments: Array.isArray(comments) ? comments : [],
-    // hours: Array.isArray(hours) ? hours.filter((h) => h.day && h.open) : [],
   };
 };
 
 /**
  * @desc    Admin manually creates a verified hospital entry
- * @route   POST /api/admin/hospitals
+ * @route   POST /apin/hospitals
  */
 const createHospitalAdmin = asyncHandler(async (req, res) => {
   const data = formatHospitalData(req.body);
@@ -190,7 +183,7 @@ const createHospitalAdmin = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Admin update hospital details
- * @route   PATCH /api/admin/hospitals/:id
+ * @route   PATCH /api/hospitals/:id
  */
 const updateHospitalAdmin = asyncHandler(async (req, res) => {
   const data = formatHospitalData(req.body);
@@ -213,7 +206,7 @@ const updateHospitalAdmin = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Admin toggle hospital verification status
- * @route   PATCH /api/admin/hospitals/:id/toggle-status
+ * @route   PATCH /api/hospitals/:id/toggle-status
  */
 const toggleHospitalStatus = asyncHandler(async (req, res) => {
   const hospital = await Hospital.findById(req.params.id);
@@ -234,7 +227,7 @@ const toggleHospitalStatus = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Admin reviews, fixes, and approves a pending hospital
- * @route   PATCH /api/admin/hospitals/review-approve/:id
+ * @route   PATCH /api/hospitals/review-approve/:id
  */
 const reviewAndApproveHospital = asyncHandler(async (req, res) => {
   const data = formatHospitalData(req.body);
@@ -287,7 +280,7 @@ const checkDuplicateHospital = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Admin delete hospital
- * @route   DELETE /api/admin/hospitals/:id
+ * @route   DELETE /api/hospitals/:id
  */
 const deleteHospitalAdmin = asyncHandler(async (req, res) => {
   const hospital = await Hospital.findByIdAndDelete(req.params.id);
@@ -303,6 +296,7 @@ export default {
   toggleUserStatus,
   deleteUserAdmin,
   getAllHospitalsAdmin,
+  getPendingHospitals,
   createHospitalAdmin,
   updateHospitalAdmin,
   toggleHospitalStatus,

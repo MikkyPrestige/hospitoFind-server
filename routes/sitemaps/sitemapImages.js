@@ -2,7 +2,7 @@ import express from "express";
 import Hospital from "../../models/hospitalsModel.js";
 
 const router = express.Router();
-const FRONTEND_URL = process.env.Frontend_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 // Escape invalid XML characters
 const xmlEscape = (str = "") =>
