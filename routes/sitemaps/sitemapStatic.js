@@ -1,7 +1,7 @@
 import express from "express";
 
 const router = express.Router();
-const FRONTEND_URL = process.env.Frontend_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 // list of static pages to include in the sitemap
 const staticPages = [

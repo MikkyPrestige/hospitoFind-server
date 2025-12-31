@@ -36,7 +36,7 @@ hospitalRouter.get("/name/:name", hospitalController.getHospitalByName);
 hospitalRouter.get("/sandbox", hospitalController.getUnverifiedHospitals);
 
 // --- PROTECTED USER ACTIONS (Require JWT) ---
-hospitalRouter.post("/", verifyJWT, hospitalController.addHospital);
+hospitalRouter.post("/", hospitalController.addHospital);
 hospitalRouter.get(
   "/submissions",
   verifyJWT,

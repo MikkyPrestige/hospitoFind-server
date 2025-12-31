@@ -13,14 +13,18 @@ adminRouter
   .get(adminController.getAllUsersAdmin)
   .post(adminController.createUserAdmin);
 
+adminRouter.route("/users/role").patch(adminController.updateUserRoleAdmin);
+
 adminRouter
   .route("/users/:id")
   .patch(adminController.toggleUserStatus)
   .delete(adminController.deleteUserAdmin);
 
-adminRouter.route("/users/role").patch(adminController.updateUserRoleAdmin);
-
 // --- HOSPITAL MANAGEMENT ---
+adminRouter
+  .route("/hospitals/pending")
+  .get(adminController.getPendingHospitals);
+
 adminRouter
   .route("/hospitals/check-duplicate")
   .get(adminController.checkDuplicateHospital);
@@ -40,7 +44,7 @@ adminRouter
   .patch(adminController.toggleHospitalStatus);
 
 adminRouter
-  .route("/hospitals/review-approve/:id")
+  .route("/hospitals/approve/:id")
   .patch(adminController.reviewAndApproveHospital);
 
 export default adminRouter;
