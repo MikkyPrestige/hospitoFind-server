@@ -7,10 +7,14 @@ import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 
 // @desc Auth0 login callback
-// @route GET /auth/callback
+// @route GET /auth/auth0-login
 // @access Public
 const auth0Login = asyncHandler(async (req, res) => {
   const { email, name, username, idToken } = req.body;
+
+  if (!idToken) {
+    return res.status(400).json({ message: "ID Token is required" });
+  }
 
   const client = new JwksClient({
     jwksUri: process.env.JWKSURI,
@@ -30,14 +34,14 @@ const auth0Login = asyncHandler(async (req, res) => {
       if (err) {
         callback(err);
       } else {
-        const signingKey = key.getPublicKey || key.rsaPublicKey;
+        const signingKey = key.getPublicKey() || key.rsaPublicKey;
         callback(null, signingKey);
       }
     });
   };
 
-  // Verify the token
-  await new Promise((resolve, reject) => {
+  // Verify token authenticity
+  const verified = await new Promise((resolve, reject) => {
     jwt.verify(
       idToken,
       getKey,
@@ -53,31 +57,31 @@ const auth0Login = asyncHandler(async (req, res) => {
     );
   });
 
-  if (decodedToken.payload.email !== email) {
+  if (verified.email !== email) {
     return res.status(400).json({ message: "Email mismatch" });
   }
 
   let user = await User.findOne({ email }).exec();
 
   if (user) {
-    console.log(`🔗 Linking Auth0 login to existing account: ${email}`);
-
+    user.isVerified = true;
+   if (!user.auth0Id) user.auth0Id = verified.sub;
     if (!user.username) {
-      user.username = username;
-      await user.save();
+      user.username = username || email.split("@")[0];
     }
+    await user.save();
   } else {
-    console.log(`✨ Creating new account for: ${email}`);
-    const userEmail = email || `${username}_${Date.now()}@hospitofind.com`;
     user = await User.create({
       name,
       username: username || email.split("@")[0],
-      email: userEmail,
+      email: email,
       role: "user",
+      isVerified: true,
+      auth0Id: verified.sub,
     });
   }
 
-  // Create access token with role
+  // Generate tokens
   const accessToken = jwt.sign(
     {
       UserInfo: {
@@ -106,15 +110,121 @@ const auth0Login = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     accessToken,
-    id: user._id,
     name: user.name,
     username: user.username,
     email: user.email,
     role: user.role,
+    auth0Id: user.auth0Id,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   });
 });
+// const auth0Login = asyncHandler(async (req, res) => {
+//   const { email, name, username, idToken } = req.body;
+
+//   const client = new JwksClient({
+//     jwksUri: process.env.JWKSURI,
+//     cache: true,
+//   });
+
+//   const decodedToken = jwt.decode(idToken, { complete: true });
+
+//   if (!decodedToken || !decodedToken.header || !decodedToken.header.kid) {
+//     return res
+//       .status(400)
+//       .json({ message: "Unable to retrieve key ID from token" });
+//   }
+
+//   const getKey = (header, callback) => {
+//     client.getSigningKey(header.kid, (err, key) => {
+//       if (err) {
+//         callback(err);
+//       } else {
+//         const signingKey = key.getPublicKey || key.rsaPublicKey;
+//         callback(null, signingKey);
+//       }
+//     });
+//   };
+
+//   // Verify the token
+//   await new Promise((resolve, reject) => {
+//     jwt.verify(
+//       idToken,
+//       getKey,
+//       {
+//         algorithms: ["RS256"],
+//         audience: process.env.AUTH0_AUDIENCE,
+//         issuer: process.env.AUTH0_ISSUER,
+//       },
+//       (err, decoded) => {
+//         if (err) reject(err);
+//         else resolve(decoded);
+//       }
+//     );
+//   });
+
+//   if (decodedToken.payload.email !== email) {
+//     return res.status(400).json({ message: "Email mismatch" });
+//   }
+
+//   let user = await User.findOne({ email }).exec();
+
+//   if (user) {
+//     console.log(`🔗 Linking Auth0 login to existing account: ${email}`);
+
+//     if (!user.username) {
+//       user.username = username;
+//       await user.save();
+//     }
+//   } else {
+//     console.log(`✨ Creating new account for: ${email}`);
+//     const userEmail = email || `${username}_${Date.now()}@hospitofind.com`;
+//     user = await User.create({
+//       name,
+//       username: username || email.split("@")[0],
+//       email: userEmail,
+//       role: "user",
+//     });
+//   }
+
+//   // Create access token with role
+//   const accessToken = jwt.sign(
+//     {
+//       UserInfo: {
+//         id: user._id,
+//         username: user.username,
+//         role: user.role,
+//       },
+//     },
+//     process.env.ACCESS_TOKEN_SECRET,
+//     { expiresIn: "15m" }
+//   );
+
+//   const refreshToken = jwt.sign(
+//     { username: user.username },
+//     process.env.REFRESH_TOKEN_SECRET,
+//     { expiresIn: "7d" }
+//   );
+
+//   res.cookie("jwt", refreshToken, {
+//     httpOnly: true,
+//     sameSite: "None",
+//     secure: true,
+//     maxAge: 7 * 24 * 60 * 60 * 1000,
+//     domain: ".hospitofind.online",
+//   });
+
+//   res.status(200).json({
+//     accessToken,
+//     id: user._id,
+//     name: user.name,
+//     username: user.username,
+//     email: user.email,
+//     role: user.role,
+//     createdAt: user.createdAt,
+//     updatedAt: user.updatedAt,
+//   });
+// });
 
 // @desc Login
 // @route POST /auth
@@ -534,6 +644,7 @@ const logout = asyncHandler(async (req, res) => {
     httpOnly: true,
     sameSite: "none",
     secure: true,
+    domain: ".hospitofind.online",
   });
 
   res.status(200).json({ message: "Cookie cleared" });

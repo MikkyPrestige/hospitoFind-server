@@ -121,12 +121,19 @@ const updatePassword = asyncHandler(async (req, res) => {
 
   if (!username || !password || !newPassword) {
     return res.status(400).json({
-      message: "Username, old password, and new password are required",
+      message: "Username, current password, and new password are required",
     });
   }
 
   const user = await User.findOne({ username }).exec();
   if (!user) return res.status(404).json({ message: "User does not exist" });
+
+  if (user.auth0Id && !user.password) {
+    return res.status(400).json({
+      message:
+        "This account uses social login. Please manage your password through your social provider's settings.",
+    });
+  }
 
   if (req.user !== user.username) {
     return res
@@ -167,23 +174,55 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 
   if (isOwner) {
-    if (!password) {
-      return res
-        .status(400)
-        .json({ message: "Password required to delete account" });
-    }
+    const isSocialUser = userToDelete.auth0Id && !userToDelete.password;
 
-    const isMatch = await bcrypt.compare(password, userToDelete.password);
-    if (!isMatch) {
-      return res
-        .status(401)
-        .json({ message: "Incorrect password. Account not deleted." });
+    if (!isSocialUser) {
+      if (!password) {
+        return res
+          .status(400)
+          .json({ message: "Password required to delete account" });
+      }
+
+      const isMatch = await bcrypt.compare(password, userToDelete.password);
+      if (!isMatch) {
+        return res
+          .status(401)
+          .json({ message: "Incorrect password. Account not deleted." });
+      }
     }
   }
 
   await userToDelete.deleteOne();
-  res.status(200).json({ message: `User ${username} deleted` });
+  if (isOwner) {
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+      domain: ".hospitofind.online",
+    });
+  }
+  res.status(200).json({ message: `User ${username} deleted successfully` });
 });
+
+
+// const toggleFavorite = asyncHandler(async (req, res) => {
+//   const { hospitalId } = req.body;
+//   const user = await User.findById(req.user.id);
+
+//   if (!user) return res.status(404).json({ message: "User not found" });
+
+//   const isFavorited = user.favorites.includes(hospitalId);
+
+//   if (isFavorited) {
+//     // Remove if already exists
+//     user.favorites = user.favorites.filter(id => id.toString() !== hospitalId);
+//   } else {
+//     user.favorites.push(hospitalId);
+//   }
+
+//   await user.save();
+//   res.status(200).json(user.favorites);
+// });
 
 export default {
   getAllUsers,
@@ -192,4 +231,5 @@ export default {
   updateUser,
   updatePassword,
   deleteUser,
+  // toggleFavorite,
 };
