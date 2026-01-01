@@ -10,12 +10,12 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: function () {
-        return !this.socialId; // Only required if not a social login
+        return !this.auth0Id;
       },
       minLength: 6,
       maxLength: 1024,
     },
-    socialId: { type: String, unique: true, sparse: true },
+    auth0Id: { type: String, unique: true, sparse: true },
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -28,6 +28,22 @@ const userSchema = new Schema(
     isVerified: { type: Boolean, default: false },
     verificationToken: String,
     verificationTokenExpires: Date,
+    // favorites: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Hospital",
+    //   },
+    // ],
+    // recentlyViewed: [
+    //   {
+    //     hospital: { type: Schema.Types.ObjectId, ref: "Hospital" },
+    //     viewedAt: { type: Date, default: Date.now },
+    //   },
+    // ],
+    // weeklyViewCount: {
+    //   type: Number,
+    //   default: 0,
+    // },
   },
   { timestamps: true }
 );
