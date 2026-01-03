@@ -28,22 +28,15 @@ const userSchema = new Schema(
     isVerified: { type: Boolean, default: false },
     verificationToken: String,
     verificationTokenExpires: Date,
-    // favorites: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Hospital",
-    //   },
-    // ],
-    // recentlyViewed: [
-    //   {
-    //     hospital: { type: Schema.Types.ObjectId, ref: "Hospital" },
-    //     viewedAt: { type: Date, default: Date.now },
-    //   },
-    // ],
-    // weeklyViewCount: {
-    //   type: Number,
-    //   default: 0,
-    // },
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Hospital" }],
+    recentlyViewed: [
+      {
+        hospital: { type: mongoose.Schema.Types.ObjectId, ref: "Hospital" },
+        viewedAt: { type: Date, default: Date.now },
+      },
+    ],
+    weeklyViewCount: { type: Number, default: 0 },
+    lastWeeklyReset: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

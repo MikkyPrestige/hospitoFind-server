@@ -775,73 +775,6 @@ const getAdminStats = asyncHandler(async (req, res) => {
   }
 });
 
-// Toggle Favorite
-// const toggleFavorite = asyncHandler(async (req, res) => {
-//   const { hospitalId } = req.body;
-//   const user = await User.findById(req.userId);
-
-//   if (!user) return res.status(404).json({ message: "User not found" });
-
-//   const index = user.favorites.indexOf(hospitalId);
-//   if (index > -1) {
-//     user.favorites.splice(index, 1);
-//   } else {
-//     user.favorites.unshift(hospitalId);
-//   }
-
-//   await user.save();
-//   res.status(200).json(user.favorites);
-// });
-
-// Record View
-// const recordView = asyncHandler(async (req, res) => {
-//   const { hospitalId } = req.body;
-//   const user = await User.findById(req.userId);
-
-//   if (!user) return res.status(404).json({ message: "User not found" });
-
-//   // Move to top and prevent duplicates
-//   user.recentlyViewed = [
-//     { hospital: hospitalId, viewedAt: Date.now() },
-//     ...user.recentlyViewed.filter(
-//       (item) => item.hospital.toString() !== hospitalId
-//     ),
-//   ].slice(0, 10);
-
-//   // Simple Weekly Logic
-//   const oneWeek = 7 * 24 * 60 * 60 * 1000;
-//   if (Date.now() - new Date(user.updatedAt).getTime() > oneWeek) {
-//     user.weeklyViewCount = 1;
-//   } else {
-//     user.weeklyViewCount += 1;
-//   }
-
-//   await user.save();
-//   res
-//     .status(200)
-//     .json({
-//       recentlyViewed: user.recentlyViewed,
-//       weeklyViews: user.weeklyViewCount,
-//     });
-// });
-
-// Get Activity
-// const getUserActivity = asyncHandler(async (req, res) => {
-//   const user = await User.findById(req.userId)
-//     .populate("favorites")
-//     .populate("recentlyViewed.hospital");
-
-//   if (!user) return res.status(404).json({ message: "User not found" });
-
-//   res.status(200).json({
-//     favorites: user.favorites,
-//     recentlyViewed: user.recentlyViewed
-//       .map((rv) => rv.hospital)
-//       .filter(Boolean),
-//     weeklyViews: user.weeklyViewCount,
-//   });
-// });
-
 export default {
   getHospitals,
   getMySubmissions,
@@ -867,7 +800,4 @@ export default {
   updateHospital,
   deleteHospital,
   getAdminStats,
-  // toggleFavorite,
-  // recordView,
-  // getUserActivity,
 };
