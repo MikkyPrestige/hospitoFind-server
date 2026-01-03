@@ -289,6 +289,26 @@ const deleteHospitalAdmin = asyncHandler(async (req, res) => {
 // @desc    Import hospitals from Google Places
 // @route   POST /api/hospitals/import-google
 // @access  Admin Only
+
+// Helper: Convert Google Hours to Schema Format
+const formatHours = (googleHours) => {
+  if (!googleHours || !googleHours.weekday_text) return [];
+  // Google returns: ["Monday: 9:00 AM – 5:00 PM", ...]
+  return googleHours.weekday_text.map((text) => {
+    const parts = text.split(": ");
+    return {
+      day: parts[0],
+      open: parts.slice(1).join(": "), // e.g., "9:00 AM – 5:00 PM"
+    };
+  });
+};
+
+// Helper: Construct Real Photo URL
+const getPhotoUrl = (photoReference, apiKey) => {
+  if (!photoReference) return "";
+  return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${photoReference}&key=${apiKey}`;
+};
+
 const importFromGoogle = asyncHandler(async (req, res) => {
   const { city, targetCountry } = req.body;
 
@@ -296,15 +316,17 @@ const importFromGoogle = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "City and Country are required" });
   }
 
-  const query = `Hospitals in ${city}, ${targetCountry}`;
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
-  const googleUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
+  const query = `Hospitals in ${city}, ${targetCountry}`;
+
+  // Find Place IDs (Basic Search)
+  const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
     query
   )}&key=${apiKey}`;
 
-  let googleData;
+  let searchResults;
   try {
-    const response = await axios.get(googleUrl);
+    const response = await axios.get(searchUrl);
     if (
       response.data.status !== "OK" &&
       response.data.status !== "ZERO_RESULTS"
@@ -313,13 +335,14 @@ const importFromGoogle = asyncHandler(async (req, res) => {
         .status(400)
         .json({ message: `Google API Error: ${response.data.status}` });
     }
-    googleData = response.data.results;
+    searchResults = response.data.results;
   } catch (error) {
     return res
       .status(500)
-      .json({ message: "Failed to connect to Google Maps" });
+      .json({ message: "Failed to connect to Google Search" });
   }
-  if (!googleData || googleData.length === 0) {
+
+  if (!searchResults || searchResults.length === 0) {
     return res
       .status(404)
       .json({ message: `No hospitals found in ${city}, ${targetCountry}.` });
@@ -328,42 +351,91 @@ const importFromGoogle = asyncHandler(async (req, res) => {
   let importedCount = 0;
   let skippedCount = 0;
 
-  // 2. Process each result
-  for (const place of googleData) {
-    const name = place.name;
-    const googleAddress = place.formatted_address || "";
-    const lat = place.geometry?.location?.lat;
-    const lng = place.geometry?.location?.lng;
-    const review = place.review;
-
-    // 3. DUPLICATE CHECK
+  // Loop through results and fetch DETAILS
+  // use a restricted loop (e.g., top 10) to save API credits and time,
+  // or loop all if you want comprehensive data.
+  for (const place of searchResults) {
+    // Check for Duplicates first (Save API calls)
     const exists = await Hospital.findOne({
-      name: name,
+      name: place.name,
       "address.city": city,
     });
-
     if (exists) {
       skippedCount++;
       continue;
     }
 
-    // 4. Create the Hospital Draft
+    // Call Details API for THIS specific hospital
+    // request specific fields: phone, website, hours, reviews, photos
+    const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,formatted_phone_number,website,opening_hours,photos,reviews,types,geometry&key=${apiKey}`;
+
+    let details;
+    try {
+      const detailRes = await axios.get(detailsUrl);
+      details = detailRes.data.result;
+    } catch (err) {
+      console.log(`Skipping details for ${place.name} due to error`);
+      continue;
+    }
+
+    if (!details) continue;
+
+    // Map Data to Your Schema
+    const realPhotoUrl = details.photos
+      ? getPhotoUrl(details.photos[0].photo_reference, apiKey)
+      : "";
+
+    // Map Reviews to Comments (Take top 3)
+    const googleComments = details.reviews
+      ? details.reviews
+          .slice(0, 3)
+          .map((r) => `"${r.text}" - ${r.author_name} (Google Review)`)
+      : [`Imported from Google`];
+
+    // Map Types to Services (Filter out generic ones)
+    const validServices = details.types
+      ? details.types
+          .filter(
+            (t) =>
+              ![
+                "point_of_interest",
+                "establishment",
+                "hospital",
+                "health",
+              ].includes(t)
+          )
+          .map((t) =>
+            t.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
+          )
+      : ["General Healthcare"];
+
+    // Add generic fallback if empty
+    if (validServices.length === 0)
+      validServices.push("General Medical Services");
+
     const newHospital = new Hospital({
-      name: name,
+      name: details.name,
       address: {
-        street: googleAddress.split(",")[0] || "Imported Address",
+        street: details.formatted_address?.split(",")[0] || "Imported Address",
         city: city,
         state: targetCountry,
         country: targetCountry,
       },
-      longitude: lng,
-      latitude: lat,
+      phoneNumber: details.formatted_phone_number || "",
+      website: details.website || "",
+      email: "",
+      photoUrl: realPhotoUrl,
+
+      longitude: details.geometry?.location?.lng,
+      latitude: details.geometry?.location?.lat,
+
+      hours: formatHours(details.opening_hours),
+      comments: googleComments,
+      services: validServices,
+
+      type: "Public",
       verified: false,
       isFeatured: false,
-      photoUrl: place.photos ? "https://maps.googleapis.com" : "",
-      type: "Public",
-      services: ["General Healthcare"],
-      comments: [`Imported from Google. Reviews: ${review}/5`],
       createdBy: new mongoose.Types.ObjectId(req.userId),
     });
 
@@ -372,7 +444,7 @@ const importFromGoogle = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({
-    message: `Import complete. Added ${importedCount} new hospitals. Skipped ${skippedCount} duplicates.`,
+    message: `Import complete. Added ${importedCount} rich-data hospitals. Skipped ${skippedCount}.`,
     imported: importedCount,
     skipped: skippedCount,
   });
