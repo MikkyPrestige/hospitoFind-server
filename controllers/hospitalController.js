@@ -42,15 +42,15 @@ const getHospitals = asyncHandler(async (req, res) => {
 // @route GET /hospitals/mine
 // @access Private (Registered User)
 const getMySubmissions = asyncHandler(async (req, res) => {
-  if (!req.userId) {
-    return res
-      .status(401)
-      .json({ message: "Unauthorized: Missing user identity" });
+  const userId = req.userId;
+
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized: No User ID" });
   }
   const userObjectId = new mongoose.Types.ObjectId(req.userId);
-  const myHospitals = await Hospital.find({ createdBy: userObjectId }).sort({
-    createdAt: -1,
-  });
+  const myHospitals = await Hospital.find({
+    $or: [{ createdBy: userObjectId }, { createdBy: req.userId }],
+  }).sort({ createdAt: -1 });
 
   res.status(200).json(myHospitals);
 });
@@ -625,13 +625,13 @@ const addHospital = asyncHandler(async (req, res) => {
     hours,
   } = req.body;
 
+  // Basic Validation
   if (!name || !address?.city || !address?.state) {
     return res
       .status(400)
       .json({ message: "Name, City, and Country (State) are required" });
   }
 
-  // Check for exact duplicates in the same location
   const duplicate = await Hospital.findOne({
     name,
     "address.city": address.city,
@@ -646,14 +646,19 @@ const addHospital = asyncHandler(async (req, res) => {
       .json({ message: "This hospital already exists in our records" });
   }
 
-  // Get coordinates for the new facility
+  // Get coordinates
   const fullAddress = `${address.street || ""}, ${address.city}, ${
     address.state
   }`.trim();
   const { longitude, latitude } = await getCoordinates(fullAddress);
 
-  // Create the record in the "Sandbox" state
-  const hospital = await Hospital.create({
+  if (!req.userId) {
+    return res
+      .status(401)
+      .json({ message: "User identity not found. Please log in again." });
+  }
+
+  const hospital = new Hospital({
     name,
     address,
     phoneNumber,
@@ -666,14 +671,16 @@ const addHospital = asyncHandler(async (req, res) => {
     hours,
     longitude,
     latitude,
-    verified: false, // New submissions are unverified by default
+    verified: false,
     isFeatured: false,
-    createdBy: req.userId,
+    createdBy: new mongoose.Types.ObjectId(req.userId),
   });
+
+  const savedHospital = await hospital.save();
 
   return res.status(201).json({
     message: "Hospital submitted successfully and is pending review.",
-    hospital,
+    hospital: savedHospital,
   });
 });
 
