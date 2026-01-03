@@ -24,9 +24,9 @@ const getUserStats = asyncHandler(async (req, res) => {
     Hospital.countDocuments({ createdBy: userId, verified: true }),
   ]);
 
-  let level = "Beginner Contributor";
-  if (total > 5) level = "Active Contributor";
-  if (total > 20) level = "Directory Expert";
+  let level = "Beginner";
+  if (total > 5) level = "Active";
+  if (total > 20) level = "Directory";
 
   res.status(200).json({
     totalSubmissions: total,
@@ -204,25 +204,96 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.status(200).json({ message: `User ${username} deleted successfully` });
 });
 
+// USER ACTIVITY
+// @desc    Toggle Favorite Hospital
+// @route   POST /api/users/favorites
+const toggleFavorite = asyncHandler(async (req, res) => {
+  const { hospitalId } = req.body;
+  const user = await User.findById(req.userId);
 
-// const toggleFavorite = asyncHandler(async (req, res) => {
-//   const { hospitalId } = req.body;
-//   const user = await User.findById(req.user.id);
+  if (!user) return res.status(404).json({ message: "User not found" });
 
-//   if (!user) return res.status(404).json({ message: "User not found" });
+  // Check if already favorite
+  const isFav = user.favorites.includes(hospitalId);
 
-//   const isFavorited = user.favorites.includes(hospitalId);
+  if (isFav) {
+    // Remove it
+    user.favorites = user.favorites.filter(
+      (id) => id.toString() !== hospitalId
+    );
+  } else {
+    // Add it (prevent duplicates)
+    user.favorites.addToSet(hospitalId);
+  }
 
-//   if (isFavorited) {
-//     // Remove if already exists
-//     user.favorites = user.favorites.filter(id => id.toString() !== hospitalId);
-//   } else {
-//     user.favorites.push(hospitalId);
-//   }
+  await user.save();
+  res.status(200).json(user.favorites);
+});
 
-//   await user.save();
-//   res.status(200).json(user.favorites);
-// });
+// @desc    Record a View (Recent & Weekly Stats)
+// @route   POST /api/users/view
+const recordView = asyncHandler(async (req, res) => {
+  const { hospitalId } = req.body;
+  const user = await User.findById(req.userId);
+
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  // Update Recently Viewed
+  // Remove if exists first (to move it to top)
+  user.recentlyViewed = user.recentlyViewed.filter(
+    (item) => item.hospital.toString() !== hospitalId
+  );
+
+  // Add to top
+  user.recentlyViewed.unshift({ hospital: hospitalId, viewedAt: new Date() });
+
+  // Keep max 20
+  if (user.recentlyViewed.length > 20) {
+    user.recentlyViewed = user.recentlyViewed.slice(0, 20);
+  }
+
+  // Update Weekly Stats
+  const now = new Date();
+  const lastReset = new Date(user.lastWeeklyReset || 0);
+  const oneWeek = 7 * 24 * 60 * 60 * 1000;
+
+  if (now - lastReset > oneWeek) {
+    user.weeklyViewCount = 1;
+    user.lastWeeklyReset = now;
+  } else {
+    user.weeklyViewCount += 1;
+  }
+
+  await user.save();
+  res.status(200).json({
+    weeklyViews: user.weeklyViewCount,
+    recentCount: user.recentlyViewed.length,
+  });
+});
+
+// @desc    Get All Activity (Hydrate Dashboard)
+// @route   GET /api/users/activity
+const getUserActivity = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.userId)
+    .populate("favorites") // Get full hospital details
+    .populate("recentlyViewed.hospital"); // Get full hospital details
+
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  // Format recently viewed to match frontend expectation
+  const formattedRecents = user.recentlyViewed
+    .filter((item) => item.hospital) // Filter out nulls if hospital was deleted
+    .map((item) => ({
+      ...item.hospital.toObject(),
+      viewedAt: item.viewedAt,
+    }));
+
+  res.status(200).json({
+    favorites: user.favorites,
+    recentlyViewed: formattedRecents,
+    weeklyViews: user.weeklyViewCount,
+  });
+});
 
 export default {
   getAllUsers,
@@ -231,5 +302,7 @@ export default {
   updateUser,
   updatePassword,
   deleteUser,
-  // toggleFavorite,
+  toggleFavorite,
+  recordView,
+  getUserActivity,
 };

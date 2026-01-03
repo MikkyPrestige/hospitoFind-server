@@ -22,6 +22,10 @@ adminRouter
 
 // --- HOSPITAL MANAGEMENT ---
 adminRouter
+  .route("/hospitals/import-google")
+  .post(adminController.importFromGoogle);
+
+adminRouter
   .route("/hospitals/pending")
   .get(adminController.getPendingHospitals);
 

@@ -1,7 +1,9 @@
+import axios from "axios";
 import User from "../models/userModel.js";
 import Hospital from "../models/hospitalsModel.js";
 import bcrypt from "bcrypt";
 import asyncHandler from "express-async-handler";
+import mongoose from "mongoose";
 
 /**
  * @desc    Get all users for management
@@ -135,8 +137,6 @@ const getPendingHospitals = asyncHandler(async (req, res) => {
 });
 
 // Helper to format hospital data from request body
-// adminController.js
-
 const formatHospitalData = (body) => {
   const { address, street, city, state, services, comments, hours, ...rest } =
     body;
@@ -197,9 +197,6 @@ const updateHospitalAdmin = asyncHandler(async (req, res) => {
   if (!hospital) {
     return res.status(404).json({ message: "Hospital not found" });
   }
-  // if (!updatedHospital) {
-  //   return res.status(404).json({ message: "Hospital not found" });
-  // }
 
   res.status(200).json(hospital);
 });
@@ -289,6 +286,98 @@ const deleteHospitalAdmin = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Hospital deleted successfully" });
 });
 
+// @desc    Import hospitals from Google Places
+// @route   POST /api/hospitals/import-google
+// @access  Admin Only
+const importFromGoogle = asyncHandler(async (req, res) => {
+  const { city, targetCountry } = req.body;
+
+  if (!city || !targetCountry) {
+    return res.status(400).json({ message: "City and Country are required" });
+  }
+
+  const query = `Hospitals in ${city}, ${targetCountry}`;
+  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+  const googleUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
+    query
+  )}&key=${apiKey}`;
+
+  let googleData;
+  try {
+    const response = await axios.get(googleUrl);
+    if (
+      response.data.status !== "OK" &&
+      response.data.status !== "ZERO_RESULTS"
+    ) {
+      return res
+        .status(400)
+        .json({ message: `Google API Error: ${response.data.status}` });
+    }
+    googleData = response.data.results;
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Failed to connect to Google Maps" });
+  }
+  if (!googleData || googleData.length === 0) {
+    return res
+      .status(404)
+      .json({ message: `No hospitals found in ${city}, ${targetCountry}.` });
+  }
+
+  let importedCount = 0;
+  let skippedCount = 0;
+
+  // 2. Process each result
+  for (const place of googleData) {
+    const name = place.name;
+    const googleAddress = place.formatted_address || "";
+    const lat = place.geometry?.location?.lat;
+    const lng = place.geometry?.location?.lng;
+    const review = place.review;
+
+    // 3. DUPLICATE CHECK
+    const exists = await Hospital.findOne({
+      name: name,
+      "address.city": city,
+    });
+
+    if (exists) {
+      skippedCount++;
+      continue;
+    }
+
+    // 4. Create the Hospital Draft
+    const newHospital = new Hospital({
+      name: name,
+      address: {
+        street: googleAddress.split(",")[0] || "Imported Address",
+        city: city,
+        state: targetCountry,
+        country: targetCountry,
+      },
+      longitude: lng,
+      latitude: lat,
+      verified: false,
+      isFeatured: false,
+      photoUrl: place.photos ? "https://maps.googleapis.com" : "",
+      type: "Public",
+      services: ["General Healthcare"],
+      comments: [`Imported from Google. Reviews: ${review}/5`],
+      createdBy: new mongoose.Types.ObjectId(req.userId),
+    });
+
+    await newHospital.save();
+    importedCount++;
+  }
+
+  res.status(200).json({
+    message: `Import complete. Added ${importedCount} new hospitals. Skipped ${skippedCount} duplicates.`,
+    imported: importedCount,
+    skipped: skippedCount,
+  });
+});
+
 export default {
   getAllUsersAdmin,
   createUserAdmin,
@@ -303,4 +392,5 @@ export default {
   reviewAndApproveHospital,
   checkDuplicateHospital,
   deleteHospitalAdmin,
+  importFromGoogle,
 };
