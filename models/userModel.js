@@ -15,6 +15,8 @@ const userSchema = new Schema(
       minLength: 6,
       maxLength: 1024,
     },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
     auth0Id: { type: String, unique: true, sparse: true },
     role: {
       type: String,

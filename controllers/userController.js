@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
 import Hospital from "../models/hospitalsModel.js";
 import asyncHandler from "express-async-handler";
+import mongoose from "mongoose";
 
 // @desc    Get all users
 // @route   GET /api/users
@@ -230,59 +231,193 @@ const toggleFavorite = asyncHandler(async (req, res) => {
   res.status(200).json(user.favorites);
 });
 
+// @desc    Toggle hospital favorite status
+// @route   POST /api/users/favorites/:hospitalId
+// @access  Private
+const toggleFavoriteStatus = asyncHandler(async (req, res) => {
+  const { hospitalId } = req.params;
+  const userId = req.userId;
+
+  // We use Atomic Updates ($addToSet / $pull) to avoid VersionErrors
+  // 1. Check if user exists first
+  const userExists = await User.exists({ _id: userId });
+  if (!userExists) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
+  // 2. Check if currently a favorite (using a lean query for speed)
+  const user = await User.findById(userId).select("favorites").lean();
+
+  // Ensure favorites array exists to prevent crashes
+  const favorites = user.favorites || [];
+  // Check string comparison to be safe
+  const isFavorite = favorites.some((id) => id.toString() === hospitalId);
+
+  if (isFavorite) {
+    // Atomic Remove
+    await User.findByIdAndUpdate(userId, {
+      $pull: { favorites: hospitalId },
+    });
+    res
+      .status(200)
+      .json({ message: "Removed from favorites", isFavorite: false });
+  } else {
+    // Atomic Add
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { favorites: hospitalId },
+    });
+    res.status(200).json({ message: "Added to favorites", isFavorite: true });
+  }
+});
+
 // @desc    Record a View (Recent & Weekly Stats)
 // @route   POST /api/users/view
 const recordView = asyncHandler(async (req, res) => {
   const { hospitalId } = req.body;
-  const user = await User.findById(req.userId);
+  const userId = req.userId;
 
-  if (!user) return res.status(404).json({ message: "User not found" });
+  // Force ID to be an ObjectId to ensure $pull finds the match
+  const oid = new mongoose.Types.ObjectId(hospitalId);
 
-  // Update Recently Viewed
-  // Remove if exists first (to move it to top)
-  user.recentlyViewed = user.recentlyViewed.filter(
-    (item) => item.hospital.toString() !== hospitalId
+  await User.findByIdAndUpdate(userId, {
+    $pull: { recentlyViewed: { hospital: oid } },
+  });
+
+  await User.findByIdAndUpdate(userId, {
+    $push: {
+      recentlyViewed: {
+        $each: [{ hospital: oid, viewedAt: new Date() }],
+        $position: 0,
+        $slice: 20,
+      },
+    },
+  });
+
+  // 2. Handle Weekly Stats (Separately to keep it simple)
+  const user = await User.findById(userId).select(
+    "lastWeeklyReset weeklyViewCount"
   );
 
-  // Add to top
-  user.recentlyViewed.unshift({ hospital: hospitalId, viewedAt: new Date() });
+  if (user) {
+    const now = new Date();
+    const lastReset = new Date(user.lastWeeklyReset || 0);
+    const oneWeek = 7 * 24 * 60 * 60 * 1000;
 
-  // Keep max 20
-  if (user.recentlyViewed.length > 20) {
-    user.recentlyViewed = user.recentlyViewed.slice(0, 20);
+    if (now - lastReset > oneWeek) {
+      // Reset count
+      await User.findByIdAndUpdate(userId, {
+        $set: { weeklyViewCount: 1, lastWeeklyReset: now },
+      });
+    } else {
+      // Increment count ($inc is atomic)
+      await User.findByIdAndUpdate(userId, {
+        $inc: { weeklyViewCount: 1 },
+      });
+    }
   }
 
-  // Update Weekly Stats
-  const now = new Date();
-  const lastReset = new Date(user.lastWeeklyReset || 0);
-  const oneWeek = 7 * 24 * 60 * 60 * 1000;
+  res.status(200).json({ message: "View recorded" });
+});
+// const recordView = asyncHandler(async (req, res) => {
+//   const { hospitalId } = req.body;
+//   const user = await User.findById(req.userId);
 
-  if (now - lastReset > oneWeek) {
-    user.weeklyViewCount = 1;
-    user.lastWeeklyReset = now;
-  } else {
-    user.weeklyViewCount += 1;
-  }
+//   if (!user) return res.status(404).json({ message: "User not found" });
 
-  await user.save();
-  res.status(200).json({
-    weeklyViews: user.weeklyViewCount,
-    recentCount: user.recentlyViewed.length,
+//   // Update Recently Viewed
+//   // Remove if exists first (to move it to top)
+//   user.recentlyViewed = user.recentlyViewed.filter(
+//     (item) => item.hospital.toString() !== hospitalId
+//   );
+
+//   // Add to top
+//   user.recentlyViewed.unshift({ hospital: hospitalId, viewedAt: new Date() });
+
+//   // Keep max 20
+//   if (user.recentlyViewed.length > 20) {
+//     user.recentlyViewed = user.recentlyViewed.slice(0, 20);
+//   }
+
+//   // Update Weekly Stats
+//   const now = new Date();
+//   const lastReset = new Date(user.lastWeeklyReset || 0);
+//   const oneWeek = 7 * 24 * 60 * 60 * 1000;
+
+//   if (now - lastReset > oneWeek) {
+//     user.weeklyViewCount = 1;
+//     user.lastWeeklyReset = now;
+//   } else {
+//     user.weeklyViewCount += 1;
+//   }
+
+//   await user.save();
+//   res.status(200).json({
+//     weeklyViews: user.weeklyViewCount,
+//     recentCount: user.recentlyViewed.length,
+//   });
+// });
+
+// @desc    Remove a specific hospital from history
+// @route   DELETE /api/users/history/:hospitalId
+const removeHistoryItem = asyncHandler(async (req, res) => {
+  const { hospitalId } = req.params;
+  const userId = req.userId;
+
+  // 🛡️ STRICT FIX: Convert String ID -> ObjectId
+  // This is required for $pull to work inside a nested array object
+  const oid = new mongoose.Types.ObjectId(hospitalId);
+
+  await User.findByIdAndUpdate(userId, {
+    $pull: {
+      recentlyViewed: { hospital: oid },
+    },
   });
+
+  res.status(200).json({ message: "Removed from history" });
+});
+
+// @desc    Remove a specific favorite (Safer than toggle for Dashboard)
+// @route   DELETE /api/users/favorites/:hospitalId
+const removeFavorite = asyncHandler(async (req, res) => {
+  const { hospitalId } = req.params;
+  const userId = req.userId;
+
+  // 🛡️ STRICT FIX: Convert String ID -> ObjectId
+  // Even for simple arrays, this is safer
+  const oid = new mongoose.Types.ObjectId(hospitalId);
+
+  await User.findByIdAndUpdate(userId, {
+    $pull: { favorites: oid },
+  });
+
+  res.status(200).json({ message: "Removed from favorites" });
+});
+
+// @desc    Clear ALL history
+// @route   DELETE /api/users/history
+const clearAllHistory = asyncHandler(async (req, res) => {
+  const userId = req.userId;
+
+  await User.findByIdAndUpdate(userId, {
+    $set: { recentlyViewed: [] },
+  });
+
+  res.status(200).json({ message: "History cleared" });
 });
 
 // @desc    Get All Activity (Hydrate Dashboard)
 // @route   GET /api/users/activity
 const getUserActivity = asyncHandler(async (req, res) => {
   const user = await User.findById(req.userId)
-    .populate("favorites") // Get full hospital details
-    .populate("recentlyViewed.hospital"); // Get full hospital details
+    .populate("favorites")
+    .populate("recentlyViewed.hospital");
 
   if (!user) return res.status(404).json({ message: "User not found" });
 
   // Format recently viewed to match frontend expectation
   const formattedRecents = user.recentlyViewed
-    .filter((item) => item.hospital) // Filter out nulls if hospital was deleted
+    .filter((item) => item.hospital)
     .map((item) => ({
       ...item.hospital.toObject(),
       viewedAt: item.viewedAt,
@@ -303,6 +438,10 @@ export default {
   updatePassword,
   deleteUser,
   toggleFavorite,
+  toggleFavoriteStatus,
   recordView,
+removeHistoryItem,
+removeFavorite,
+clearAllHistory,
   getUserActivity,
 };

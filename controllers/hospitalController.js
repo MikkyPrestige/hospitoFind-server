@@ -160,68 +160,168 @@ const getHospitalByName = asyncHandler(async (req, res) => {
   return res.json(hospital);
 });
 
-// @desc Find hospitals by general search term (name, street, city, or state)
-// @route GET /hospitals/find?term=searchTerm
-// @access Public
-// Helper: escape a string for use in RegExp
+// Helper: Escape regex characters to prevent crashing on symbols like "(" or "+"
 function escapeRegex(text = "") {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
-
+// @desc Find hospitals by smart search (Name, City, State/Country)
+// @route GET /hospitals/find?term=... OR ?city=...&state=...
+// @access Public
 const findHospitals = asyncHandler(async (req, res) => {
-  let { term } = req.query;
+  let { term, city, state } = req.query;
 
+  // SCENARIO 1: Dropdown Click (Precision Search)
+  if (city && state) {
+    const query = {
+      verified: true,
+      // Match exactly (case-insensitive)
+      "address.city": {
+        $regex: new RegExp(`^${escapeRegex(city.trim())}$`, "i"),
+      },
+      "address.state": {
+        $regex: new RegExp(`^${escapeRegex(state.trim())}$`, "i"),
+      },
+    };
+
+    const hospitals = await Hospital.find(query).lean().limit(100);
+    return res.status(200).json(hospitals || []);
+  }
+
+  // SCENARIO 2: Manual Typing (Smart Text Search)
   if (!term || typeof term !== "string" || term.trim().length < 2) {
     return res
       .status(400)
       .json({ message: "Please enter at least 2 characters" });
   }
 
-  const safe = escapeRegex(term.trim());
-  const searchRegex = new RegExp(safe, "i");
+  const cleanTerm = term.trim();
+  const safe = escapeRegex(cleanTerm);
 
-  const query = {
-    verified: true,
-    $or: [
-      { name: { $regex: searchRegex } },
-      { "address.street": { $regex: searchRegex } },
-      { "address.city": { $regex: searchRegex } },
-      { "address.state": { $regex: searchRegex } },
-    ],
-  };
+  // Base OR Conditions: Search Name, Street, City, or Country (State field)
+  const orConditions = [
+    { name: { $regex: new RegExp(safe, "i") } },
+    { "address.street": { $regex: new RegExp(safe, "i") } },
+    { "address.city": { $regex: new RegExp(safe, "i") } },
+    { "address.state": { $regex: new RegExp(safe, "i") } },
+  ];
 
-  const hospitals = await Hospital.find(query).lean().limit(200);
+  // Smart Logic: Handle "City Country"
+  // 1. Try treating the whole term as just a City
+  orConditions.push({ "address.city": { $regex: new RegExp(safe, "i") } });
+
+  // 2. Try splitting by the LAST space to separate City from Country
+  const lastSpaceIndex = cleanTerm.lastIndexOf(" ");
+  if (lastSpaceIndex !== -1) {
+    const cityPart = cleanTerm.substring(0, lastSpaceIndex).trim();
+    const countryPart = cleanTerm.substring(lastSpaceIndex + 1).trim();
+
+    if (cityPart.length > 1 && countryPart.length > 1) {
+      orConditions.push({
+        $and: [
+          {
+            "address.city": { $regex: new RegExp(escapeRegex(cityPart), "i") },
+          },
+          {
+            "address.state": {
+              $regex: new RegExp(escapeRegex(countryPart), "i"),
+            },
+          },
+        ],
+      });
+    }
+  }
+
+  const query = { verified: true, $or: orConditions };
+
+  // Fetch results (lean for speed)
+  let hospitals = await Hospital.find(query).lean().limit(100);
+
+  // --- SMART RANKING ---
+  // Sort results in memory to give the user the "Best Match" first
+  const lowerTerm = cleanTerm.toLowerCase();
+
+  hospitals.sort((a, b) => {
+    const nameA = a.name.toLowerCase();
+    const nameB = b.name.toLowerCase();
+
+    // Priority 1: Exact Name Match
+    if (nameA === lowerTerm) return -1;
+    if (nameB === lowerTerm) return 1;
+
+    // Priority 2: Name Starts With Term
+    if (nameA.startsWith(lowerTerm) && !nameB.startsWith(lowerTerm)) return -1;
+    if (!nameA.startsWith(lowerTerm) && nameB.startsWith(lowerTerm)) return 1;
+
+    // Priority 3: Name Contains Term
+    const hasNameA = nameA.includes(lowerTerm);
+    const hasNameB = nameB.includes(lowerTerm);
+    if (hasNameA && !hasNameB) return -1;
+    if (!hasNameA && hasNameB) return 1;
+
+    return 0; // Keep original order
+  });
+
   return res.status(200).json(hospitals || []);
 });
+// Helper: escape a string for use in RegExp
+// function escapeRegex(text = "") {
+//   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+// }
+
+// const findHospitals = asyncHandler(async (req, res) => {
+//   let { term } = req.query;
+
+//   if (!term || typeof term !== "string" || term.trim().length < 2) {
+//     return res
+//       .status(400)
+//       .json({ message: "Please enter at least 2 characters" });
+//   }
+
+//   const safe = escapeRegex(term.trim());
+//   const searchRegex = new RegExp(safe, "i");
+
+//   const query = {
+//     verified: true,
+//     $or: [
+//       { name: { $regex: searchRegex } },
+//       { "address.street": { $regex: searchRegex } },
+//       { "address.city": { $regex: searchRegex } },
+//       { "address.state": { $regex: searchRegex } },
+//     ],
+//   };
+
+//   const hospitals = await Hospital.find(query).lean().limit(200);
+//   return res.status(200).json(hospitals || []);
+// });
 
 // @desc Search for hospitals by cities or state
 // @route GET /hospitals/search?city=city&state=state
 // @access Public
-const searchHospitals = asyncHandler(async (req, res) => {
-  const { address, city, state } = req.query;
+// const searchHospitals = asyncHandler(async (req, res) => {
+//   const { address, city, state } = req.query;
 
-  const query = { verified: true };
+//   const query = { verified: true };
 
-  if (address) {
-    query["$or"] = [
-      { name: { $regex: new RegExp(address, "i") } },
-      { "address.street": { $regex: new RegExp(address, "i") } },
-    ];
-  }
+//   if (address) {
+//     query["$or"] = [
+//       { name: { $regex: new RegExp(address, "i") } },
+//       { "address.street": { $regex: new RegExp(address, "i") } },
+//     ];
+//   }
 
-  if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
-  if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
+//   if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
+//   if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
 
-  const hospitals = await Hospital.find(query).lean();
+//   const hospitals = await Hospital.find(query).lean();
 
-  if (hospitals.length === 0) {
-    return res
-      .status(404)
-      .json({ success: false, message: "No matching records" });
-  }
+//   if (hospitals.length === 0) {
+//     return res
+//       .status(404)
+//       .json({ success: false, message: "No matching records" });
+//   }
 
-  return res.json(hospitals);
-});
+//   return res.json(hospitals);
+// });
 
 // @desc Get nearby hospitals based on lat/lon or IP
 // @route GET /hospitals/nearby?lat=..&lon=..&limit=..
@@ -786,7 +886,7 @@ export default {
   approveHospital,
   getHospitalByName,
   findHospitals,
-  searchHospitals,
+  // searchHospitals,
   getNearbyHospitals,
   getHospitalById,
   getTopHospitals,

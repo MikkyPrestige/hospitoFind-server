@@ -113,13 +113,6 @@ const auth0Login = asyncHandler(async (req, res) => {
   );
 
   res.cookie("jwt", refreshToken, getCookieOptions());
-  // res.cookie("jwt", refreshToken, {
-  //   httpOnly: true,
-  //   sameSite: "None",
-  //   secure: true,
-  //   maxAge: 7 * 24 * 60 * 60 * 1000,
-  //   domain: ".hospitofind.online",
-  // });
 
   res.status(200).json({
     accessToken,
@@ -193,13 +186,6 @@ const login = asyncHandler(async (req, res) => {
   );
 
   res.cookie("jwt", refreshToken, getCookieOptions());
-  // res.cookie("jwt", refreshToken, {
-  //   httpOnly: true,
-  //   sameSite: "None",
-  //   secure: true,
-  //   maxAge: 7 * 24 * 60 * 60 * 1000,
-  //   domain: ".hospitofind.online",
-  // });
 
   res.status(201).json({
     accessToken,
@@ -328,13 +314,6 @@ const verifyEmail = asyncHandler(async (req, res) => {
   );
 
   res.cookie("jwt", refreshToken, getCookieOptions());
-  // res.cookie("jwt", refreshToken, {
-  //   httpOnly: true,
-  //   secure: true,
-  //   sameSite: "None",
-  //   maxAge: 7 * 24 * 60 * 60 * 1000,
-  //   domain: ".hospitofind.online",
-  // });
 
   res.status(200).json({
     message: "Email verified successfully!",
@@ -488,6 +467,96 @@ const refresh = asyncHandler(async (req, res) => {
   );
 });
 
+// @desc    Forgot Password - Send Email
+// @route   POST /auth/forgot-password
+// @access  Public
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    // Don't reveal if user exists.
+    // Always return "Email sent" to prevent email scraping.
+    return res
+      .status(200)
+      .json({ message: "If that email exists, a reset link has been sent." });
+  }
+
+  // Generate Token
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  // Hash it and save to DB
+  user.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 Minutes
+
+  await user.save();
+
+  // Create Reset Link
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+  const message = `
+    <h1>Password Reset Request</h1>
+    <p>You requested a password reset. Please click the link below to verify:</p>
+    <a href="${resetUrl}" clicktracking=off>${resetUrl}</a>
+    <p>If you did not make this request, please ignore this email.</p>
+  `;
+
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: "HospitoFind <security@hospitofind.online>",
+      to: user.email,
+      subject: "Password Reset Token",
+      html: message,
+    });
+
+    res.status(200).json({ message: "Email Sent" });
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+    return res.status(500).json({ message: "Email could not be sent" });
+  }
+});
+
+// @desc    Reset Password
+// @route   PUT /auth/reset-password/:resetToken
+// @access  Public
+const resetPassword = asyncHandler(async (req, res) => {
+  // Get token from URL and hash it to compare with DB
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.resetToken)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or Expired Token" });
+  }
+
+  // Set new password
+  user.password = await bcrypt.hash(req.body.password, 10);
+
+  // Clear reset fields
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  res
+    .status(200)
+    .json({ message: "Password updated successfully! Please login." });
+});
+
 // @desc Logout
 // @route POST /auth/logout
 // @access Private
@@ -497,12 +566,6 @@ const logout = asyncHandler(async (req, res) => {
 
   // Clear the cookie
   res.clearCookie("jwt", getCookieOptions());
-  // res.clearCookie("jwt", {
-  //   httpOnly: true,
-  //   sameSite: "none",
-  //   secure: true,
-  //   domain: ".hospitofind.online",
-  // });
 
   res.status(200).json({ message: "Cookie cleared" });
 });
@@ -514,5 +577,7 @@ export default {
   verifyEmail,
   resendVerification,
   refresh,
+  forgotPassword,
+  resetPassword,
   logout,
 };
