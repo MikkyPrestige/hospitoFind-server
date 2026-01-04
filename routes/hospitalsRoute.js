@@ -9,7 +9,7 @@ hospitalRouter.get("/", hospitalController.getHospitals);
 hospitalRouter.get("/count", hospitalController.getHospitalCount);
 hospitalRouter.get("/random", hospitalController.getRandomHospitals);
 hospitalRouter.get("/find", hospitalController.findHospitals);
-hospitalRouter.get("/search", hospitalController.searchHospitals);
+// hospitalRouter.get("/search", hospitalController.searchHospitals);
 hospitalRouter.get("/nearby", hospitalController.getNearbyHospitals);
 hospitalRouter.get("/top", hospitalController.getTopHospitals);
 hospitalRouter.get("/explore", hospitalController.getHospitalsGroupedByCountry);

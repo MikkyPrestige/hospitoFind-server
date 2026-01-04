@@ -4,20 +4,28 @@ import { verifyJWT } from "../middleware/verifyRoles.js";
 
 const userRouter = express.Router();
 
-// userRouter.post("/", userController.createUser);
-
 userRouter.use(verifyJWT);
 
 userRouter
   .route("/")
-  .get(userController.getAllUsers) // Only Admin
-  .patch(userController.updateUser) // Owner or Admin
-  .delete(userController.deleteUser); // Owner or Admin
-userRouter.route("/role").patch(userController.updateUserRole); // Only Admin
-userRouter.route("/stats").get(userController.getUserStats); // Owner or Admin
-userRouter.route("/password").patch(userController.updatePassword); // Owner
-userRouter.route("/favorites").post(userController.toggleFavorite); //Owner
-userRouter.route("/view").post(userController.recordView);           // Owner
-userRouter.route("/activity").get(userController.getUserActivity);   // Owner
+  .get(userController.getAllUsers)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
+userRouter.route("/role").patch(userController.updateUserRole);
+userRouter.route("/stats").get(userController.getUserStats);
+userRouter.route("/password").patch(userController.updatePassword);
+userRouter.route("/favorites").post(userController.toggleFavorite);
+userRouter.route("/view").post(userController.recordView);
+userRouter.route("/activity").get(userController.getUserActivity);
+userRouter
+  .route("/history/:hospitalId")
+  .delete(userController.removeHistoryItem);
+userRouter.route("/history").delete(userController.clearAllHistory);
+userRouter
+  .route("/favorites-status/:hospitalId")
+  .post(userController.toggleFavoriteStatus);
+userRouter
+  .route("/favorites/:hospitalId")
+  .delete(userController.removeFavorite);
 
 export default userRouter;
