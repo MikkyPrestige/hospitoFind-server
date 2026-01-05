@@ -15,8 +15,8 @@ dotenv.config();
 const nearbyCache = new Map();
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 
-// Haversine formula to calculate distance between two lat/lon points
-const haversine = (a, b) => {
+// getDistance formula to calculate distance between two lat/lon points
+const getDistance = (a, b) => {
   const R = 6371e3; // meters
   const φ1 = (a.lat * Math.PI) / 180;
   const φ2 = (b.lat * Math.PI) / 180;
@@ -263,157 +263,118 @@ const findHospitals = asyncHandler(async (req, res) => {
 
   return res.status(200).json(hospitals || []);
 });
-// Helper: escape a string for use in RegExp
-// function escapeRegex(text = "") {
-//   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-// }
-
-// const findHospitals = asyncHandler(async (req, res) => {
-//   let { term } = req.query;
-
-//   if (!term || typeof term !== "string" || term.trim().length < 2) {
-//     return res
-//       .status(400)
-//       .json({ message: "Please enter at least 2 characters" });
-//   }
-
-//   const safe = escapeRegex(term.trim());
-//   const searchRegex = new RegExp(safe, "i");
-
-//   const query = {
-//     verified: true,
-//     $or: [
-//       { name: { $regex: searchRegex } },
-//       { "address.street": { $regex: searchRegex } },
-//       { "address.city": { $regex: searchRegex } },
-//       { "address.state": { $regex: searchRegex } },
-//     ],
-//   };
-
-//   const hospitals = await Hospital.find(query).lean().limit(200);
-//   return res.status(200).json(hospitals || []);
-// });
-
-// @desc Search for hospitals by cities or state
-// @route GET /hospitals/search?city=city&state=state
-// @access Public
-// const searchHospitals = asyncHandler(async (req, res) => {
-//   const { address, city, state } = req.query;
-
-//   const query = { verified: true };
-
-//   if (address) {
-//     query["$or"] = [
-//       { name: { $regex: new RegExp(address, "i") } },
-//       { "address.street": { $regex: new RegExp(address, "i") } },
-//     ];
-//   }
-
-//   if (city) query["address.city"] = { $regex: new RegExp(city, "i") };
-//   if (state) query["address.state"] = { $regex: new RegExp(state, "i") };
-
-//   const hospitals = await Hospital.find(query).lean();
-
-//   if (hospitals.length === 0) {
-//     return res
-//       .status(404)
-//       .json({ success: false, message: "No matching records" });
-//   }
-
-//   return res.json(hospitals);
-// });
 
 // @desc Get nearby hospitals based on lat/lon or IP
 // @route GET /hospitals/nearby?lat=..&lon=..&limit=..
 // @access Public
 const getNearbyHospitals = async (req, res) => {
   const { lat, lon, limit } = req.query;
+  const max = parseInt(limit) || 3;
+  const maxRadiusMeters = 500000; // 500km
+
   const userLat = parseFloat(lat);
   const userLon = parseFloat(lon);
-  const max = parseInt(limit) || 3;
-  const maxRadiusKm = 500; // 500km radius
+  const hasLocation = !isNaN(userLat) && !isNaN(userLon);
 
-  // Generate a Cache Key based on location or IP
-  const ip =
-    req.headers["x-forwarded-for"]?.split(",")[0] ||
-    req.connection.remoteAddress ||
-    "unknown";
-  const cacheKey = userLat && userLon ? `${userLat},${userLon}` : `ip:${ip}`;
-
-  // Check in-memory cache first
+  // Check Cache
+  const cacheKey = hasLocation
+    ? `geo:${userLat}:${userLon}:${max}`
+    : `ip:${req.ip}`;
   const cached = nearbyCache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
     return res.json(cached.data);
   }
 
   try {
-    let hospitals = await Hospital.find({ verified: true }).lean();
-
-    if (!hospitals || hospitals.length === 0) {
-      return res.json({
-        results: [],
-        fallback: true,
-        message: "No verified hospitals currently available in the directory.",
-      });
-    }
-
     let results = [];
-    let fallbackMessage =
-      "Location access denied — Showing popular verified hospitals.";
+    let fallback = false;
+    let message = "Showing verified hospitals near you.";
 
-    // Calculate Distance if user provided lat/lon
-    if (!isNaN(userLat) && !isNaN(userLon)) {
-      const withDistances = hospitals.map((h) => {
-        // Handle cases where lat/lon might be missing or under different keys
-        const hLat = h.latitude ?? h.lat;
-        const hLon = h.longitude ?? h.lon;
+    // ATTEMPT SMART SEARCH (If coords exist)
+    if (hasLocation) {
+      try {
+        // Attempt MongoDB Geospatial Query
+        results = await Hospital.find({
+          verified: true,
+          location: {
+            $near: {
+              $geometry: { type: "Point", coordinates: [userLon, userLat] },
+              $maxDistance: maxRadiusMeters,
+            },
+          },
+        })
+          .limit(max)
+          .lean();
+      } catch (geoError) {
+        console.warn(
+          "⚠️ MongoDB Index Error (Using Manual Fallback):",
+          geoError.message
+        );
+        // If Index fails, fetch ALL verified and filter manually
+        const allHospitals = await Hospital.find({ verified: true }).lean();
+        results = allHospitals
+          .map((h) => {
+            // Use legacy lat/lon if location missing
+            const hLat = h.location?.coordinates?.[1] ?? h.latitude;
+            const hLon = h.location?.coordinates?.[0] ?? h.longitude;
+            if (!hLat || !hLon) return { ...h, distanceValue: Infinity };
 
-        if (typeof hLat !== "number" || typeof hLon !== "number") {
-          return { ...h, distance: null, distanceValue: Infinity };
-        }
-
-        const km =
-          haversine({ lat: userLat, lon: userLon }, { lat: hLat, lon: hLon }) /
-          1000;
-
-        return {
-          ...h,
-          distance: !isNaN(km) ? `${km.toFixed(1)} km` : null,
-          distanceValue: km,
-        };
-      });
-
-      // Filter by radius and sort by closest first
-      const nearby = withDistances
-        .filter((h) => h.distanceValue <= maxRadiusKm)
-        .sort((a, b) => a.distanceValue - b.distanceValue)
-        .slice(0, max);
-
-      if (nearby.length > 0) {
-        results = nearby;
-        fallbackMessage = "Showing verified hospitals near your location.";
+            const dist = getDistance(
+              { lat: userLat, lon: userLon },
+              { lat: hLat, lon: hLon }
+            );
+            return { ...h, distanceValue: dist };
+          })
+          .filter((h) => h.distanceValue <= maxRadiusMeters)
+          .sort((a, b) => a.distanceValue - b.distanceValue)
+          .slice(0, max);
       }
     }
 
-    //  Fallback: If no hospital is within 500km, show random verified hospitals
-    if (results.length === 0) {
-      results = hospitals.sort(() => 0.5 - Math.random()).slice(0, max);
+    // FALLBACK (If no coords OR no results found)
+    if (!results.length) {
+      fallback = true;
+      message = hasLocation
+        ? "No hospitals found nearby. Showing top verified hospitals."
+        : "Showing verified global hospitals.";
+
+      console.log("[GeoSearch] No results found nearby. Fetching random...");
+      results = await Hospital.aggregate([
+        { $match: { verified: true } },
+        { $sample: { size: max } },
+      ]);
     }
 
-    const responseData = {
-      results,
-      fallback: results.length > 0,
-      message: fallbackMessage,
-    };
+    // DISTANCE CALCULATION (Formatting)
+    if (hasLocation) {
+      results = results.map((h) => {
+        const hLon = h.location?.coordinates?.[0] ?? h.longitude;
+        const hLat = h.location?.coordinates?.[1] ?? h.latitude;
 
-    // Cache the results
+        if (hLat !== undefined && hLon !== undefined) {
+          const dist = getDistance(
+            { lat: userLat, lon: userLon },
+            { lat: hLat, lon: hLon }
+          );
+          // Add formatted distance string
+          return {
+            ...h,
+            distance: `${(dist / 1000).toFixed(1)} km`,
+          };
+        }
+        return h;
+      });
+    }
+
+    const responseData = { results, fallback, message };
+
+    // Save to Cache
     nearbyCache.set(cacheKey, { data: responseData, timestamp: Date.now() });
+
     return res.json(responseData);
   } catch (err) {
-    // console.error("Nearby search error:", err);
-    return res
-      .status(500)
-      .json({ message: "Failed to fetch nearby hospitals" });
+    console.error("Critical Search Error:", err);
+    return res.status(500).json({ message: "Search service unavailable" });
   }
 };
 

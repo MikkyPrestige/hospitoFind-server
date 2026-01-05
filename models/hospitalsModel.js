@@ -32,6 +32,17 @@ const hospitalSchema = new Schema(
     },
     longitude: { type: Number },
     latitude: { type: Number },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number],
+        index: "2dsphere",
+      },
+    },
   },
   { timestamps: true }
 );
@@ -40,6 +51,13 @@ hospitalSchema.index({ "address.state": 1, "address.city": 1, slug: 1 });
 
 // Pre-save: auto-generate slug from name if not present
 hospitalSchema.pre("save", async function (next) {
+  if (this.latitude && this.longitude) {
+    this.location = {
+      type: "Point",
+      coordinates: [this.longitude, this.latitude],
+    };
+  }
+
   if (!this.slug && this.name) {
     const base = sanitize(this.name);
     let slug = base;
