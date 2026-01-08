@@ -11,18 +11,17 @@ import { dirname } from "path";
 
 // Config & Middleware
 import corsOptions from "./config/corsOptions.js";
-import connectDB from "./config/db.js";
+import connectDB from "./config/dbConn.js";
 import { logger, logEvents } from "./middleware/logger.js";
 import errorHandler from "./middleware/errorHandler.js";
 
 // Routes
-import rootRoutes from "./routes/rootRoute.js";
-import authRoutes from "./routes/authRoute.js";
-import userRoutes from "./routes/userRoute.js";
+import rootRoutes from "./routes/root.js";
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import hospitalRoutes from "./routes/hospitalsRoute.js";
-import hospitalSlugRoutes from "./routes/hospitalsSlugRoute.js";
-import healthRoutes from "./routes/healthRoute.js";
+import hospitalRoutes from "./routes/hospitalsRoutes.js";
+import healthRoutes from "./routes/healthRoutes.js";
 import sitemapIndex from "./routes/sitemaps/sitemapIndex.js";
 import loadSitemapRoutes from "./routes/sitemaps/index.js";
 
@@ -51,7 +50,6 @@ app.use("/", rootRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/admin", adminRoutes);
-app.use("/hospital", hospitalSlugRoutes);
 app.use("/hospitals", hospitalRoutes);
 app.use("/health", healthRoutes);
 // ===== 404 Handling =====

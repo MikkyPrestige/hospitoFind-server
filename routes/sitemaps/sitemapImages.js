@@ -1,5 +1,5 @@
 import express from "express";
-import Hospital from "../../models/hospitalsModel.js";
+import Hospital from "../../models/Hospital.js";
 
 const router = express.Router();
 const FRONTEND_URL = process.env.FRONTEND_URL;

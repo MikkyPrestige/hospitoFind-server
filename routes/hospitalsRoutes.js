@@ -9,7 +9,6 @@ hospitalRouter.get("/", hospitalController.getHospitals);
 hospitalRouter.get("/count", hospitalController.getHospitalCount);
 hospitalRouter.get("/random", hospitalController.getRandomHospitals);
 hospitalRouter.get("/find", hospitalController.findHospitals);
-// hospitalRouter.get("/search", hospitalController.searchHospitals);
 hospitalRouter.get("/nearby", hospitalController.getNearbyHospitals);
 hospitalRouter.get("/top", hospitalController.getTopHospitals);
 hospitalRouter.get("/explore", hospitalController.getHospitalsGroupedByCountry);
@@ -21,6 +20,7 @@ hospitalRouter.get(
   "/country/:country",
   hospitalController.getHospitalsForCountry
 );
+hospitalRouter.get("/:country/:city/:slug", hospitalController.getHospitalBySlug);
 hospitalRouter.get("/stats/countries", hospitalController.getCountryStats);
 
 // Sharing & Exporting hospitals routes
@@ -37,9 +37,6 @@ hospitalRouter.get("/sandbox", hospitalController.getUnverifiedHospitals);
 
 // --- PROTECTED USER ACTIONS (Require JWT) ---
 hospitalRouter.post("/", verifyJWT, hospitalController.addHospital);
-// hospitalRouter.get("/activity", verifyJWT, hospitalController.getUserActivity);
-// hospitalRouter.post("/favorite", verifyJWT, hospitalController.toggleFavorite);
-// hospitalRouter.post("/view", verifyJWT, hospitalController.recordView);
 hospitalRouter.get(
   "/submissions",
   verifyJWT,

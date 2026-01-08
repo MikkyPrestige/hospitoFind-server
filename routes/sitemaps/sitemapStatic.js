@@ -16,6 +16,7 @@ const staticPages = [
   "/health-Tips",
   "/faq",
   "/policy",
+  "/terms"
 ];
 
 // sitemap for static pages

@@ -1,26 +1,18 @@
 import crypto from "node:crypto";
-import { Resend } from "resend";
 import jwt from "jsonwebtoken";
 import { JwksClient } from "jwks-rsa";
 import bcrypt from "bcrypt";
 import asyncHandler from "express-async-handler";
-import User from "../models/userModel.js";
-
-// Helper for Cookie Options
-const getCookieOptions = () => {
-  const isProduction = process.env.NODE_ENV === "production";
-  return {
-    httpOnly: true,
-    secure: true,
-    sameSite: isProduction ? "None" : "Lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    ...(isProduction && { domain: ".hospitofind.online" }),
-  };
-};
+import User from "../models/User.js";
+import {
+  getCookieOptions,
+  generateTokens,
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+} from "../utils/authHelpers.js";
 
 // @desc Auth0 login callback
 // @route GET /auth/auth0-login
-// @access Public
 const auth0Login = asyncHandler(async (req, res) => {
   const { email, name, username, idToken } = req.body;
 
@@ -128,7 +120,6 @@ const auth0Login = asyncHandler(async (req, res) => {
 
 // @desc Login
 // @route POST /auth
-// @access Public
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -148,8 +139,7 @@ const login = asyncHandler(async (req, res) => {
 
   if (user && !user.password) {
     return res.status(400).json({
-      message:
-        "This account uses Social Login. Please sign in with Google/Facebook.",
+      message: "This account uses Social Login. Please sign in with socials",
     });
   }
 
@@ -165,25 +155,7 @@ const login = asyncHandler(async (req, res) => {
     });
   }
 
-  // Create access token
-  const accessToken = jwt.sign(
-    {
-      UserInfo: {
-        id: user._id,
-        username: user.username,
-        role: user.role,
-      },
-    },
-    process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" }
-  );
-
-  // Create refresh token
-  const refreshToken = jwt.sign(
-    { username: user.username },
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "7d" }
-  );
+  const { accessToken, refreshToken } = generateTokens(user);
 
   res.cookie("jwt", refreshToken, getCookieOptions());
 
@@ -198,9 +170,8 @@ const login = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc Register new user & send verification email
+// @desc Register new user
 // @route POST /auth/register
-// @access  Public
 export const register = asyncHandler(async (req, res) => {
   const { name, username, email, password } = req.body;
 
@@ -214,7 +185,7 @@ export const register = asyncHandler(async (req, res) => {
     if (!existingUser.isVerified) {
       return res.status(409).json({
         message:
-          "This email is already registered but not verified. Please check your inbox or use the 'Resend Link' option.",
+          "This email is already registered but not verified. Check your inbox or use the 'Resend Link' option.",
       });
     }
     return res.status(409).json({ message: "Email already exists" });
@@ -236,43 +207,21 @@ export const register = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
-
     try {
-      await resend.emails.send({
-        from: "HospitoFind <onboarding@hospitofind.online>",
-        to: email,
-        subject: "Verify your HospitoFind Account",
-        html: `
-                    <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #e1e8f0; border-radius: 12px; padding: 40px;">
-                        <h1 style="color: #0e3db7; text-align: center;">HospitoFind</h1>
-                        <h2 style="text-align: center;">Welcome, ${name}!</h2>
-                        <p style="text-align: center;">Please click the button below to verify your email address:</p>
-                        <div style="text-align: center; margin: 30px 0;">
-                            <a href="${verificationLink}"
-                               style="background: #0e3db7; color: white; padding: 14px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
-                               Verify Email Address
-                            </a>
-                        </div>
-                        <p style="font-size: 12px; color: #718096; text-align: center;">This link expires in 24 hours.</p>
-                    </div>
-                `,
-      });
+      await sendVerificationEmail(email, name, verificationToken);
     } catch (emailError) {
       console.error("Resend Error:", emailError);
     }
 
-    res.status(201).json({
-      message:
-        "Registration successful! Please check your email to verify your account.",
-    });
+    res
+      .status(201)
+      .json({ message: "Registration successful! Verify your email." });
   } else {
     res.status(400).json({ message: "Invalid user data" });
   }
 });
 
-// Verify Email
+// @desc Verify Email
 const verifyEmail = asyncHandler(async (req, res) => {
   const { token } = req.query;
 
@@ -295,23 +244,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
   user.verificationTokenExpires = undefined;
   await user.save();
 
-  const accessToken = jwt.sign(
-    {
-      UserInfo: {
-        id: user._id,
-        username: user.username,
-        role: user.role,
-      },
-    },
-    process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" }
-  );
-
-  const refreshToken = jwt.sign(
-    { username: user.username },
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "7d" }
-  );
+  const { accessToken, refreshToken } = generateTokens(user);
 
   res.cookie("jwt", refreshToken, getCookieOptions());
 
@@ -325,6 +258,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc Resend Verification
 const resendVerification = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
@@ -343,11 +277,11 @@ const resendVerification = asyncHandler(async (req, res) => {
 
   if (user.isVerified) {
     return res.status(400).json({
-      message: "This account is already verified. Please log in.",
+      message: "This account is already verified.",
     });
   }
 
-  // Only allow resend if the last token was created more than 2 minutes ago
+  // Rate Limiting (2 mins)
   const now = new Date();
   if (
     user.verificationTokenExpires &&
@@ -363,61 +297,16 @@ const resendVerification = asyncHandler(async (req, res) => {
   user.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
   await user.save();
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
-
   try {
-    await resend.emails.send({
-      from: "HospitoFind <onboarding@hospitofind.online>",
-      to: email,
-      subject: "Verify your email - HospitoFind",
-      html: `
-                <div style="font-family: 'Inter', Helvetica, Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e1e8f0; border-radius: 16px; padding: 40px; background-color: #ffffff;">
-                    <div style="text-align: center; margin-bottom: 24px;">
-                        <h1 style="color: #0e3db7; margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px;">HospitoFind</h1>
-                    </div>
-
-                    <div style="text-align: center; margin-bottom: 32px;">
-                        <h2 style="color: #1a202c; font-size: 22px; font-weight: 700; margin-bottom: 12px;">Confirm your email address</h2>
-                        <p style="color: #4a5568; line-height: 1.6; font-size: 16px; margin: 0;">
-                            Tap the button below to confirm your email address and activate your account. This helps us keep your healthcare search secure.
-                        </p>
-                    </div>
-
-                    <div style="text-align: center; margin: 32px 0;">
-                        <a href="${verificationLink}"
-                           style="background-color: #0e3db7; color: #ffffff; padding: 16px 36px; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(14, 61, 183, 0.25);">
-                           Verify Email Address
-                        </a>
-                    </div>
-
-                    <p style="color: #718096; font-size: 14px; text-align: center; margin-top: 32px; line-height: 1.5;">
-                        If you didn't request this email, you can safely ignore it. This link will expire in 24 hours.
-                    </p>
-
-                    <hr style="border: 0; border-top: 1px solid #edf2f7; margin: 32px 0;" />
-
-                    <p style="color: #a0aec0; font-size: 12px; text-align: center; margin: 0;">
-                        &copy; ${new Date().getFullYear()} HospitoFind. All rights reserved.
-                    </p>
-                </div>
-            `,
-    });
-
-    res
-      .status(200)
-      .json({ message: "Verification email sent! Check your inbox." });
+    await sendVerificationEmail(email, user.name, verificationToken);
+    res.status(200).json({ message: "Verification email sent!" });
   } catch (error) {
-    console.error("Resend Error:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to send email. Please try again later." });
+    res.status(500).json({ message: "Failed to send email." });
   }
 });
 
 // @desc Refresh token
 // @route GET /auth/refresh
-// @access Public
 const refresh = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
 
@@ -433,7 +322,7 @@ const refresh = asyncHandler(async (req, res) => {
       if (err)
         return res
           .status(403)
-          .json({ message: "Forbidden: Token Expired or Invalid" });
+          .json({ message: "Token Expired or Invalid" });
 
       const user = await User.findOne({ username: decoded.username });
 
@@ -467,54 +356,32 @@ const refresh = asyncHandler(async (req, res) => {
   );
 });
 
-// @desc    Forgot Password - Send Email
+// @desc Forgot Password
 // @route   POST /auth/forgot-password
-// @access  Public
 const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
   const user = await User.findOne({ email });
 
   if (!user) {
-    // Don't reveal if user exists.
-    // Always return "Email sent" to prevent email scraping.
     return res
       .status(200)
-      .json({ message: "If that email exists, a reset link has been sent." });
+      .json({ message: "If email exists, a reset link has been sent." });
   }
 
   // Generate Token
   const resetToken = crypto.randomBytes(20).toString("hex");
 
-  // Hash it and save to DB
+  // Hash and save to DB
   user.resetPasswordToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-
   user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 Minutes
-
   await user.save();
 
-  // Create Reset Link
-  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-
-  const message = `
-    <h1>Password Reset Request</h1>
-    <p>You requested a password reset. Please click the link below to verify:</p>
-    <a href="${resetUrl}" clicktracking=off>${resetUrl}</a>
-    <p>If you did not make this request, please ignore this email.</p>
-  `;
-
   try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: "HospitoFind <security@hospitofind.online>",
-      to: user.email,
-      subject: "Password Reset Token",
-      html: message,
-    });
-
+    await sendPasswordResetEmail(user.email, resetToken);
     res.status(200).json({ message: "Email Sent" });
   } catch (error) {
     user.resetPasswordToken = undefined;
@@ -526,9 +393,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
 // @desc    Reset Password
 // @route   PUT /auth/reset-password/:resetToken
-// @access  Public
 const resetPassword = asyncHandler(async (req, res) => {
-  // Get token from URL and hash it to compare with DB
+  // Get token from URL and hash it
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(req.params.resetToken)
@@ -545,11 +411,9 @@ const resetPassword = asyncHandler(async (req, res) => {
 
   // Set new password
   user.password = await bcrypt.hash(req.body.password, 10);
-
   // Clear reset fields
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
-
   await user.save();
 
   res
@@ -559,7 +423,6 @@ const resetPassword = asyncHandler(async (req, res) => {
 
 // @desc Logout
 // @route POST /auth/logout
-// @access Private
 const logout = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(204);

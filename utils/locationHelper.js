@@ -39,19 +39,29 @@ export const nigeriaStates = [
 ].map((state) => state.toLowerCase());
 
 /**
- * Normalizes a state value to a Country label.
  * Maps any Nigerian state to "Nigeria", otherwise returns the state name.
  */
 export const normalizeCountry = (stateValue) => {
   if (!stateValue) return "Unknown";
 
   const trimmedState = stateValue.trim().toLowerCase();
-
   // If the state is in the Nigerian list, return "Nigeria"
   if (nigeriaStates.includes(trimmedState) || trimmedState === "nigeria") {
     return "Nigeria";
   }
-
   // Otherwise, return the original value capitalized (e.g., Ghana, Kenya)
   return stateValue.charAt(0).toUpperCase() + stateValue.slice(1);
+};
+
+
+// Calculate distance between two points (Haversine formula)
+export const getDistance = (a, b) => {
+  const R = 6371e3; // meters
+  const φ1 = (a.lat * Math.PI) / 180;
+  const φ2 = (b.lat * Math.PI) / 180;
+  const Δφ = ((b.lat - a.lat) * Math.PI) / 180;
+  const Δλ = ((b.lon - a.lon) * Math.PI) / 180;
+
+  const d = Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(d), Math.sqrt(1 - d));
 };
