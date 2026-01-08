@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { sanitize } from "../config/sanitize.js";
+import { sanitize } from "../utils/sanitize.js";
 
 const Schema = mongoose.Schema;
 

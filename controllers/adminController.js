@@ -1,10 +1,16 @@
 import axios from "axios";
-import User from "../models/userModel.js";
-import Hospital from "../models/hospitalsModel.js";
+import User from "../models/User.js";
+import Hospital from "../models/Hospital.js";
+import {
+  formatHours,
+  getPhotoUrl,
+  formatHospitalData,
+} from "../utils/hospitalHelpers.js";
 import bcrypt from "bcrypt";
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 
+// --- USER MANAGEMENT ---
 /**
  * @desc    Get all users for management
  * @route   GET /api/users
@@ -22,14 +28,12 @@ const getAllUsersAdmin = asyncHandler(async (req, res) => {
 const createUserAdmin = asyncHandler(async (req, res) => {
   const { name, username, email, password, role } = req.body;
 
-  // 1. Validation
   if (!username || !email || !password) {
     return res
       .status(400)
       .json({ message: "Username, email, and password are required" });
   }
 
-  // 2. Check if user already exists
   const userExists = await User.findOne({ $or: [{ email }, { username }] });
   if (userExists) {
     return res
@@ -37,10 +41,8 @@ const createUserAdmin = asyncHandler(async (req, res) => {
       .json({ message: "User with this email or username already exists" });
   }
 
-  // 3. Hash the password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // 4. Create User
   const newUser = await User.create({
     name,
     username,
@@ -69,7 +71,6 @@ const updateUserRoleAdmin = asyncHandler(async (req, res) => {
   const user = await User.findById(userId);
   if (!user) return res.status(404).json({ message: "User not found" });
 
-  // Prevent admin from demoting themselves (to avoid lockouts)
   if (user._id.toString() === req.userId.toString() && newRole !== "admin") {
     return res.status(400).json({ message: "You cannot demote yourself." });
   }
@@ -109,7 +110,6 @@ const deleteUserAdmin = asyncHandler(async (req, res) => {
   const user = await User.findById(id);
   if (!user) return res.status(404).json({ message: "User not found" });
 
-  // Safety: Prevent admin from deleting themselves
   if (user.email === req.user) {
     return res
       .status(400)
@@ -120,6 +120,8 @@ const deleteUserAdmin = asyncHandler(async (req, res) => {
   res.json({ message: `User ${user.username} deleted successfully` });
 });
 
+
+// --- HOSPITAL MANAGEMENT ---
 // @desc    Get all hospitals (admin view)
 // @route   GET /admin/hospitals
 const getAllHospitalsAdmin = asyncHandler(async (req, res) => {
@@ -135,32 +137,6 @@ const getPendingHospitals = asyncHandler(async (req, res) => {
   });
   res.json(hospitals);
 });
-
-// Helper to format hospital data from request body
-const formatHospitalData = (body) => {
-  const { address, street, city, state, services, comments, hours, ...rest } =
-    body;
-
-  return {
-    ...rest,
-    address: {
-      street: street || address?.street || "",
-      city: city || address?.city || "",
-      state: state || address?.state || "",
-    },
-    services:
-      typeof services === "string"
-        ? services
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean)
-        : Array.isArray(services)
-        ? services
-        : [],
-    comments: Array.isArray(comments) ? comments.filter(Boolean) : [],
-    hours: Array.isArray(hours) ? hours.filter((h) => h.day && h.open) : [],
-  };
-};
 
 /**
  * @desc    Admin manually creates a verified hospital entry
@@ -212,7 +188,6 @@ const toggleHospitalStatus = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Hospital not found" });
   }
 
-  // Flip the boolean
   hospital.verified = !hospital.verified;
   await hospital.save();
 
@@ -247,6 +222,9 @@ const reviewAndApproveHospital = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Hospital approved!", hospital });
 });
 
+/**
+ * @desc    Check for duplicates
+ */
 const checkDuplicateHospital = asyncHandler(async (req, res) => {
   const { name, city, currentId } = req.query;
 
@@ -286,29 +264,11 @@ const deleteHospitalAdmin = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Hospital deleted successfully" });
 });
 
+
+// --- GOOGLE IMPORT ---
 // @desc    Import hospitals from Google Places
 // @route   POST /api/hospitals/import-google
 // @access  Admin Only
-
-// Helper: Convert Google Hours to Schema Format
-const formatHours = (googleHours) => {
-  if (!googleHours || !googleHours.weekday_text) return [];
-  // Google returns: ["Monday: 9:00 AM – 5:00 PM", ...]
-  return googleHours.weekday_text.map((text) => {
-    const parts = text.split(": ");
-    return {
-      day: parts[0],
-      open: parts.slice(1).join(": "), // e.g., "9:00 AM – 5:00 PM"
-    };
-  });
-};
-
-// Helper: Construct Real Photo URL
-const getPhotoUrl = (photoReference, apiKey) => {
-  if (!photoReference) return "";
-  return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${photoReference}&key=${apiKey}`;
-};
-
 const importFromGoogle = asyncHandler(async (req, res) => {
   const { city, targetCountry } = req.body;
 
@@ -318,8 +278,6 @@ const importFromGoogle = asyncHandler(async (req, res) => {
 
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
   const query = `Hospitals in ${city}, ${targetCountry}`;
-
-  // Find Place IDs (Basic Search)
   const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
     query
   )}&key=${apiKey}`;
@@ -351,11 +309,7 @@ const importFromGoogle = asyncHandler(async (req, res) => {
   let importedCount = 0;
   let skippedCount = 0;
 
-  // Loop through results and fetch DETAILS
-  // use a restricted loop (e.g., top 10) to save API credits and time,
-  // or loop all if you want comprehensive data.
   for (const place of searchResults) {
-    // Check for Duplicates first (Save API calls)
     const exists = await Hospital.findOne({
       name: place.name,
       "address.city": city,
@@ -365,8 +319,6 @@ const importFromGoogle = asyncHandler(async (req, res) => {
       continue;
     }
 
-    // Call Details API for THIS specific hospital
-    // request specific fields: phone, website, hours, reviews, photos
     const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,formatted_phone_number,website,opening_hours,photos,reviews,types,geometry&key=${apiKey}`;
 
     let details;
@@ -380,10 +332,8 @@ const importFromGoogle = asyncHandler(async (req, res) => {
 
     if (!details) continue;
 
-    // Map Data to Your Schema
-    const realPhotoUrl = details.photos
-      ? getPhotoUrl(details.photos[0].photo_reference, apiKey)
-      : "";
+    const realPhotoUrl = details.photos ? getPhotoUrl(details.photos[0].photo_reference, apiKey) : "";
+    const hoursFormatted = formatHours(details.opening_hours);
 
     // Map Reviews to Comments (Take top 3)
     const googleComments = details.reviews
@@ -392,7 +342,6 @@ const importFromGoogle = asyncHandler(async (req, res) => {
           .map((r) => `"${r.text}" - ${r.author_name} (Google Review)`)
       : [`Imported from Google`];
 
-    // Map Types to Services (Filter out generic ones)
     const validServices = details.types
       ? details.types
           .filter(
@@ -409,7 +358,6 @@ const importFromGoogle = asyncHandler(async (req, res) => {
           )
       : ["General Healthcare"];
 
-    // Add generic fallback if empty
     if (validServices.length === 0)
       validServices.push("General Medical Services");
 
@@ -425,14 +373,11 @@ const importFromGoogle = asyncHandler(async (req, res) => {
       website: details.website || "",
       email: "",
       photoUrl: realPhotoUrl,
-
       longitude: details.geometry?.location?.lng,
       latitude: details.geometry?.location?.lat,
-
-      hours: formatHours(details.opening_hours),
+      hours: hoursFormatted,
       comments: googleComments,
       services: validServices,
-
       type: "Public",
       verified: false,
       isFeatured: false,

@@ -14,7 +14,7 @@ userRouter
 userRouter.route("/role").patch(userController.updateUserRole);
 userRouter.route("/stats").get(userController.getUserStats);
 userRouter.route("/password").patch(userController.updatePassword);
-userRouter.route("/favorites").post(userController.toggleFavorite);
+// userRouter.route("/favorites").post(userController.toggleFavorite);
 userRouter.route("/view").post(userController.recordView);
 userRouter.route("/activity").get(userController.getUserActivity);
 userRouter

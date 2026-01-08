@@ -1,50 +1,33 @@
 import fetch from "node-fetch";
+import {
+  stripHtml,
+  dedupeByTitle,
+  OUTBREAK_KEYWORDS,
+} from "../utils/healthHelpers.js";
 
 /* =====================================================
-    SHARED HELPERS & CACHE
+   CACHE STATE (In-Memory)
 ===================================================== */
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
-global.cachedNewsData = global.cachedNewsData || {
-  results: [],
-  lastFetched: 0,
-};
 
-const CACHE_VERSION = "v2";
-let cachedTips = null;
-let lastFetchedDate = null;
-let lastCacheVersion = null;
-
-
-const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "").trim();
-
-const dedupeByTitle = (arr) => {
-  const seen = new Set();
-  return arr.filter((x) => {
-    const key = x.title?.toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-};
+let newsCache = { results: [], lastFetched: 0 };
+let tipsCache = { results: [], lastFetchedDate: null };
 
 /* =====================================================
-    GLOBAL HEALTH NEWS
+    FETCH NEWS
 ===================================================== */
-async function getCachedNewsData() {
+async function fetchNewsData() {
   const now = Date.now();
-  if (
-    global.cachedNewsData.results.length &&
-    now - global.cachedNewsData.lastFetched < CACHE_TTL_MS
-  ) {
-    return global.cachedNewsData.results;
+
+  if (newsCache.results.length && now - newsCache.lastFetched < CACHE_TTL_MS) {
+    return newsCache.results;
   }
 
   const API_KEY = process.env.NEWSDATA_API_KEY;
-  const queryKeywords = encodeURIComponent(
+  const query = encodeURIComponent(
     "health AND (outbreak OR virus OR vaccine OR medicine OR wellness OR disease)"
   );
-
-  const url = `https://newsdata.io/api/1/news?category=health&language=en&q=${queryKeywords}&apikey=${API_KEY}`;
+  const url = `https://newsdata.io/api/1/news?category=health&language=en&q=${query}&apikey=${API_KEY}`;
 
   try {
     const res = await fetch(url);
@@ -54,16 +37,22 @@ async function getCachedNewsData() {
       return [];
     }
 
-    global.cachedNewsData = { results: data.results, lastFetched: now };
+    newsCache = { results: data.results, lastFetched: now };
     return data.results;
   } catch (err) {
+    console.error("News fetch error:", err);
     return [];
   }
 }
 
+/* =====================================================
+    CONTROLLER FUNCTIONS
+===================================================== */
+// @desc    Get Global Health News
+// @route   GET /api/health/news
 const getGlobalHealthNews = async (req, res) => {
   try {
-    const news = await getCachedNewsData();
+    const news = await fetchNewsData();
 
     if (!news || news.length === 0) {
       return res.json([
@@ -86,27 +75,22 @@ const getGlobalHealthNews = async (req, res) => {
       source_id: n.source_id || "NewsData",
     }));
 
-    const uniqueArticles = dedupeByTitle(articles);
-
-    res.json(uniqueArticles);
+    res.json(dedupeByTitle(articles));
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-/* =====================================================
-   HEALTH ALERTS (WHO + NewsData)
-===================================================== */
+// @desc    Get Health Alerts (WHO + NewsData)
+// @route   GET /api/health/alerts
 const getHealthAlerts = async (req, res) => {
   const WHO_URL = "https://www.who.int/api/news/diseaseoutbreaknews";
   const BASE_LINK =
     "https://www.who.int/emergencies/disease-outbreak-news/item";
 
   let alerts = [];
-  let whoCount = 0;
-  let newsCount = 0;
 
-  // 1️WHO Alerts
+  // Fetch WHO Alerts
   try {
     const resp = await fetch(WHO_URL);
     const data = await resp.json();
@@ -136,87 +120,76 @@ const getHealthAlerts = async (req, res) => {
       .filter(Boolean);
 
     if (whoAlerts.length === 0 && whoAlertsRaw.length > 0) {
-      const fallback = whoAlertsRaw.slice(0, 6).map((item) => ({
-        title: item.Title || "Unknown outbreak",
-        date: item.PublicationDate || item.PublicationDateAndTime || "",
-        summary: item.Overview
-          ? stripHtml(item.Overview).slice(0, 350)
-          : "No summary available.",
-        link: item.ItemDefaultUrl
-          ? `${BASE_LINK}${item.ItemDefaultUrl}`
-          : BASE_LINK,
-        source: "WHO (archived)",
-      }));
-      alerts = alerts.concat(fallback);
-      whoCount = fallback.length;
+      alerts = alerts.concat(
+        whoAlertsRaw.slice(0, 6).map((item) => ({
+          title: item.Title || "Unknown outbreak",
+          date: item.PublicationDate || "",
+          summary: stripHtml(item.Overview || "").slice(0, 350),
+          link: item.ItemDefaultUrl
+            ? `${BASE_LINK}${item.ItemDefaultUrl}`
+            : BASE_LINK,
+          source: "WHO (archived)",
+        }))
+      );
     } else {
       alerts = alerts.concat(whoAlerts);
-      whoCount = whoAlerts.length;
     }
   } catch (e) {
-    console.warn("WHO fetch failed:", e);
+    console.warn("WHO fetch failed:", e.message);
   }
+  //   if (whoAlerts.length === 0 && whoAlertsRaw.length > 0) {
+  //     const fallback = whoAlertsRaw.slice(0, 6).map((item) => ({
+  //       title: item.Title || "Unknown outbreak",
+  //       date: item.PublicationDate || item.PublicationDateAndTime || "",
+  //       summary: item.Overview
+  //         ? stripHtml(item.Overview).slice(0, 350)
+  //         : "No summary available.",
+  //       link: item.ItemDefaultUrl
+  //         ? `${BASE_LINK}${item.ItemDefaultUrl}`
+  //         : BASE_LINK,
+  //       source: "WHO (archived)",
+  //     }));
+  //     alerts = alerts.concat(fallback);
+  //     whoCount = fallback.length;
+  //   } else {
+  //     alerts = alerts.concat(whoAlerts);
+  //     whoCount = whoAlerts.length;
+  //   }
+  // } catch (e) {
+  //   console.warn("WHO fetch failed:", e);
+  // }
 
-  // NewsData Alerts
-  const news = await getCachedNewsData();
-  const outbreakKeywords = [
-    "outbreak",
-    "epidemic",
-    "pandemic",
-    "virus",
-    "infection",
-    "infectious",
-    "disease",
-    "fever",
-    "health alert",
-    "covid",
-    "flu",
-    "malaria",
-    "cholera",
-    "ebola",
-    "dengue",
-    "typhoid",
-    "zika",
-    "yellow fever",
-    "plague",
-    "measles",
-    "mpox",
-    "health emergency",
-  ];
+  const news = await fetchNewsData();
 
-  const outbreakNews = news.filter((n) => {
-    const text = `${n.title || ""} ${n.description || ""}`.toLowerCase();
-    return outbreakKeywords.some((kw) => text.includes(kw));
-  });
+  const outbreakNews = news
+    .filter((n) => {
+      const text = `${n.title || ""} ${n.description || ""}`.toLowerCase();
+      return OUTBREAK_KEYWORDS.some((kw) => text.includes(kw));
+    })
+    .map((n) => ({
+      title: n.title || "Health update",
+      date: n.pubDate || "",
+      summary: (n.description || "").slice(0, 350),
+      link: n.link || "",
+      source: n.source_id ? `NewsData (${n.source_id})` : "NewsData",
+    }));
 
-  const mappedOutbreakNews = outbreakNews.map((n) => ({
-    title: n.title || "Health update",
-    date: n.pubDate || "",
-    summary: (n.description || "").slice(0, 350),
-    link: n.link || "",
-    source: n.source_id ? `NewsData (${n.source_id})` : "NewsData",
-  }));
-
-  alerts = alerts.concat(mappedOutbreakNews);
-  newsCount = mappedOutbreakNews.length;
+  alerts = alerts.concat(outbreakNews);
 
   const unique = dedupeByTitle(alerts).sort(
     (a, b) => new Date(b.date) - new Date(a.date)
   );
-  const top = unique.slice(0, 9);
-
-  res.json(top);
+  res.json(unique.slice(0, 9));
 };
 
-/* =====================================================
-     HEALTH TIPS (MyHealthFinder API)
-===================================================== */
+// @desc    Get Health Tips (MyHealthFinder)
+// @route   GET /api/health/tips
 const getHealthTips = async (req, res) => {
   const today = new Date().toISOString().split("T")[0];
 
-  // Check Cache
-  if (cachedTips && lastFetchedDate === today) {
-    return res.json(cachedTips);
+  // Return Cached Tips if valid
+  if (tipsCache.results.length && tipsCache.lastFetchedDate === today) {
+    return res.json(tipsCache.results);
   }
 
   try {
@@ -236,10 +209,9 @@ const getHealthTips = async (req, res) => {
       return res.status(404).json({ error: "No tips available" });
     }
 
+    // Shuffle & Select
     const shuffled = resources.sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, 12);
-
-    const formattedTips = selected.map((tip) => ({
+    const formattedTips = shuffled.slice(0, 12).map((tip) => ({
       Title: tip.Title || "Stay Healthy Today",
       ImageUrl: tip.ImageUrl || null,
       ImageAlt: tip.ImageAlt || null,
@@ -247,8 +219,7 @@ const getHealthTips = async (req, res) => {
     }));
 
     // Update Cache
-    cachedTips = formattedTips;
-    lastFetchedDate = today;
+    tipsCache = { results: formattedTips, lastFetchedDate: today };
 
     res.json(formattedTips);
   } catch (error) {

@@ -1,6 +1,6 @@
 import express from "express";
-import Hospital from "../../models/hospitalsModel.js";
-import { sanitize } from "../../config/sanitize.js";
+import Hospital from "../../models/Hospital.js";
+import { sanitize } from "../../utils/sanitize.js";
 
 const router = express.Router();
 const FRONTEND_URL = process.env.FRONTEND_URL;

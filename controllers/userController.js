@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
-import User from "../models/userModel.js";
-import Hospital from "../models/hospitalsModel.js";
+import User from "../models/User.js";
+import Hospital from "../models/Hospital.js";
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 
@@ -16,7 +16,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 // @desc Get dashboard stats
 // @route   GET /api/users/stats
-// @access  Private
 const getUserStats = asyncHandler(async (req, res) => {
   const userId = req.userId;
 
@@ -55,13 +54,11 @@ const updateUserRole = asyncHandler(async (req, res) => {
   res.json({ message: `User role updated to ${newRole}` });
 });
 
-// @desc    Update user
+// @desc    Update user profile
 // @route   PATCH /users
-// @access  Private
 const updateUser = asyncHandler(async (req, res) => {
   const { name, username, email, password, role } = req.body;
 
-  // Security check: Only allow the user themselves or an admin to update
   const userToUpdate = await User.findOne({ username }).exec();
   if (!userToUpdate) return res.status(404).json({ message: "User not found" });
 
@@ -74,14 +71,12 @@ const updateUser = asyncHandler(async (req, res) => {
       .json({ message: "Unauthorized to update this profile" });
   }
 
-  // Security Gate: Regular users CANNOT change their own role to admin
   if (role && role !== userToUpdate.role && !isAdmin) {
     return res
       .status(403)
       .json({ message: "Only admins can change user roles" });
   }
 
-  // Verify password if the user is updating their own sensitive info
   if (isOwner) {
     if (!password)
       return res
@@ -116,7 +111,6 @@ const updateUser = asyncHandler(async (req, res) => {
 
 // @desc Update Password
 // @route PATCH /users/password
-// @access Private
 const updatePassword = asyncHandler(async (req, res) => {
   const { username, password, newPassword } = req.body;
 
@@ -132,7 +126,7 @@ const updatePassword = asyncHandler(async (req, res) => {
   if (user.auth0Id && !user.password) {
     return res.status(400).json({
       message:
-        "This account uses social login. Please manage your password through your social provider's settings.",
+        "This account uses social login. Please check your provider settings.",
     });
   }
 
@@ -188,7 +182,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       if (!isMatch) {
         return res
           .status(401)
-          .json({ message: "Incorrect password. Account not deleted." });
+          .json({ message: "Incorrect password." });
       }
     }
   }
@@ -205,31 +199,31 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.status(200).json({ message: `User ${username} deleted successfully` });
 });
 
-// USER ACTIVITY
+// --- USER ACTIVITY ---
 // @desc    Toggle Favorite Hospital
 // @route   POST /api/users/favorites
-const toggleFavorite = asyncHandler(async (req, res) => {
-  const { hospitalId } = req.body;
-  const user = await User.findById(req.userId);
+// const toggleFavorite = asyncHandler(async (req, res) => {
+//   const { hospitalId } = req.body;
+//   const user = await User.findById(req.userId);
 
-  if (!user) return res.status(404).json({ message: "User not found" });
+//   if (!user) return res.status(404).json({ message: "User not found" });
 
-  // Check if already favorite
-  const isFav = user.favorites.includes(hospitalId);
+//   // Check if already favorite
+//   const isFav = user.favorites.includes(hospitalId);
 
-  if (isFav) {
-    // Remove it
-    user.favorites = user.favorites.filter(
-      (id) => id.toString() !== hospitalId
-    );
-  } else {
-    // Add it (prevent duplicates)
-    user.favorites.addToSet(hospitalId);
-  }
+//   if (isFav) {
+//     // Remove it
+//     user.favorites = user.favorites.filter(
+//       (id) => id.toString() !== hospitalId
+//     );
+//   } else {
+//     // Add it (prevent duplicates)
+//     user.favorites.addToSet(hospitalId);
+//   }
 
-  await user.save();
-  res.status(200).json(user.favorites);
-});
+//   await user.save();
+//   res.status(200).json(user.favorites);
+// });
 
 // @desc    Toggle hospital favorite status
 // @route   POST /api/users/favorites/:hospitalId
@@ -238,20 +232,14 @@ const toggleFavoriteStatus = asyncHandler(async (req, res) => {
   const { hospitalId } = req.params;
   const userId = req.userId;
 
-  // We use Atomic Updates ($addToSet / $pull) to avoid VersionErrors
-  // 1. Check if user exists first
   const userExists = await User.exists({ _id: userId });
   if (!userExists) {
     res.status(404);
     throw new Error("User not found");
   }
-
-  // 2. Check if currently a favorite (using a lean query for speed)
   const user = await User.findById(userId).select("favorites").lean();
 
-  // Ensure favorites array exists to prevent crashes
   const favorites = user.favorites || [];
-  // Check string comparison to be safe
   const isFavorite = favorites.some((id) => id.toString() === hospitalId);
 
   if (isFavorite) {
@@ -277,95 +265,47 @@ const recordView = asyncHandler(async (req, res) => {
   const { hospitalId } = req.body;
   const userId = req.userId;
 
-  // Force ID to be an ObjectId to ensure $pull finds the match
-  const oid = new mongoose.Types.ObjectId(hospitalId);
+  const user = await User.findById(userId);
 
-  await User.findByIdAndUpdate(userId, {
-    $pull: { recentlyViewed: { hospital: oid } },
-  });
-
-  await User.findByIdAndUpdate(userId, {
-    $push: {
-      recentlyViewed: {
-        $each: [{ hospital: oid, viewedAt: new Date() }],
-        $position: 0,
-        $slice: 20,
-      },
-    },
-  });
-
-  // 2. Handle Weekly Stats (Separately to keep it simple)
-  const user = await User.findById(userId).select(
-    "lastWeeklyReset weeklyViewCount"
-  );
-
-  if (user) {
-    const now = new Date();
-    const lastReset = new Date(user.lastWeeklyReset || 0);
-    const oneWeek = 7 * 24 * 60 * 60 * 1000;
-
-    if (now - lastReset > oneWeek) {
-      // Reset count
-      await User.findByIdAndUpdate(userId, {
-        $set: { weeklyViewCount: 1, lastWeeklyReset: now },
-      });
-    } else {
-      // Increment count ($inc is atomic)
-      await User.findByIdAndUpdate(userId, {
-        $inc: { weeklyViewCount: 1 },
-      });
-    }
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
   }
 
+  user.recentlyViewed = user.recentlyViewed.filter(
+    (item) => item.hospital.toString() !== hospitalId
+  );
+
+  user.recentlyViewed.unshift({
+    hospital: hospitalId,
+    viewedAt: new Date(),
+  });
+
+  // Limit to 20
+  if (user.recentlyViewed.length > 20) {
+    user.recentlyViewed = user.recentlyViewed.slice(0, 20);
+  }
+
+  // Update Weekly Stats
+  const now = new Date();
+  const lastReset = new Date(user.lastWeeklyReset || 0);
+  const oneWeek = 7 * 24 * 60 * 60 * 1000;
+
+  if (now.getTime() - lastReset.getTime() > oneWeek) {
+    user.weeklyViewCount = 1;
+    user.lastWeeklyReset = now;
+  } else {
+    user.weeklyViewCount = (user.weeklyViewCount || 0) + 1;
+  }
+
+  await user.save();
   res.status(200).json({ message: "View recorded" });
 });
-// const recordView = asyncHandler(async (req, res) => {
-//   const { hospitalId } = req.body;
-//   const user = await User.findById(req.userId);
-
-//   if (!user) return res.status(404).json({ message: "User not found" });
-
-//   // Update Recently Viewed
-//   // Remove if exists first (to move it to top)
-//   user.recentlyViewed = user.recentlyViewed.filter(
-//     (item) => item.hospital.toString() !== hospitalId
-//   );
-
-//   // Add to top
-//   user.recentlyViewed.unshift({ hospital: hospitalId, viewedAt: new Date() });
-
-//   // Keep max 20
-//   if (user.recentlyViewed.length > 20) {
-//     user.recentlyViewed = user.recentlyViewed.slice(0, 20);
-//   }
-
-//   // Update Weekly Stats
-//   const now = new Date();
-//   const lastReset = new Date(user.lastWeeklyReset || 0);
-//   const oneWeek = 7 * 24 * 60 * 60 * 1000;
-
-//   if (now - lastReset > oneWeek) {
-//     user.weeklyViewCount = 1;
-//     user.lastWeeklyReset = now;
-//   } else {
-//     user.weeklyViewCount += 1;
-//   }
-
-//   await user.save();
-//   res.status(200).json({
-//     weeklyViews: user.weeklyViewCount,
-//     recentCount: user.recentlyViewed.length,
-//   });
-// });
 
 // @desc    Remove a specific hospital from history
 // @route   DELETE /api/users/history/:hospitalId
 const removeHistoryItem = asyncHandler(async (req, res) => {
   const { hospitalId } = req.params;
   const userId = req.userId;
-
-  // 🛡️ STRICT FIX: Convert String ID -> ObjectId
-  // This is required for $pull to work inside a nested array object
   const oid = new mongoose.Types.ObjectId(hospitalId);
 
   await User.findByIdAndUpdate(userId, {
@@ -377,14 +317,11 @@ const removeHistoryItem = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Removed from history" });
 });
 
-// @desc    Remove a specific favorite (Safer than toggle for Dashboard)
+// @desc    Remove a specific favorite
 // @route   DELETE /api/users/favorites/:hospitalId
 const removeFavorite = asyncHandler(async (req, res) => {
   const { hospitalId } = req.params;
   const userId = req.userId;
-
-  // 🛡️ STRICT FIX: Convert String ID -> ObjectId
-  // Even for simple arrays, this is safer
   const oid = new mongoose.Types.ObjectId(hospitalId);
 
   await User.findByIdAndUpdate(userId, {
@@ -406,7 +343,7 @@ const clearAllHistory = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "History cleared" });
 });
 
-// @desc    Get All Activity (Hydrate Dashboard)
+// @desc    Get All Activity ( Dashboard)
 // @route   GET /api/users/activity
 const getUserActivity = asyncHandler(async (req, res) => {
   const user = await User.findById(req.userId)
@@ -415,7 +352,6 @@ const getUserActivity = asyncHandler(async (req, res) => {
 
   if (!user) return res.status(404).json({ message: "User not found" });
 
-  // Format recently viewed to match frontend expectation
   const formattedRecents = user.recentlyViewed
     .filter((item) => item.hospital)
     .map((item) => ({
@@ -437,11 +373,11 @@ export default {
   updateUser,
   updatePassword,
   deleteUser,
-  toggleFavorite,
+  // toggleFavorite,
   toggleFavoriteStatus,
   recordView,
-removeHistoryItem,
-removeFavorite,
-clearAllHistory,
+  removeHistoryItem,
+  removeFavorite,
+  clearAllHistory,
   getUserActivity,
 };
