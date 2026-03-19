@@ -26,6 +26,11 @@ const hospitalSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    continent: {
+      type: String,
+      index: true,
+    },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -44,7 +49,7 @@ const hospitalSchema = new Schema(
       },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 hospitalSchema.index({ "address.state": 1, "address.city": 1, slug: 1 });
