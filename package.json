@@ -24,6 +24,7 @@
     "fs": "^0.0.1-security",
     "geoip-lite": "^1.4.10",
     "geoip2-lite": "^1.0.11",
+    "groq-sdk": "^1.1.1",
     "haversine-distance": "^1.2.4",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.1",

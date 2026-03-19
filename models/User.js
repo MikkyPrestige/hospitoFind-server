@@ -39,6 +39,45 @@ const userSchema = new Schema(
     ],
     weeklyViewCount: { type: Number, default: 0 },
     lastWeeklyReset: { type: Date, default: Date.now },
+    healthHistory: [
+      {
+        date: {
+          type: Date,
+          default: Date.now,
+        },
+        symptoms: [{ type: String, trim: true }],
+        location: {
+          type: String,
+          trim: true,
+        },
+        matchedHospitals: [
+          {
+            hospitalId: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "Hospital",
+            },
+            name: { type: String },
+            matchScore: { type: Number },
+          },
+        ],
+        hospitalVisited: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Hospital",
+          default: null,
+        },
+        rating: {
+          type: Number,
+          min: 1,
+          max: 5,
+          default: null,
+        },
+        feedback: {
+          type: String,
+          trim: true,
+          default: null,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
