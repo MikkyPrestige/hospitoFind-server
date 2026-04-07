@@ -4,12 +4,14 @@ import { Resend } from "resend";
 // Cookie Options
 export const getCookieOptions = () => {
   const isProduction = process.env.NODE_ENV === "production";
+  const cookieDomain = process.env.COOKIE_DOMAIN || undefined;
+
   return {
     httpOnly: true,
-    secure: true,
+    secure: isProduction,
     sameSite: isProduction ? "None" : "Lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    ...(isProduction && { domain: ".hospitofind.online" }),
+    ...(cookieDomain ? { domain: cookieDomain } : {}),
   };
 };
 
@@ -24,13 +26,13 @@ export const generateTokens = (user) => {
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" }
+    { expiresIn: "15m" },
   );
 
   const refreshToken = jwt.sign(
     { username: user.username },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "7d" }
+    { expiresIn: "7d" },
   );
 
   return { accessToken, refreshToken };
