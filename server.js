@@ -45,6 +45,9 @@ app.use("/agent", agentRoutes);
 app.use("/user/health-history", healthHistoryRoutes);
 app.use("/health", healthRoutes);
 
+app.get("/ping", (req, res) => {
+  res.status(200).send("Server is awake");
+});
 
 // ===== 404 Handling =====
 app.all("*", (req, res) => {
@@ -74,6 +77,6 @@ mongoose.connection.on("error", (err) => {
   console.error("MongoDB Connection Error:", err);
   logEvents(
     `${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`,
-    "mongoErrLog.log"
+    "mongoErrLog.log",
   );
 });
