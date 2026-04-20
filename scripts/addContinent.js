@@ -75,10 +75,10 @@ const fetchCountryContinent = async () => {
       map[nameLower] = region;
     }
 
-    console.log(`✅ Loaded ${Object.keys(map).length} countries from API\n`);
+    console.log(`Loaded ${Object.keys(map).length} countries from API\n`);
     return map;
   } catch (err) {
-    console.warn(`⚠️  RestCountries API failed: ${err.message}`);
+    console.warn(`RestCountries API failed: ${err.message}`);
     console.warn("   Falling back to minimal hardcoded map...\n");
 
     return {
@@ -240,7 +240,7 @@ if (!MONGODB_URI) {
 
 console.log("🔌 Connecting to MongoDB...");
 await mongoose.connect(MONGODB_URI);
-console.log("✅ Connected\n");
+console.log("Connected\n");
 
 const Hospital = mongoose.model(
   "Hospital",
@@ -253,7 +253,7 @@ const [hospitals, countryContinent] = await Promise.all([
   fetchCountryContinent(),
 ]);
 
-console.log(`📋 Found ${hospitals.length} hospitals in DB\n`);
+console.log(`Found ${hospitals.length} hospitals in DB\n`);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Analyse countries
@@ -264,7 +264,7 @@ for (const h of hospitals) {
   countryCounts[country] = (countryCounts[country] || 0) + 1;
 }
 
-console.log("🌍 Countries found in your DB:");
+console.log("Countries found in your DB:");
 const sorted = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]);
 for (const [country, count] of sorted) {
   const fixed = SPELLING_FIXES[country.toLowerCase()] || country;
@@ -272,7 +272,7 @@ for (const [country, count] of sorted) {
   const wasFixed = fixed.toLowerCase() !== country.toLowerCase();
   const status = continent
     ? `→ ${continent}${wasFixed ? ` (will fix: "${country}" → "${fixed}")` : ""}`
-    : "⚠️  NOT FOUND in API";
+    : "NOT FOUND in API";
   console.log(`   ${country} (${count}) ${status}`);
 }
 console.log();
@@ -292,10 +292,8 @@ for (const h of hospitals) {
   const continent = countryContinent[fixedCountry.toLowerCase()];
   const needsFix = fixedCountry.toLowerCase() !== rawCountry.toLowerCase();
 
-  // Skip garbage/test data
   if (!rawCountry || rawCountry.toLowerCase() === "tttt") continue;
 
-  // Already done and no spelling fix needed
   if (h.continent && !needsFix) {
     alreadyDone++;
     continue;
@@ -324,14 +322,14 @@ for (const h of hospitals) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Summary
 // ─────────────────────────────────────────────────────────────────────────────
-console.log("📊 Migration summary:");
-console.log(`   ✅ Will update:        ${continentSet} hospitals`);
-console.log(`   ✏️  Spelling fixes:     ${spellingFixed} hospitals`);
-console.log(`   ⏭️  Already complete:   ${alreadyDone} hospitals`);
-console.log(`   ⚠️  Unmapped/skipped:   ${unmapped.length} hospitals\n`);
+console.log("Migration summary:");
+console.log(`Will update:        ${continentSet} hospitals`);
+console.log(`Spelling fixes:     ${spellingFixed} hospitals`);
+console.log(`Already complete:   ${alreadyDone} hospitals`);
+console.log(`Unmapped/skipped:   ${unmapped.length} hospitals\n`);
 
 if (unmapped.length > 0) {
-  console.log("⚠️  These hospitals could not be mapped:");
+  console.log("These hospitals could not be mapped:");
   unmapped.forEach(({ name, country }) => {
     console.log(`   - "${name}" → country: "${country}"`);
   });
@@ -342,11 +340,11 @@ if (unmapped.length > 0) {
 // Execute
 // ─────────────────────────────────────────────────────────────────────────────
 if (bulkOps.length === 0) {
-  console.log("✨ Nothing to update — all hospitals already have a continent.");
+  console.log("Nothing to update — all hospitals already have a continent.");
 } else {
-  console.log(`🚀 Running bulk update for ${bulkOps.length} hospitals...`);
+  console.log(`Running bulk update for ${bulkOps.length} hospitals...`);
   const result = await Hospital.bulkWrite(bulkOps);
-  console.log(`✅ Done!`);
+  console.log(`Done!`);
   console.log(`   Modified:        ${result.modifiedCount} hospitals`);
   if (spellingFixed > 0) {
     console.log(`   Spellings fixed: ${spellingFixed} hospitals`);

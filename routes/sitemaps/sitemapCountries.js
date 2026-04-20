@@ -5,7 +5,6 @@ import { sanitize } from "../../utils/sanitize.js";
 const router = express.Router();
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
-// sitemap for countries based on hospitals' states
 router.get("/sitemap-countries.xml", async (req, res) => {
   const states = await Hospital.distinct("address.state");
 

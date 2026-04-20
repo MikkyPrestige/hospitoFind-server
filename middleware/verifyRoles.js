@@ -24,7 +24,6 @@ export const verifyJWT = (req, res, next) => {
 };
 
 export const verifyAdmin = (req, res, next) => {
-  // Check if the role attached by verifyJWT is 'admin'
   if (!req.role || req.role !== "admin") {
     return res.status(403).json({ message: "Access Denied: Admins Only" });
   }

@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-// This schema represents a "Snapshot" of the hospital at the moment it was shared.
 const sharedHospitalSchema = new Schema(
   {
     hospitalId: {
@@ -23,10 +22,9 @@ const sharedHospitalSchema = new Schema(
     services: { type: [String] },
     verified: { type: Boolean, default: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
-// Main schema for shareable links
 const shareableLinkSchema = new Schema(
   {
     linkId: {
@@ -50,7 +48,7 @@ const shareableLinkSchema = new Schema(
       expires: 2592000, // Automatically delete the document from MongoDB after 30 days
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const ShareableLink = mongoose.model("ShareableLink", shareableLinkSchema);

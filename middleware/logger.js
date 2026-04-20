@@ -24,13 +24,11 @@ const logEvents = async (message, logFileName) => {
 };
 
 const logger = (req, res, next) => {
-  // Generate a unique request ID
   req.reqId = ids.generate();
 
   const clientIp = req.ip || req.headers["x-forwarded-for"] || "unknown-ip";
   const origin = req.headers.origin || "no-origin";
 
-  // Log the request details with the request ID included
   const logMsg = `${req.method}\t${req.url}\t${clientIp}\t${origin}\tID: ${req.reqId}`;
 
   logEvents(logMsg, "reqLog.log");

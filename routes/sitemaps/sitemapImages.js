@@ -13,7 +13,6 @@ const xmlEscape = (str = "") =>
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-// sitemap for hospital images
 router.get("/sitemap-images.xml", async (req, res) => {
   const hospitals = await Hospital.find(
     {},

@@ -1,5 +1,5 @@
 const COUNTRY_CONTINENT = {
-  // ── Africa ───────────────────────────────────────────────────────────────
+  // ── Africa
   nigeria: "Africa",
   ghana: "Africa",
   kenya: "Africa",
@@ -49,7 +49,7 @@ const COUNTRY_CONTINENT = {
   malawi: "Africa",
   lesotho: "Africa",
   eswatini: "Africa",
-  swaziland: "Africa", // both accepted
+  swaziland: "Africa",
   madagascar: "Africa",
   mauritius: "Africa",
   seychelles: "Africa",
@@ -72,7 +72,7 @@ const COUNTRY_CONTINENT = {
   mayotte: "Africa",
   reunion: "Africa",
 
-  // ── Europe ────────────────────────────────────────────────────────────────
+  // ── Europe
   germany: "Europe",
   france: "Europe",
   "united kingdom": "Europe",
@@ -135,7 +135,7 @@ const COUNTRY_CONTINENT = {
   "san marino": "Europe",
   "vatican city": "Europe",
 
-  // ── North America ─────────────────────────────────────────────────────────
+  // ── North America
   "united states": "North America",
   "united states of america": "North America",
   usa: "North America",
@@ -161,7 +161,7 @@ const COUNTRY_CONTINENT = {
   bahamas: "North America",
   "puerto rico": "North America",
 
-  // ── South America ─────────────────────────────────────────────────────────
+  // ── South America
   brazil: "South America",
   argentina: "South America",
   colombia: "South America",
@@ -177,7 +177,7 @@ const COUNTRY_CONTINENT = {
   guyana: "South America",
   suriname: "South America",
 
-  // ── Asia ─────────────────────────────────────────────────────────────────
+  // ── Asia
   india: "Asia",
   china: "Asia",
   japan: "Asia",
@@ -219,7 +219,7 @@ const COUNTRY_CONTINENT = {
   armenia: "Asia",
   azerbaijan: "Asia",
 
-  // ── Middle East ───────────────────────────────────────────────────────────
+  // ── Middle East
   iran: "Middle East",
   "islamic republic of iran": "Middle East",
   persia: "Middle East",
@@ -245,7 +245,7 @@ const COUNTRY_CONTINENT = {
   "west bank": "Middle East",
   gaza: "Middle East",
 
-  // ── Oceania ───────────────────────────────────────────────────────────────
+  // ── Oceania
   australia: "Oceania",
   "new zealand": "Oceania",
   "new zealand": "Oceania",

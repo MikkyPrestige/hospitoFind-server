@@ -8,6 +8,7 @@ import User from "../models/User.js";
 import { getCoordinates } from "../utils/geocode.js";
 import { normalizeCountry, getDistance } from "../utils/locationHelper.js";
 import { escapeRegex } from "../utils/stringUtils.js";
+import { sanitizeInput } from "../utils/sanitizer.js";
 
 // In-memory cache for nearby hospitals
 const nearbyCache = new Map();
@@ -42,7 +43,7 @@ const getHospitalCount = asyncHandler(async (req, res) => {
 const getCountryStats = asyncHandler(async (req, res) => {
   const hospitals = await Hospital.find(
     { verified: true },
-    { "address.state": 1 }
+    { "address.state": 1 },
   ).lean();
   const stats = {};
 
@@ -286,7 +287,7 @@ const getNearbyHospitals = async (req, res) => {
             if (!hLat || !hLon) return { ...h, distanceValue: Infinity };
             const dist = getDistance(
               { lat: userLat, lon: userLon },
-              { lat: hLat, lon: hLon }
+              { lat: hLat, lon: hLon },
             );
             return { ...h, distanceValue: dist };
           })
@@ -316,7 +317,7 @@ const getNearbyHospitals = async (req, res) => {
         if (hLat !== undefined && hLon !== undefined) {
           const dist = getDistance(
             { lat: userLat, lon: userLon },
-            { lat: hLat, lon: hLon }
+            { lat: hLat, lon: hLon },
           );
           return {
             ...h,
@@ -469,21 +470,24 @@ const getMySubmissions = asyncHandler(async (req, res) => {
   res.status(200).json(myHospitals);
 });
 
+
 // @desc add new hospital
 // @route POST /hospitals
 const addHospital = asyncHandler(async (req, res) => {
-  const {
-    name,
-    address,
-    phoneNumber,
-    website,
-    email,
-    photoUrl,
-    type,
-    services,
-    comments,
-    hours,
-  } = req.body;
+const cleanBody = sanitizeInput(req.body);
+
+const {
+  name,
+  address,
+  phoneNumber,
+  website,
+  email,
+  photoUrl,
+  type,
+  services,
+  comments,
+  hours,
+} = cleanBody;
 
   if (!name || !address?.city || !address?.state) {
     return res
@@ -505,17 +509,15 @@ const addHospital = asyncHandler(async (req, res) => {
       .json({ message: "This hospital already exists in our records" });
   }
 
-  // Get coordinates
-  const fullAddress = `${address.street || ""}, ${address.city}, ${
-    address.state
-  }`.trim();
-  const { longitude, latitude } = await getCoordinates(fullAddress);
-
   if (!req.userId) {
     return res
       .status(401)
       .json({ message: "User identity not found. Please log in again." });
   }
+
+  // Get coordinates
+  const fullAddress = `${address.street || ""}, ${address.city}, ${address.state}`.trim();
+  const { longitude, latitude } = await getCoordinates(fullAddress);
 
   const hospital = new Hospital({
     name,
@@ -706,7 +708,7 @@ const exportHospitals = asyncHandler(async (req, res) => {
   res.setHeader("Content-Type", "text/csv");
   res.setHeader(
     "Content-Disposition",
-    'attachment; filename="verified_hospitals_export.csv"'
+    'attachment; filename="verified_hospitals_export.csv"',
   );
 
   return res.status(200).send(csv);

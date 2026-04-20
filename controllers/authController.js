@@ -57,7 +57,7 @@ const auth0Login = asyncHandler(async (req, res) => {
       (err, decoded) => {
         if (err) reject(err);
         else resolve(decoded);
-      }
+      },
     );
   });
 
@@ -95,13 +95,13 @@ const auth0Login = asyncHandler(async (req, res) => {
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" }
+    { expiresIn: "15m" },
   );
 
   const refreshToken = jwt.sign(
     { username: user.username },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "7d" }
+    { expiresIn: "7d" },
   );
 
   res.cookie("jwt", refreshToken, getCookieOptions());
@@ -133,7 +133,7 @@ const login = asyncHandler(async (req, res) => {
 
   if (!user) {
     return res
-      .status(401)
+      .status(400)
       .json({ message: "User not found. Please check your email or sign up." });
   }
 
@@ -145,7 +145,7 @@ const login = asyncHandler(async (req, res) => {
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    return res.status(401).json({ message: "Invalid credentials" });
+    return res.status(400).json({ message: "Invalid credentials" });
   }
 
   if (!user.isVerified) {
@@ -311,7 +311,7 @@ const refresh = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
 
   if (!cookies?.jwt)
-    return res.status(401).json({ message: "No refresh token" });
+    return res.status(400).json({ message: "No refresh token" });
 
   const refreshToken = cookies.jwt;
 
@@ -320,14 +320,12 @@ const refresh = asyncHandler(async (req, res) => {
     process.env.REFRESH_TOKEN_SECRET,
     async (err, decoded) => {
       if (err)
-        return res
-          .status(403)
-          .json({ message: "Token Expired or Invalid" });
+        return res.status(400).json({ message: "Token Expired or Invalid" });
 
       const user = await User.findOne({ username: decoded.username });
 
       if (!user)
-        return res.status(401).json({ message: "User no longer exists" });
+        return res.status(400).json({ message: "User no longer exists" });
 
       // Create a NEW Access Token
       const accessToken = jwt.sign(
@@ -339,7 +337,7 @@ const refresh = asyncHandler(async (req, res) => {
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "15m" }
+        { expiresIn: "15m" },
       );
 
       res.json({
@@ -352,7 +350,7 @@ const refresh = asyncHandler(async (req, res) => {
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       });
-    }
+    },
   );
 });
 
@@ -369,7 +367,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
       .json({ message: "If email exists, a reset link has been sent." });
   }
 
-  // Generate Token
   const resetToken = crypto.randomBytes(20).toString("hex");
 
   // Hash and save to DB
@@ -394,7 +391,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
 // @desc    Reset Password
 // @route   PUT /auth/reset-password/:resetToken
 const resetPassword = asyncHandler(async (req, res) => {
-  // Get token from URL and hash it
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(req.params.resetToken)
@@ -409,8 +405,8 @@ const resetPassword = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Invalid or Expired Token" });
   }
 
-  // Set new password
   user.password = await bcrypt.hash(req.body.password, 10);
+
   // Clear reset fields
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
@@ -427,7 +423,6 @@ const logout = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(204);
 
-  // Clear the cookie
   res.clearCookie("jwt", getCookieOptions());
 
   res.status(200).json({ message: "Cookie cleared" });

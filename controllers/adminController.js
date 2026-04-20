@@ -13,7 +13,7 @@ import mongoose from "mongoose";
 // --- USER MANAGEMENT ---
 /**
  * @desc    Get all users for management
- * @route   GET /api/users
+ * @route   GET /admin/users
  */
 const getAllUsersAdmin = asyncHandler(async (req, res) => {
   const users = await User.find({}).select("-password").sort({ createdAt: -1 });
@@ -23,7 +23,7 @@ const getAllUsersAdmin = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Admin manually creates a user
- * @route   POST /api/users
+ * @route   POST /admin/users
  */
 const createUserAdmin = asyncHandler(async (req, res) => {
   const { name, username, email, password, role } = req.body;
@@ -59,7 +59,7 @@ const createUserAdmin = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Update any user's role
- * @route   PATCH /api/users/role
+ * @route   PATCH /admin/users/role
  */
 const updateUserRoleAdmin = asyncHandler(async (req, res) => {
   const { userId, newRole } = req.body;
@@ -81,7 +81,7 @@ const updateUserRoleAdmin = asyncHandler(async (req, res) => {
 });
 
 // @desc    Toggle user active/suspended status
-// @route   PATCH /api/users/status
+// @route   PATCH /admin/users/status
 const toggleUserStatus = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -102,7 +102,7 @@ const toggleUserStatus = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Force delete any user
- * @route   DELETE /api/users/:id
+ * @route   DELETE /admin/users/:id
  */
 const deleteUserAdmin = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -130,7 +130,7 @@ const getAllHospitalsAdmin = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get  hospitals pending (admin view)
-// @route   GET /api/hospitals/pending
+// @route   GET /admin/hospitals/pending
 const getPendingHospitals = asyncHandler(async (req, res) => {
   const hospitals = await Hospital.find({ verified: false }).sort({
     createdAt: -1,
@@ -140,7 +140,7 @@ const getPendingHospitals = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Admin manually creates a verified hospital entry
- * @route   POST /apin/hospitals
+ * @route   POST /admin/hospitals
  */
 const createHospitalAdmin = asyncHandler(async (req, res) => {
   const data = formatHospitalData(req.body);
@@ -159,7 +159,7 @@ const createHospitalAdmin = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Admin update hospital details
- * @route   PATCH /api/hospitals/:id
+ * @route   PATCH /admin/hospitals/:id
  */
 const updateHospitalAdmin = asyncHandler(async (req, res) => {
   const data = formatHospitalData(req.body);
@@ -179,7 +179,7 @@ const updateHospitalAdmin = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Admin toggle hospital verification status
- * @route   PATCH /api/hospitals/:id/toggle-status
+ * @route   PATCH /admin/hospitals/:id/toggle-status
  */
 const toggleHospitalStatus = asyncHandler(async (req, res) => {
   const hospital = await Hospital.findById(req.params.id);
@@ -199,7 +199,7 @@ const toggleHospitalStatus = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Admin reviews, fixes, and approves a pending hospital
- * @route   PATCH /api/hospitals/review-approve/:id
+ * @route   PATCH /admin/hospitals/review-approve/:id
  */
 const reviewAndApproveHospital = asyncHandler(async (req, res) => {
   const data = formatHospitalData(req.body);
@@ -255,7 +255,7 @@ const checkDuplicateHospital = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Admin delete hospital
- * @route   DELETE /api/hospitals/:id
+ * @route   DELETE /admin/hospitals/:id
  */
 const deleteHospitalAdmin = asyncHandler(async (req, res) => {
   const hospital = await Hospital.findByIdAndDelete(req.params.id);
@@ -267,7 +267,7 @@ const deleteHospitalAdmin = asyncHandler(async (req, res) => {
 
 // --- GOOGLE IMPORT ---
 // @desc    Import hospitals from Google Places
-// @route   POST /api/hospitals/import-google
+// @route   POST /admin/hospitals/import-google
 // @access  Admin Only
 const importFromGoogle = asyncHandler(async (req, res) => {
   const { city, targetCountry } = req.body;

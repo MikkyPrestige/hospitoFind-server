@@ -13,7 +13,6 @@ const migrate = async () => {
     let count = 0;
 
     for (const h of hospitals) {
-      // If hospital has old lat/lon but NO location field
       if (
         h.latitude &&
         h.longitude &&
@@ -21,7 +20,6 @@ const migrate = async () => {
       ) {
         h.location = {
           type: "Point",
-          // MongoDB uses [Longitude, Latitude] order
           coordinates: [h.longitude, h.latitude],
         };
 
@@ -33,7 +31,6 @@ const migrate = async () => {
 
     console.log(`Migration Complete! Updated ${count} hospitals.`);
 
-    // Now force create the index
     console.log("Creating Index...");
     await Hospital.collection.createIndex({ location: "2dsphere" });
     console.log("Index Created Successfully!");

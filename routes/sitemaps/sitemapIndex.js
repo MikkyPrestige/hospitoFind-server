@@ -2,7 +2,6 @@ import express from "express";
 
 const router = express.Router();
 
-// List of sitemap files to include in the sitemap index
 const SITEMAPS = [
   "/sitemap-static.xml",
   "/sitemap-countries.xml",
@@ -11,7 +10,6 @@ const SITEMAPS = [
   "/sitemap-images.xml",
 ];
 
-// sitemap index XML file
 router.get("/sitemap.xml", (req, res) => {
   const HOST = process.env.FRONTEND_URL;
 

@@ -1,6 +1,7 @@
 import express from "express";
 import hospitalController from "../controllers/hospitalController.js";
 import { verifyJWT, verifyAdmin } from "../middleware/verifyRoles.js";
+import { hospitalSubmissionLimiter } from "../middleware/rateLimiter.js";
 
 const hospitalRouter = express.Router();
 
@@ -23,20 +24,22 @@ hospitalRouter.get(
 hospitalRouter.get("/:country/:city/:slug", hospitalController.getHospitalBySlug);
 hospitalRouter.get("/stats/countries", hospitalController.getCountryStats);
 
-// Sharing & Exporting hospitals routes
 hospitalRouter.post("/share", hospitalController.shareHospitals);
 hospitalRouter.get("/share/:linkId", hospitalController.getSharedHospitals);
 hospitalRouter.get("/export", hospitalController.exportHospitals);
 
-// Specific lookups
 hospitalRouter.get("/id/:id", hospitalController.getHospitalById);
 hospitalRouter.get("/name/:name", hospitalController.getHospitalByName);
 
-// --- COMMUNITY SANDBOX ROUTE ---
 hospitalRouter.get("/sandbox", hospitalController.getUnverifiedHospitals);
 
 // --- PROTECTED USER ACTIONS (Require JWT) ---
-hospitalRouter.post("/", verifyJWT, hospitalController.addHospital);
+hospitalRouter.post(
+  "/",
+  verifyJWT,
+  hospitalSubmissionLimiter,
+  hospitalController.addHospital,
+);
 hospitalRouter.get(
   "/submissions",
   verifyJWT,
@@ -51,7 +54,6 @@ hospitalRouter.get(
   verifyAdmin,
   hospitalController.getAdminStats
 );
-
 hospitalRouter.get(
   "/admin/pending",
   verifyJWT,

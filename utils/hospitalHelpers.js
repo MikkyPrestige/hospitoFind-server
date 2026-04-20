@@ -1,4 +1,3 @@
-// Convert Google Hours to Schema Format
 export const formatHours = (googleHours) => {
   if (!googleHours || !googleHours.weekday_text) return [];
   return googleHours.weekday_text.map((text) => {
@@ -10,13 +9,11 @@ export const formatHours = (googleHours) => {
   });
 };
 
-// Construct Real Photo URL
 export const getPhotoUrl = (photoReference, apiKey) => {
   if (!photoReference) return "";
   return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${photoReference}&key=${apiKey}`;
 };
 
-// format hospital data from request body
 export const formatHospitalData = (body) => {
   const { address, street, city, state, services, comments, hours, ...rest } =
     body;
