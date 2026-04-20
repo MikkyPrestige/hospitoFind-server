@@ -3,7 +3,6 @@ import express from "express";
 const router = express.Router();
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
-// list of static pages to include in the sitemap
 const staticPages = [
   "/",
   "/find-hospital",
@@ -19,7 +18,6 @@ const staticPages = [
   "/terms"
 ];
 
-// sitemap for static pages
 router.get("/sitemap-static.xml", (req, res) => {
   const xmlItems = staticPages
     .map((page) => {

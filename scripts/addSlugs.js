@@ -20,7 +20,6 @@ async function run() {
         const base = sanitize(doc.name || "hospital");
         let slug = base;
         let i = 0;
-        // check uniqueness within state+city
         while (
           await Hospital.exists({
             "address.state": doc.address?.state,

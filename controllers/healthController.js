@@ -90,7 +90,6 @@ const getHealthAlerts = async (req, res) => {
 
   let alerts = [];
 
-  // Fetch WHO Alerts
   try {
     const resp = await fetch(WHO_URL);
     const data = await resp.json();
@@ -137,27 +136,6 @@ const getHealthAlerts = async (req, res) => {
   } catch (e) {
     console.warn("WHO fetch failed:", e.message);
   }
-  //   if (whoAlerts.length === 0 && whoAlertsRaw.length > 0) {
-  //     const fallback = whoAlertsRaw.slice(0, 6).map((item) => ({
-  //       title: item.Title || "Unknown outbreak",
-  //       date: item.PublicationDate || item.PublicationDateAndTime || "",
-  //       summary: item.Overview
-  //         ? stripHtml(item.Overview).slice(0, 350)
-  //         : "No summary available.",
-  //       link: item.ItemDefaultUrl
-  //         ? `${BASE_LINK}${item.ItemDefaultUrl}`
-  //         : BASE_LINK,
-  //       source: "WHO (archived)",
-  //     }));
-  //     alerts = alerts.concat(fallback);
-  //     whoCount = fallback.length;
-  //   } else {
-  //     alerts = alerts.concat(whoAlerts);
-  //     whoCount = whoAlerts.length;
-  //   }
-  // } catch (e) {
-  //   console.warn("WHO fetch failed:", e);
-  // }
 
   const news = await fetchNewsData();
 
@@ -183,11 +161,10 @@ const getHealthAlerts = async (req, res) => {
 };
 
 // @desc    Get Health Tips (MyHealthFinder)
-// @route   GET /api/health/tips
+// @route   GET /health/tips
 const getHealthTips = async (req, res) => {
   const today = new Date().toISOString().split("T")[0];
 
-  // Return Cached Tips if valid
   if (tipsCache.results.length && tipsCache.lastFetchedDate === today) {
     return res.json(tipsCache.results);
   }
@@ -209,7 +186,6 @@ const getHealthTips = async (req, res) => {
       return res.status(404).json({ error: "No tips available" });
     }
 
-    // Shuffle & Select
     const shuffled = resources.sort(() => 0.5 - Math.random());
     const formattedTips = shuffled.slice(0, 12).map((tip) => ({
       Title: tip.Title || "Stay Healthy Today",

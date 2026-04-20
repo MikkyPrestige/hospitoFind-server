@@ -17,7 +17,6 @@ async function generateCoordinates() {
     await mongoose.connect(MONGODB_URI);
     console.log("Connected to MongoDB");
 
-    // Find hospitals missing or null coordinates
     const hospitals = await Hospital.find({
       $or: [
         { longitude: { $exists: false } },
@@ -58,7 +57,6 @@ async function generateCoordinates() {
         console.warn(`No coordinates found for ${hospital.name}`);
       }
 
-      // Small delay to avoid Mapbox rate limits
       await new Promise((r) => setTimeout(r, 400));
     }
 
@@ -82,5 +80,4 @@ async function generateCoordinates() {
   }
 }
 
-// Run the script
 generateCoordinates();

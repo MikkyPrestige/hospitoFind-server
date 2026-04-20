@@ -45,16 +45,13 @@ export const normalizeCountry = (stateValue) => {
   if (!stateValue) return "Unknown";
 
   const trimmedState = stateValue.trim().toLowerCase();
-  // If the state is in the Nigerian list, return "Nigeria"
   if (nigeriaStates.includes(trimmedState) || trimmedState === "nigeria") {
     return "Nigeria";
   }
-  // Otherwise, return the original value capitalized (e.g., Ghana, Kenya)
   return stateValue.charAt(0).toUpperCase() + stateValue.slice(1);
 };
 
 
-// Calculate distance between two points (Haversine formula)
 export const getDistance = (a, b) => {
   const R = 6371e3; // meters
   const φ1 = (a.lat * Math.PI) / 180;

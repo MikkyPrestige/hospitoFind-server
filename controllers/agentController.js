@@ -26,7 +26,7 @@ CONVERSATION RULES:
 
 TONE: Friendly, concise, professional. Like a knowledgeable healthcare receptionist.`;
 
-//  Helper: detect match trigger anywhere in the response
+
 const extractMatchTrigger = (text) => {
   try {
     const trimmed = text.trim();
@@ -57,7 +57,7 @@ const extractMatchTrigger = (text) => {
   return null;
 };
 
-//  Helper: detect symptom patterns
+
 const detectPatterns = (healthHistory) => {
   if (!healthHistory || healthHistory.length < 3) return null;
 
@@ -79,9 +79,7 @@ const detectPatterns = (healthHistory) => {
   return null;
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
 // POST /agent/chat
-// ─────────────────────────────────────────────────────────────────────────────
 export const chat = async (req, res) => {
   const { messages = [], userLocation } = req.body;
 
@@ -92,7 +90,6 @@ export const chat = async (req, res) => {
   try {
     let historyContext = "";
 
-    // Returning logged-in user context
     if (req.userId) {
       const user = await User.findById(req.userId)
         .select("healthHistory")
@@ -116,7 +113,6 @@ export const chat = async (req, res) => {
       }
     }
 
-    // Location context
     if (userLocation) {
       historyContext += `\n\nUSER LOCATION (already known — DO NOT ask for location): The user's location is "${userLocation}". Use this location directly when triggering the match. Never ask the user where they are located.`;
     }
@@ -159,9 +155,7 @@ export const chat = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
 // POST /agent/match
-// ─────────────────────────────────────────────────────────────────────────────
 export const match = async (req, res) => {
   const { symptoms = [], location = "", additionalNeeds = "" } = req.body;
 
@@ -198,7 +192,6 @@ export const match = async (req, res) => {
       });
     }
 
-    // Save session for logged-in users
     if (req.userId) {
       const session = {
         symptoms,

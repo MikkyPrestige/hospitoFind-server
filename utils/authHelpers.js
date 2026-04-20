@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Resend } from "resend";
 
-// Cookie Options
 export const getCookieOptions = () => {
   const isProduction = process.env.NODE_ENV === "production";
   const cookieDomain = process.env.COOKIE_DOMAIN || undefined;
@@ -15,7 +14,6 @@ export const getCookieOptions = () => {
   };
 };
 
-// Token Generator (Access + Refresh)
 export const generateTokens = (user) => {
   const accessToken = jwt.sign(
     {
@@ -38,7 +36,6 @@ export const generateTokens = (user) => {
   return { accessToken, refreshToken };
 };
 
-// Email Service: Verification
 export const sendVerificationEmail = async (email, name, token) => {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
@@ -64,7 +61,6 @@ export const sendVerificationEmail = async (email, name, token) => {
   });
 };
 
-// Email Service: Password Reset
 export const sendPasswordResetEmail = async (email, token) => {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;

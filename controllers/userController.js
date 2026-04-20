@@ -5,7 +5,7 @@ import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 
 // @desc    Get all users
-// @route   GET /api/users
+// @route   GET /api/user
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find().select("-password").lean();
   if (!users || users.length === 0)
@@ -15,7 +15,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 // @desc Get dashboard stats
-// @route   GET /api/users/stats
+// @route   GET /api/user/stats
 const getUserStats = asyncHandler(async (req, res) => {
   const userId = req.userId;
 
@@ -37,7 +37,7 @@ const getUserStats = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update user role
-// @route   PATCH /api/users/role
+// @route   PATCH /api/user/role
 const updateUserRole = asyncHandler(async (req, res) => {
   const { userId, newRole } = req.body;
 
@@ -55,7 +55,7 @@ const updateUserRole = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update user profile
-// @route   PATCH /users
+// @route   PATCH /user
 const updateUser = asyncHandler(async (req, res) => {
   const { name, username, email, password, role } = req.body;
 
@@ -67,13 +67,13 @@ const updateUser = asyncHandler(async (req, res) => {
 
   if (!isOwner && !isAdmin) {
     return res
-      .status(403)
+      .status(400)
       .json({ message: "Unauthorized to update this profile" });
   }
 
   if (role && role !== userToUpdate.role && !isAdmin) {
     return res
-      .status(403)
+      .status(400)
       .json({ message: "Only admins can change user roles" });
   }
 
@@ -83,10 +83,9 @@ const updateUser = asyncHandler(async (req, res) => {
         .status(400)
         .json({ message: "Current password required for security" });
     const isMatch = await bcrypt.compare(password, userToUpdate.password);
-    if (!isMatch) return res.status(401).json({ message: "Invalid password" });
+    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
   }
 
-  // Update fields
   if (name) userToUpdate.name = name;
   if (email) {
     const existingEmailUser = await User.findOne({ email }).exec();
@@ -110,7 +109,7 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 // @desc Update Password
-// @route PATCH /users/password
+// @route PATCH /user/password
 const updatePassword = asyncHandler(async (req, res) => {
   const { username, password, newPassword } = req.body;
 
@@ -132,17 +131,15 @@ const updatePassword = asyncHandler(async (req, res) => {
 
   if (req.user !== user.username) {
     return res
-      .status(403)
+      .status(400)
       .json({ message: "You can only change your own password" });
   }
 
-  // Verify Old Password
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(401).json({ message: "Invalid current password" });
+    return res.status(400).json({ message: "Invalid current password" });
   }
 
-  //  Hash & Save New Password
   user.password = await bcrypt.hash(newPassword, 10);
   await user.save();
 
@@ -150,27 +147,24 @@ const updatePassword = asyncHandler(async (req, res) => {
 });
 
 // @desc    Delete user
-// @route   DELETE /users
-// @access  Private
+// @route   DELETE /user
 const deleteUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 
   const userToDelete = await User.findOne({ username }).exec();
   if (!userToDelete) return res.status(404).json({ message: "User not found" });
 
-  // Only admins or the account owner can delete the account
   const isOwner = req.user === userToDelete.username;
   const isAdmin = req.role === "admin";
 
   if (!isOwner && !isAdmin) {
     return res
-      .status(403)
+      .status(400)
       .json({ message: "Unauthorized to delete this account" });
   }
 
   if (isOwner) {
     const isSocialUser = userToDelete.auth0Id && !userToDelete.password;
-
     if (!isSocialUser) {
       if (!password) {
         return res
@@ -180,14 +174,15 @@ const deleteUser = asyncHandler(async (req, res) => {
 
       const isMatch = await bcrypt.compare(password, userToDelete.password);
       if (!isMatch) {
-        return res
-          .status(401)
-          .json({ message: "Incorrect password." });
+     return res
+       .status(400)
+       .json({ message: "Incorrect password. Account not deleted." });
       }
     }
   }
 
   await userToDelete.deleteOne();
+
   if (isOwner) {
     res.clearCookie("jwt", {
       httpOnly: true,
@@ -199,35 +194,8 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.status(200).json({ message: `User ${username} deleted successfully` });
 });
 
-// --- USER ACTIVITY ---
-// @desc    Toggle Favorite Hospital
-// @route   POST /api/users/favorites
-// const toggleFavorite = asyncHandler(async (req, res) => {
-//   const { hospitalId } = req.body;
-//   const user = await User.findById(req.userId);
-
-//   if (!user) return res.status(404).json({ message: "User not found" });
-
-//   // Check if already favorite
-//   const isFav = user.favorites.includes(hospitalId);
-
-//   if (isFav) {
-//     // Remove it
-//     user.favorites = user.favorites.filter(
-//       (id) => id.toString() !== hospitalId
-//     );
-//   } else {
-//     // Add it (prevent duplicates)
-//     user.favorites.addToSet(hospitalId);
-//   }
-
-//   await user.save();
-//   res.status(200).json(user.favorites);
-// });
-
 // @desc    Toggle hospital favorite status
-// @route   POST /api/users/favorites/:hospitalId
-// @access  Private
+// @route   POST /api/user/favorites/:hospitalId
 const toggleFavoriteStatus = asyncHandler(async (req, res) => {
   const { hospitalId } = req.params;
   const userId = req.userId;
@@ -243,7 +211,6 @@ const toggleFavoriteStatus = asyncHandler(async (req, res) => {
   const isFavorite = favorites.some((id) => id.toString() === hospitalId);
 
   if (isFavorite) {
-    // Atomic Remove
     await User.findByIdAndUpdate(userId, {
       $pull: { favorites: hospitalId },
     });
@@ -251,7 +218,6 @@ const toggleFavoriteStatus = asyncHandler(async (req, res) => {
       .status(200)
       .json({ message: "Removed from favorites", isFavorite: false });
   } else {
-    // Atomic Add
     await User.findByIdAndUpdate(userId, {
       $addToSet: { favorites: hospitalId },
     });
@@ -260,7 +226,7 @@ const toggleFavoriteStatus = asyncHandler(async (req, res) => {
 });
 
 // @desc    Record a View (Recent & Weekly Stats)
-// @route   POST /api/users/view
+// @route   POST /api/user/view
 const recordView = asyncHandler(async (req, res) => {
   const { hospitalId } = req.body;
   const userId = req.userId;
@@ -272,7 +238,7 @@ const recordView = asyncHandler(async (req, res) => {
   }
 
   user.recentlyViewed = user.recentlyViewed.filter(
-    (item) => item.hospital.toString() !== hospitalId
+    (item) => item.hospital.toString() !== hospitalId,
   );
 
   user.recentlyViewed.unshift({
@@ -280,12 +246,10 @@ const recordView = asyncHandler(async (req, res) => {
     viewedAt: new Date(),
   });
 
-  // Limit to 20
   if (user.recentlyViewed.length > 20) {
     user.recentlyViewed = user.recentlyViewed.slice(0, 20);
   }
 
-  // Update Weekly Stats
   const now = new Date();
   const lastReset = new Date(user.lastWeeklyReset || 0);
   const oneWeek = 7 * 24 * 60 * 60 * 1000;
@@ -302,7 +266,7 @@ const recordView = asyncHandler(async (req, res) => {
 });
 
 // @desc    Remove a specific hospital from history
-// @route   DELETE /api/users/history/:hospitalId
+// @route   DELETE /api/user/history/:hospitalId
 const removeHistoryItem = asyncHandler(async (req, res) => {
   const { hospitalId } = req.params;
   const userId = req.userId;
@@ -318,7 +282,7 @@ const removeHistoryItem = asyncHandler(async (req, res) => {
 });
 
 // @desc    Remove a specific favorite
-// @route   DELETE /api/users/favorites/:hospitalId
+// @route   DELETE /api/user/favorites/:hospitalId
 const removeFavorite = asyncHandler(async (req, res) => {
   const { hospitalId } = req.params;
   const userId = req.userId;
@@ -332,7 +296,7 @@ const removeFavorite = asyncHandler(async (req, res) => {
 });
 
 // @desc    Clear ALL history
-// @route   DELETE /api/users/history
+// @route   DELETE /api/user/history
 const clearAllHistory = asyncHandler(async (req, res) => {
   const userId = req.userId;
 
@@ -344,7 +308,7 @@ const clearAllHistory = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get All Activity ( Dashboard)
-// @route   GET /api/users/activity
+// @route   GET /api/user/activity
 const getUserActivity = asyncHandler(async (req, res) => {
   const user = await User.findById(req.userId)
     .populate("favorites")
@@ -373,7 +337,6 @@ export default {
   updateUser,
   updatePassword,
   deleteUser,
-  // toggleFavorite,
   toggleFavoriteStatus,
   recordView,
   removeHistoryItem,
