@@ -1,6 +1,7 @@
 const allowedOrigins = [
   "https://hospitofind-server.onrender.com",
   "https://hospitofind.online",
+  "https://www.hospitofind.online",
   "https://health.gov/myhealthfinder",
   "https://hospitofind-server-1.onrender.com",
   "https://hospitofind.netlify.app",
