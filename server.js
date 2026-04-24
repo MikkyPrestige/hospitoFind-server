@@ -20,13 +20,12 @@ import adminRoutes from "./routes/adminRoutes.js";
 import hospitalRoutes from "./routes/hospitalsRoutes.js";
 import agentRoutes from "./routes/agentRoutes.js";
 import healthRoutes from "./routes/healthRoutes.js";
-import sitemapIndex from "./routes/sitemaps/sitemapIndex.js";
 import loadSitemapRoutes from "./routes/sitemaps/index.js";
 
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// ===== Security & Logging =====
+// Security & common middleware
 app.use(logger);
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors(corsOptions));
@@ -34,8 +33,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "public")));
-app.use("/", sitemapIndex);
+
+// SITEMAPS
 loadSitemapRoutes(app);
+
+// ROUTES
 app.use("/", rootRoutes);
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);

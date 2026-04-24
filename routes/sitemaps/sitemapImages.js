@@ -1,8 +1,9 @@
 import express from "express";
 import Hospital from "../../models/Hospital.js";
+import { sanitize } from "../../utils/sanitize.js";
 
 const router = express.Router();
-const FRONTEND_URL = process.env.FRONTEND_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL || "https://hospitofind.online";
 
 // Escape invalid XML characters
 const xmlEscape = (str = "") =>
@@ -14,43 +15,49 @@ const xmlEscape = (str = "") =>
     .replace(/>/g, "&gt;");
 
 router.get("/sitemap-images.xml", async (req, res) => {
-  const hospitals = await Hospital.find(
-    {},
-    "slug address.photoUrl address.city address.state updatedAt photoUrl"
-  ).lean();
+  try {
+    const hospitals = await Hospital.find(
+      { photoUrl: { $exists: true, $ne: null } },
+      "slug address.state address.city photoUrl updatedAt",
+    ).lean();
 
-  const xmlItems = hospitals
-    .filter((h) => h.photoUrl)
-    .map((h) => {
-      const lastmod = h.updatedAt.toISOString().split("T")[0];
-      const state = xmlEscape(h.address.state.toLowerCase());
-      const city = xmlEscape(h.address.city.toLowerCase());
-      const slug = xmlEscape(h.slug);
-      const imageUrl = xmlEscape(h.photoUrl);
+    const xmlItems = hospitals
+      .map((h) => {
+        const state = sanitize(h.address?.state || "");
+        const city = sanitize(h.address?.city || "");
+        const slug = sanitize(h.slug || "");
+        const imageUrl = xmlEscape(h.photoUrl || "");
 
-      const hospitalPage = `${FRONTEND_URL}/hospital/${state}/${city}/${slug}`;
+        const hospitalPage = `${FRONTEND_URL}/hospital/${state}/${city}/${slug}`;
 
-      return `
+        const lastmod = h.updatedAt
+          ? h.updatedAt.toISOString().split("T")[0]
+          : new Date().toISOString().split("T")[0];
+
+        return `
         <url>
-            <loc>${hospitalPage}</loc>
-            <lastmod>${lastmod}</lastmod>
-            <image:image>
-                <image:loc>${imageUrl}</image:loc>
-            </image:image>
-        </url>
-      `;
-    })
-    .join("");
+          <loc>${hospitalPage}</loc>
+          <lastmod>${lastmod}</lastmod>
+          <image:image>
+            <image:loc>${imageUrl}</image:loc>
+          </image:image>
+        </url>`;
+      })
+      .join("");
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-  <urlset
-    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-    xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-      ${xmlItems}
-  </urlset>`;
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+    ${xmlItems}
+</urlset>`;
 
-  res.header("Content-Type", "application/xml");
-  res.send(xml);
+    res.header("Content-Type", "application/xml");
+    res.send(xml.trim());
+  } catch (error) {
+    console.error("Sitemap Images Error:", error);
+    res.status(500).send("Error generating image sitemap");
+  }
 });
 
 export default router;
