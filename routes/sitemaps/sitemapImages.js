@@ -4,6 +4,8 @@ import { sanitize } from "../../utils/sanitize.js";
 
 const router = express.Router();
 const FRONTEND_URL = process.env.FRONTEND_URL || "https://hospitofind.online";
+const BACKEND_URL =
+  process.env.BACKEND_URL || "https://hospitofind-server.onrender.com";
 
 // Escape invalid XML characters
 const xmlEscape = (str = "") =>
@@ -17,7 +19,7 @@ const xmlEscape = (str = "") =>
 router.get("/sitemap-images.xml", async (req, res) => {
   try {
     const hospitals = await Hospital.find(
-      { photoUrl: { $exists: true, $ne: null } },
+      { photoUrl: { $exists: true, $ne: null, $ne: "" } },
       "slug address.state address.city photoUrl updatedAt",
     ).lean();
 
@@ -26,10 +28,14 @@ router.get("/sitemap-images.xml", async (req, res) => {
         const state = sanitize(h.address?.state || "");
         const city = sanitize(h.address?.city || "");
         const slug = sanitize(h.slug || "");
-        const imageUrl = xmlEscape(h.photoUrl || "");
+
+        let imageUrl = h.photoUrl || "";
+        if (!imageUrl.startsWith("http")) {
+          imageUrl = `${BACKEND_URL}${imageUrl.startsWith("/") ? "" : "/"}${imageUrl}`;
+        }
+        imageUrl = xmlEscape(imageUrl);
 
         const hospitalPage = `${FRONTEND_URL}/hospital/${state}/${city}/${slug}`;
-
         const lastmod = h.updatedAt
           ? h.updatedAt.toISOString().split("T")[0]
           : new Date().toISOString().split("T")[0];
@@ -46,9 +52,8 @@ router.get("/sitemap-images.xml", async (req, res) => {
       .join("");
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
     ${xmlItems}
 </urlset>`;
 
