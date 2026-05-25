@@ -6,11 +6,14 @@
   "main": "server.js",
   "scripts": {
     "start": "node server",
-    "dev": "nodemon server"
+    "dev": "nodemon server",
+    "seed": "node scripts/seedHospitals.js",
+    "test": "cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest"
   },
   "author": "Elue Michael",
   "license": "ISC",
   "dependencies": {
+    "@sentry/node": "^10.53.1",
     "axios": "^1.15.2",
     "bcrypt": "^6.0.0",
     "body-parser": "^1.20.5",
@@ -28,6 +31,7 @@
     "groq-sdk": "^1.1.1",
     "haversine-distance": "^1.2.4",
     "helmet": "^8.1.0",
+    "ioredis": "^5.10.1",
     "jsdom": "^29.0.2",
     "jsonwebtoken": "^9.0.1",
     "jwks-rsa": "^3.0.1",
@@ -36,9 +40,16 @@
     "nodemon": "^3.1.4",
     "papaparse": "^5.4.1",
     "resend": "^6.12.3",
-    "short-id": "^0.1.0-1"
+    "short-id": "^0.1.0-1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "sitemap": "^9.0.0"
+    "@types/jest": "^30.0.0",
+    "cross-env": "^10.1.0",
+    "jest": "^30.4.2",
+    "mongodb-memory-server": "^11.1.0",
+    "sitemap": "^9.0.0",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.11"
   }
 }

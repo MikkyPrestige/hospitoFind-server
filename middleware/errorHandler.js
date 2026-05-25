@@ -1,8 +1,11 @@
+import * as Sentry from "@sentry/node";
 import { logEvents } from "./logger.js";
 
 const errorHandler = (err, req, res, next) => {
+  Sentry.captureException(err);
   const requestId = req.reqId || "N/A";
- const status = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+  const status =
+    res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
 
   const errorLogMsg = `${err.name}: ${err.message}\t${req.method}\t${req.url}\t${req.headers.origin}\tReqID: ${requestId}`;
   logEvents(errorLogMsg, "errLog.log");

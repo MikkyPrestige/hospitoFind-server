@@ -1,3 +1,6 @@
+import SymptomMapping from "../models/SymptomMapping.js";
+import { cacheGet, cacheSet } from "./cache.js";
+
 const COUNTRY_CONTINENT = {
   // ── Africa
   nigeria: "Africa",
@@ -257,7 +260,7 @@ const COUNTRY_CONTINENT = {
   tonga: "Oceania",
 };
 
-const getUserContinent = (location) => {
+export const getUserContinent = (location) => {
   if (!location) return null;
   const lower = location.toLowerCase().trim();
   const sorted = Object.keys(COUNTRY_CONTINENT).sort(
@@ -269,7 +272,8 @@ const getUserContinent = (location) => {
   return null;
 };
 
-const SYMPTOM_SERVICE_MAP = {
+// Static fallback — used only when DB is empty
+const STATIC_SYMPTOM_MAP = {
   "chest pain": ["cardiology", "cardiac", "heart", "emergency", "icu"],
   heart: ["cardiology", "cardiac", "heart"],
   palpitation: ["cardiology", "cardiac"],
@@ -321,10 +325,47 @@ const SYMPTOM_SERVICE_MAP = {
   alcohol: ["general", "psychiatry"],
 };
 
-export const symptomsToServices = (symptoms) => {
+const CACHE_KEY = "symptom:mappings";
+const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+
+const loadSymptomMap = async () => {
+  // Try Redis cache first
+  const cached = await cacheGet(CACHE_KEY);
+  if (cached) return cached;
+
+  // Load from MongoDB
+  const docs = await SymptomMapping.find().lean();
+  if (docs.length) {
+    // Convert array of { symptomKeywords, services } to flat keyword → services map
+    const map = {};
+    for (const doc of docs) {
+      for (const keyword of doc.symptomKeywords) {
+        const key = keyword.toLowerCase();
+        if (!map[key]) map[key] = [];
+        map[key].push(...doc.services.map((s) => s.toLowerCase()));
+      }
+    }
+    await cacheSet(CACHE_KEY, map, CACHE_TTL);
+    return map;
+  }
+
+  // Fallback to static map and seed it into DB for next time
+  await SymptomMapping.insertMany(
+    Object.entries(STATIC_SYMPTOM_MAP).map(([keyword, services]) => ({
+      symptomKeywords: [keyword],
+      services,
+    })),
+  ).catch(() => {}); // ignore duplicate key errors if another process seeded
+
+  await cacheSet(CACHE_KEY, STATIC_SYMPTOM_MAP, CACHE_TTL);
+  return STATIC_SYMPTOM_MAP;
+};
+
+export const symptomsToServices = async (symptoms, providedMap = null) => {
+  const map = providedMap || (await loadSymptomMap());
   const services = new Set();
   const lower = symptoms.map((s) => s.toLowerCase());
-  for (const [keyword, list] of Object.entries(SYMPTOM_SERVICE_MAP)) {
+  for (const [keyword, list] of Object.entries(map)) {
     if (lower.some((s) => s.includes(keyword))) {
       list.forEach((svc) => services.add(svc.toLowerCase()));
     }
@@ -406,8 +447,16 @@ const shapeResult = (hospital, serviceScore, serviceReason, locationLabel) => {
   };
 };
 
-export const matchHospitals = (profile, hospitals, topN = 5) => {
-  const serviceKeywords = symptomsToServices(profile.symptoms || []);
+export const matchHospitals = async (
+  profile,
+  hospitals,
+  topN = 5,
+  symptomMap = null,
+) => {
+  const serviceKeywords = await symptomsToServices(
+    profile.symptoms || [],
+    symptomMap,
+  );
   const locationTerms = parseLocationTerms(profile.location);
   const userContinent = getUserContinent(profile.location);
 

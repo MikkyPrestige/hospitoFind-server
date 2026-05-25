@@ -1,6 +1,7 @@
 import express from "express";
 import { verifyJWT, verifyAdmin } from "../middleware/verifyRoles.js";
 import adminController from "../controllers/adminController.js";
+import * as symptomController from "../controllers/symptomController.js";
 
 const adminRouter = express.Router();
 
@@ -42,5 +43,14 @@ adminRouter
 adminRouter
   .route("/hospitals/approve/:id")
   .patch(adminController.reviewAndApproveHospital);
+
+adminRouter
+  .route("/symptoms")
+  .get(symptomController.getSymptomMappings)
+  .post(symptomController.createSymptomMapping);
+adminRouter
+  .route("/symptoms/:id")
+  .put(symptomController.updateSymptomMapping)
+  .delete(symptomController.deleteSymptomMapping);
 
 export default adminRouter;

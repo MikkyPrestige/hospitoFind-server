@@ -1,7 +1,8 @@
 import Groq from "groq-sdk";
 import Hospital from "../models/Hospital.js";
 import User from "../models/User.js";
-import { matchHospitals } from "../utils/matchingEngine.js";
+import { matchHospitals, getUserContinent } from "../utils/matchingEngine.js";
+import { matchSchema } from "../utils/validation.js";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -157,28 +158,35 @@ export const chat = async (req, res) => {
 
 // POST /agent/match
 export const match = async (req, res) => {
-  const { symptoms = [], location = "", additionalNeeds = "" } = req.body;
-
-  if (!symptoms.length || !location) {
-    return res
-      .status(400)
-      .json({ message: "Symptoms and location are required" });
+  let symptoms, location, additionalNeeds;
+  try {
+    const parsed = matchSchema.parse(req.body);
+    symptoms = parsed.symptoms;
+    location = parsed.location;
+    additionalNeeds = parsed.additionalNeeds;
+  } catch (err) {
+    return res.status(400).json({
+      message: "Validation failed",
+      errors: err.errors || err.message,
+    });
   }
 
   try {
-    const hospitals = await Hospital.find({}).lean();
+        const continent = getUserContinent(location);
+        const filter = continent ? { continent } : {};
+        const hospitals = await Hospital.find(filter).lean();
 
-    if (!hospitals.length) {
-      return res
-        .status(404)
-        .json({ message: "No hospitals found in database" });
-    }
+        if (!hospitals.length) {
+          return res
+            .status(404)
+            .json({ message: "No hospitals found in your region" });
+        }
 
-    const matchResult = matchHospitals(
-      { symptoms, location, additionalNeeds },
-      hospitals,
-      5,
-    );
+        const matchResult = await matchHospitals(
+          { symptoms, location, additionalNeeds },
+          hospitals,
+          5,
+        );
 
     if (matchResult.noResults) {
       return res.status(200).json({

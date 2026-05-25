@@ -1,6 +1,7 @@
 import express from "express";
 import { chat, match } from "../controllers/agentController.js";
 import { verifyJWT } from "../middleware/verifyRoles.js";
+import agentChatLimiter from "../middleware/agentChatLimiter.js";
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ const optionalAuth = (req, res, next) => {
   return verifyJWT(req, res, next);
 };
 
-router.post("/chat", optionalAuth, chat);
+router.post("/chat", agentChatLimiter, optionalAuth, chat);
 router.post("/match", optionalAuth, match);
 
 export default router;

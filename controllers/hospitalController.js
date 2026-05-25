@@ -9,13 +9,10 @@ import { getCoordinates } from "../utils/geocode.js";
 import { normalizeCountry, getDistance } from "../utils/locationHelper.js";
 import { escapeRegex } from "../utils/stringUtils.js";
 import { sanitizeInput } from "../utils/sanitizer.js";
+import { cacheGet, cacheSet } from "../utils/cache.js";
 
 // In-memory cache for nearby hospitals
-const nearbyCache = new Map();
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
-
-let cachedFeatured = [];
-let lastFeaturedFetch = 0;
 const FEATURED_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
 
 /* =====================================================
@@ -24,11 +21,26 @@ const FEATURED_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
 // @desc Get all verified hospitals
 // @route GET /hospitals
 const getHospitals = asyncHandler(async (req, res) => {
-  const hospitals = await Hospital.find({ verified: true }).lean();
-  if (!hospitals || hospitals.length === 0) {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  const [hospitals, total] = await Promise.all([
+    Hospital.find({ verified: true }).skip(skip).limit(limit).lean(),
+    Hospital.countDocuments({ verified: true }),
+  ]);
+
+  if (!hospitals.length) {
     return res.status(404).json({ message: "No verified hospitals found" });
   }
-  return res.json(hospitals);
+
+  return res.json({
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    hospitals,
+  });
 });
 
 // @desc  Get total count (Verified)
@@ -253,9 +265,9 @@ const getNearbyHospitals = async (req, res) => {
   const cacheKey = hasLocation
     ? `geo:${userLat}:${userLon}:${max}`
     : `ip:${req.ip}`;
-  const cached = nearbyCache.get(cacheKey);
-  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-    return res.json(cached.data);
+  const cached = await cacheGet(cacheKey);
+  if (cached) {
+    return res.json(cached);
   }
 
   try {
@@ -329,7 +341,7 @@ const getNearbyHospitals = async (req, res) => {
     }
 
     const responseData = { results, fallback, message };
-    nearbyCache.set(cacheKey, { data: responseData, timestamp: Date.now() });
+    await cacheSet(cacheKey, responseData, CACHE_TTL);
 
     return res.json(responseData);
   } catch (err) {
@@ -341,8 +353,9 @@ const getNearbyHospitals = async (req, res) => {
 // @desc    Get top featured hospitals
 // @route   GET /hospitals/featured
 const getTopHospitals = async (req, res) => {
-  const now = Date.now();
-  if (cachedFeatured.length && now - lastFeaturedFetch < FEATURED_CACHE_TTL) {
+  const featuredCacheKey = "featured:hospitals";
+  const cachedFeatured = await cacheGet(featuredCacheKey);
+  if (cachedFeatured) {
     return res.json(cachedFeatured.sort(() => 0.5 - Math.random()).slice(0, 3));
   }
 
@@ -351,14 +364,15 @@ const getTopHospitals = async (req, res) => {
       .limit(20)
       .lean();
 
-    cachedFeatured = hospitals.length
+    const toCache = hospitals.length
       ? hospitals
       : await Hospital.aggregate([
           { $match: { verified: true } },
           { $sample: { size: 20 } },
         ]);
 
-    lastFeaturedFetch = now;
+    await cacheSet(featuredCacheKey, toCache, FEATURED_CACHE_TTL);
+
     res.json(cachedFeatured.sort(() => 0.5 - Math.random()).slice(0, 3));
   } catch (err) {
     return res.status(500).json({ message: "Failed to load top hospitals" });
@@ -470,24 +484,23 @@ const getMySubmissions = asyncHandler(async (req, res) => {
   res.status(200).json(myHospitals);
 });
 
-
 // @desc add new hospital
 // @route POST /hospitals
 const addHospital = asyncHandler(async (req, res) => {
-const cleanBody = sanitizeInput(req.body);
+  const cleanBody = sanitizeInput(req.body);
 
-const {
-  name,
-  address,
-  phoneNumber,
-  website,
-  email,
-  photoUrl,
-  type,
-  services,
-  comments,
-  hours,
-} = cleanBody;
+  const {
+    name,
+    address,
+    phoneNumber,
+    website,
+    email,
+    photoUrl,
+    type,
+    services,
+    comments,
+    hours,
+  } = cleanBody;
 
   if (!name || !address?.city || !address?.state) {
     return res
@@ -516,7 +529,8 @@ const {
   }
 
   // Get coordinates
-  const fullAddress = `${address.street || ""}, ${address.city}, ${address.state}`.trim();
+  const fullAddress =
+    `${address.street || ""}, ${address.city}, ${address.state}`.trim();
   const { longitude, latitude } = await getCoordinates(fullAddress);
 
   const hospital = new Hospital({
