@@ -37,3 +37,4 @@ jobs:
           AUTH0_AUDIENCE: test-audience
           AUTH0_ISSUER: https://test-issuer.auth0.com/
           JWT_SECRET: test-jwt
+          GROQ_API_KEY: test-key
