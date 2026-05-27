@@ -1,5 +1,6 @@
 import SymptomMapping from "../models/SymptomMapping.js";
 import { cacheGet, cacheSet } from "./cache.js";
+import { semanticMatch } from "./ragMatcher.js";
 
 const COUNTRY_CONTINENT = {
   // ── Africa
@@ -447,18 +448,34 @@ const shapeResult = (hospital, serviceScore, serviceReason, locationLabel) => {
   };
 };
 
-export const matchHospitals = async (
-  profile,
-  hospitals,
-  topN = 5,
-  symptomMap = null,
-) => {
+export const matchHospitals = async (profile, hospitals, topN = 5, symptomMap = null) => {
+  // 1. Keyword-based service extraction (fallback)
   const serviceKeywords = await symptomsToServices(
     profile.symptoms || [],
     symptomMap,
   );
   const locationTerms = parseLocationTerms(profile.location);
   const userContinent = getUserContinent(profile.location);
+
+  // 2. RAG semantic matching
+  const semanticMap = new Map();
+  if (!symptomMap) {
+    const queryText =
+      (profile.symptoms || []).join(" ") +
+      " " +
+      (profile.additionalNeeds || "");
+    try {
+      const semanticResults = await semanticMatch(
+        queryText,
+        Math.max(topN * 3, 10),
+      );
+      for (const { hospitalId, score } of semanticResults) {
+        semanticMap.set(hospitalId, score);
+      }
+    } catch {
+      // RAG failed silently, fall back to keyword-only matching
+    }
+  }
 
   const tier1 = [];
   const tier2 = [];
@@ -469,22 +486,34 @@ export const matchHospitals = async (
       hospital,
       serviceKeywords,
     );
+
+    // RAG boost: up to 20 extra points based on semantic similarity
+    const semScore = semanticMap.get(hospital._id.toString());
+    const semanticBoost = semScore
+      ? Math.min(20, Math.round(semScore * 20))
+      : 0;
+    const totalServiceScore = svcScore + semanticBoost;
+
     const city = hospital.address?.city || "";
     const country = hospital.address?.state || "";
 
     // Tier 1 — city match
     if (locationTerms.length && fieldMatches(city, locationTerms)) {
-      tier1.push(shapeResult(hospital, svcScore, svcReason, `In ${city}`));
+      tier1.push(
+        shapeResult(hospital, totalServiceScore, svcReason, `In ${city}`),
+      );
       continue;
     }
 
     // Tier 2 — country match
     if (locationTerms.length && fieldMatches(country, locationTerms)) {
-      tier2.push(shapeResult(hospital, svcScore, svcReason, `In ${country}`));
+      tier2.push(
+        shapeResult(hospital, totalServiceScore, svcReason, `In ${country}`),
+      );
       continue;
     }
 
-    // Tier 3 — continent match via DB field (no lookup needed)
+    // Tier 3 — continent match
     if (
       userContinent &&
       hospital.continent &&
@@ -493,7 +522,7 @@ export const matchHospitals = async (
       tier3.push(
         shapeResult(
           hospital,
-          svcScore,
+          totalServiceScore,
           svcReason,
           `In ${country} (${userContinent})`,
         ),
@@ -523,4 +552,4 @@ export const matchHospitals = async (
   }
 
   return { results, noResults: false };
-};
+};;

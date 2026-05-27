@@ -1,28 +1,21 @@
 import { jest } from "@jest/globals";
-import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import supertest from "supertest";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import app from "../app.js";
+import { connectTestDB, disconnectTestDB, clearTestDB } from "./dbHelper.mjs";
 
-let mongoServer;
 let request;
 
 beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  await mongoose.connect(mongoServer.getUri());
+  await connectTestDB();
   request = supertest(app);
-});
-
-afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-});
+}, 60000);
 
 beforeEach(async () => {
-  await User.deleteMany({});
-});
+  await clearTestDB();
+}, 60000);
 
 const createTestUser = async () => {
   const hashedPassword = await bcrypt.hash("testpassword", 10);
@@ -71,8 +64,18 @@ describe("Auth – login and refresh token", () => {
       password: "testpassword",
     });
 
-    const cookies = loginRes.headers["set-cookie"];
+    const raw = loginRes.headers["set-cookie"];
+    const cookies = Array.isArray(raw)
+      ? raw
+      : typeof raw === "string"
+        ? [raw]
+        : [];
+
     const jwtCookie = cookies.find((c) => c.startsWith("jwt="));
+    if (!jwtCookie)
+      throw new Error(
+        "No jwt cookie found. Raw header: " + JSON.stringify(raw),
+      );
 
     const refreshRes = await request
       .get("/auth/refresh")

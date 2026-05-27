@@ -24,6 +24,9 @@ adminRouter
   .route("/hospitals/import-google")
   .post(adminController.importFromGoogle);
 adminRouter
+  .route("/hospitals/import-osm")
+  .post(adminController.importFromOsm);
+adminRouter
   .route("/hospitals/pending")
   .get(adminController.getPendingHospitals);
 adminRouter

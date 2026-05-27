@@ -8,12 +8,16 @@
     "start": "node server",
     "dev": "nodemon server",
     "seed": "node scripts/seedHospitals.js",
-    "test": "cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest"
+    "test": "cross-env NODE_OPTIONS=\"--experimental-vm-modules\" SKIP_RAG=true jest",
+    "test:rag": "cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest tests/embedding.test.mjs",
+    "build-embeddings": "node scripts/buildEmbeddings.js"
   },
   "author": "Elue Michael",
   "license": "ISC",
   "dependencies": {
     "@sentry/node": "^10.53.1",
+    "@tensorflow-models/universal-sentence-encoder": "^1.3.3",
+    "@tensorflow/tfjs": "^4.22.0",
     "axios": "^1.15.2",
     "bcrypt": "^6.0.0",
     "body-parser": "^1.20.5",

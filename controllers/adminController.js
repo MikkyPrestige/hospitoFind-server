@@ -1,4 +1,7 @@
 import axios from "axios";
+import bcrypt from "bcrypt";
+import asyncHandler from "express-async-handler";
+import mongoose from "mongoose";
 import User from "../models/User.js";
 import Hospital from "../models/Hospital.js";
 import {
@@ -6,9 +9,7 @@ import {
   getPhotoUrl,
   formatHospitalData,
 } from "../utils/hospitalHelpers.js";
-import bcrypt from "bcrypt";
-import asyncHandler from "express-async-handler";
-import mongoose from "mongoose";
+import { getUserContinent } from "../utils/matchingEngine.js";
 
 // --- USER MANAGEMENT ---
 /**
@@ -120,7 +121,6 @@ const deleteUserAdmin = asyncHandler(async (req, res) => {
   res.json({ message: `User ${user.username} deleted successfully` });
 });
 
-
 // --- HOSPITAL MANAGEMENT ---
 // @desc    Get all hospitals (admin view)
 // @route   GET /admin/hospitals
@@ -167,7 +167,7 @@ const updateHospitalAdmin = asyncHandler(async (req, res) => {
   const hospital = await Hospital.findByIdAndUpdate(
     req.params.id,
     { $set: data },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!hospital) {
@@ -212,7 +212,7 @@ const reviewAndApproveHospital = asyncHandler(async (req, res) => {
         verified: true,
       },
     },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!hospital) {
@@ -264,7 +264,6 @@ const deleteHospitalAdmin = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Hospital deleted successfully" });
 });
 
-
 // --- GOOGLE IMPORT ---
 // @desc    Import hospitals from Google Places
 // @route   POST /admin/hospitals/import-google
@@ -279,7 +278,7 @@ const importFromGoogle = asyncHandler(async (req, res) => {
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
   const query = `Hospitals in ${city}, ${targetCountry}`;
   const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
-    query
+    query,
   )}&key=${apiKey}`;
 
   let searchResults;
@@ -332,7 +331,9 @@ const importFromGoogle = asyncHandler(async (req, res) => {
 
     if (!details) continue;
 
-    const realPhotoUrl = details.photos ? getPhotoUrl(details.photos[0].photo_reference, apiKey) : "";
+    const realPhotoUrl = details.photos
+      ? getPhotoUrl(details.photos[0].photo_reference, apiKey)
+      : "";
     const hoursFormatted = formatHours(details.opening_hours);
 
     // Map Reviews to Comments (Take top 3)
@@ -351,10 +352,10 @@ const importFromGoogle = asyncHandler(async (req, res) => {
                 "establishment",
                 "hospital",
                 "health",
-              ].includes(t)
+              ].includes(t),
           )
           .map((t) =>
-            t.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
+            t.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
           )
       : ["General Healthcare"];
 
@@ -395,6 +396,193 @@ const importFromGoogle = asyncHandler(async (req, res) => {
   });
 });
 
+// --- OSM IMPORT ---
+// @desc    Import hospitals from OpenStreetMap (Overpass API)
+// @route   POST /admin/hospitals/import-osm
+// @access  Admin Only
+const importFromOsm = asyncHandler(async (req, res) => {
+  const { city, targetCountry } = req.body;
+
+  if (!city || !targetCountry) {
+    return res.status(400).json({ message: "City and Country are required" });
+  }
+
+  // Overpass QL: find hospitals within the country, matching city name
+  const overpassQuery = `
+    [out:json][timeout:60];
+    area["name"="${targetCountry}"]->.country;
+    (
+      node["amenity"="hospital"](area.country)["addr:city"="${city}"];
+      way["amenity"="hospital"](area.country)["addr:city"="${city}"];
+      relation["amenity"="hospital"](area.country)["addr:city"="${city}"];
+    );
+    out center;
+  `;
+
+   let elements;
+   try {
+     const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
+     const response = await axios.get(url, {
+       timeout: 90000,
+       headers: {
+         "User-Agent": "HospitoFind/1.0 (admin import tool)",
+       },
+     });
+     elements = response.data.elements;
+   } catch (err) {
+     console.error("OSM Import Error:", err.response?.data || err.message);
+     return res.status(500).json({
+       message: "Failed to connect to OpenStreetMap",
+       error: err.response?.data || err.message,
+     });
+   }
+
+  if (!elements || elements.length === 0) {
+    return res
+      .status(404)
+      .json({ message: `No hospitals found in ${city}, ${targetCountry}.` });
+  }
+
+  const dryRun = req.query.dryRun === "true";
+  const preview = [];
+  let importedCount = 0;
+  let skippedCount = 0;
+
+  for (const el of elements) {
+    const tags = el.tags || {};
+    const lat = el.lat || el.center?.lat;
+    const lon = el.lon || el.center?.lon;
+
+    const name = tags.name || tags["name:en"] || "Unnamed Hospital";
+    const exists = await Hospital.findOne({
+      name: name,
+      "address.city": city,
+    });
+    if (exists) {
+      skippedCount++;
+      continue;
+    }
+
+    const hospitalData = {
+      name,
+      address: {
+        street: tags["addr:street"] || "",
+        city: city,
+        state: targetCountry,
+        country: targetCountry,
+      },
+      phoneNumber: tags.phone || tags["contact:phone"] || "",
+      website: tags.website || tags["contact:website"] || "",
+      email: "",
+      photoUrl: "",
+      longitude: lon,
+      latitude: lat,
+      hours: tags.opening_hours
+        ? [{ day: "See OSM", open: tags.opening_hours }]
+        : [],
+      comments: ["Imported from OpenStreetMap"],
+      services: tags["healthcare:speciality"]
+        ? tags["healthcare:speciality"].split(";").map((s) =>
+            s
+              .trim()
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, (l) => l.toUpperCase()),
+          )
+        : ["General Healthcare"],
+      type: tags.healthcare || "Hospital",
+      continent: getUserContinent(targetCountry),
+      verified: false,
+      isFeatured: false,
+      createdBy: dryRun ? req.userId : new mongoose.Types.ObjectId(req.userId),
+    };
+
+    if (dryRun) {
+      preview.push(hospitalData);
+      importedCount++;
+    } else {
+      await Hospital.create(hospitalData);
+      importedCount++;
+    }
+  }
+
+  if (dryRun) {
+    return res.status(200).json({
+      message: `DRY RUN — Would import ${importedCount} hospitals. Skipped ${skippedCount} duplicates.`,
+      imported: importedCount,
+      skipped: skippedCount,
+      preview,
+    });
+  }
+
+  res.status(200).json({
+    message: `Import complete. Added ${importedCount} hospitals. Skipped ${skippedCount} duplicates.`,
+    imported: importedCount,
+    skipped: skippedCount,
+  });
+  // Map OSM elements to hospital schema
+  //  let importedCount = 0;
+  //  let skippedCount = 0;
+
+  //  for (const el of elements) {
+  //    const tags = el.tags || {};
+  //    const lat = el.lat || el.center?.lat;
+  //    const lon = el.lon || el.center?.lon;
+
+  //    const name = tags.name || tags["name:en"] || "Unnamed Hospital";
+  //    const exists = await Hospital.findOne({
+  //      name: name,
+  //      "address.city": city,
+  //    });
+  //    if (exists) {
+  //      skippedCount++;
+  //      continue;
+  //    }
+
+  //    // Map OSM tags to hospital fields
+  //    const hospitalData = {
+  //      name,
+  //      address: {
+  //        street: tags["addr:street"] || "",
+  //        city: city,
+  //        state: targetCountry,
+  //        country: targetCountry,
+  //      },
+  //      phoneNumber: tags.phone || tags["contact:phone"] || "",
+  //      website: tags.website || tags["contact:website"] || "",
+  //      email: "",
+  //      photoUrl: "",
+  //      longitude: lon,
+  //      latitude: lat,
+  //      hours: tags.opening_hours
+  //        ? [{ day: "See OSM", open: tags.opening_hours }]
+  //        : [],
+  //      comments: ["Imported from OpenStreetMap"],
+  //      services: tags["healthcare:speciality"]
+  //        ? tags["healthcare:speciality"].split(";").map((s) =>
+  //            s
+  //              .trim()
+  //              .replace(/_/g, " ")
+  //              .replace(/\b\w/g, (l) => l.toUpperCase()),
+  //          )
+  //        : ["General Healthcare"],
+  //      type: tags.healthcare || "Hospital",
+  //      continent: getUserContinent(targetCountry),
+  //      verified: false,
+  //      isFeatured: false,
+  //      createdBy: new mongoose.Types.ObjectId(req.userId),
+  //    };
+
+  //    await Hospital.create(hospitalData);
+  //    importedCount++;
+  //  }
+
+  //  res.status(200).json({
+  //    message: `Import complete. Added ${importedCount} hospitals. Skipped ${skippedCount} duplicates.`,
+  //    imported: importedCount,
+  //    skipped: skippedCount,
+  //  });
+});
+
 export default {
   getAllUsersAdmin,
   createUserAdmin,
@@ -410,4 +598,5 @@ export default {
   checkDuplicateHospital,
   deleteHospitalAdmin,
   importFromGoogle,
+  importFromOsm,
 };

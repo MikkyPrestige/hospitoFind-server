@@ -173,7 +173,8 @@ export const match = async (req, res) => {
 
   try {
         const continent = getUserContinent(location);
-        const filter = continent ? { continent } : {};
+        const filter = { verified: true };
+        if (continent) filter.continent = continent;
         const hospitals = await Hospital.find(filter).lean();
 
         if (!hospitals.length) {

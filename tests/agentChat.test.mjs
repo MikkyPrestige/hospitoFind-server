@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
-import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import supertest from "supertest";
+import { connectTestDB, disconnectTestDB } from "./dbHelper.mjs";
 
 // 1. Mock Groq before importing the app
 const mockCreate = jest.fn();
@@ -18,19 +18,12 @@ jest.unstable_mockModule("groq-sdk", () => ({
 // 2. Dynamically import the app AFTER the mock
 const { default: app } = await import("../app.js");
 
-let mongoServer;
 let request;
 
 beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  await mongoose.connect(mongoServer.getUri());
+  await connectTestDB();
   request = supertest(app);
-});
-
-afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-});
+}, 60000);
 
 beforeEach(() => {
   mockCreate.mockReset();

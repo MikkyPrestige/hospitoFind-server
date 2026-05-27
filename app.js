@@ -1,5 +1,6 @@
-import * as Sentry from "@sentry/node";
 import dotenv from "dotenv";
+dotenv.config();
+import * as Sentry from "@sentry/node";
 import express from "express";
 import { Router } from "express";
 import mongoose from "mongoose";
@@ -21,8 +22,6 @@ import hospitalRoutes from "./routes/hospitalsRoutes.js";
 import agentRoutes from "./routes/agentRoutes.js";
 import healthRoutes from "./routes/healthRoutes.js";
 import loadSitemapRoutes from "./routes/sitemaps/index.js";
-
-dotenv.config();
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
