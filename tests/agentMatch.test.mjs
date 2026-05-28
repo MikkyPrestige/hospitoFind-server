@@ -19,7 +19,7 @@ describe("POST /agent/match with continent pre-filter", () => {
     await clearTestDB();
   });
 
-  it.skip("only matches hospitals on the same continent", async () => {
+  it("only matches hospitals on the same continent", async () => {
     await Hospital.create({
       name: "Nairobi General",
       type: "General",
@@ -50,7 +50,7 @@ describe("POST /agent/match with continent pre-filter", () => {
     expect(res.body.hospitals[0].name).toBe("Nairobi General");
   }, 90000);
 
-  it.skip("GET /hospitals returns paginated results", async () => {
+  it("GET /hospitals returns paginated results", async () => {
     await Hospital.create([
       {
         name: "H1",
