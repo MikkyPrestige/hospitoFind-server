@@ -448,7 +448,12 @@ const shapeResult = (hospital, serviceScore, serviceReason, locationLabel) => {
   };
 };
 
-export const matchHospitals = async (profile, hospitals, topN = 5, symptomMap = null) => {
+export const matchHospitals = async (
+  profile,
+  hospitals,
+  topN = 5,
+  symptomMap = null,
+) => {
   // 1. Keyword-based service extraction (fallback)
   const serviceKeywords = await symptomsToServices(
     profile.symptoms || [],
@@ -552,4 +557,4 @@ export const matchHospitals = async (profile, hospitals, topN = 5, symptomMap = 
   }
 
   return { results, noResults: false };
-};;
+};

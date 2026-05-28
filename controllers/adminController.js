@@ -10,6 +10,7 @@ import {
   formatHospitalData,
 } from "../utils/hospitalHelpers.js";
 import { getUserContinent } from "../utils/matchingEngine.js";
+import { scheduleRebuild } from "../utils/debouncedRebuild.js";
 
 // --- USER MANAGEMENT ---
 /**
@@ -154,6 +155,7 @@ const createHospitalAdmin = asyncHandler(async (req, res) => {
     verified: true,
     createdBy: req.userId,
   });
+  scheduleRebuild();
   res.status(201).json(hospital);
 });
 
@@ -174,6 +176,8 @@ const updateHospitalAdmin = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Hospital not found" });
   }
 
+  scheduleRebuild();
+
   res.status(200).json(hospital);
 });
 
@@ -190,6 +194,8 @@ const toggleHospitalStatus = asyncHandler(async (req, res) => {
 
   hospital.verified = !hospital.verified;
   await hospital.save();
+
+  scheduleRebuild();
 
   res.status(200).json({
     message: `Hospital is now ${hospital.verified ? "Live" : "Hidden"}`,
@@ -218,6 +224,8 @@ const reviewAndApproveHospital = asyncHandler(async (req, res) => {
   if (!hospital) {
     return res.status(404).json({ message: "Hospital not found" });
   }
+
+  scheduleRebuild();
 
   res.status(200).json({ message: "Hospital approved!", hospital });
 });
@@ -419,23 +427,23 @@ const importFromOsm = asyncHandler(async (req, res) => {
     out center;
   `;
 
-   let elements;
-   try {
-     const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
-     const response = await axios.get(url, {
-       timeout: 90000,
-       headers: {
-         "User-Agent": "HospitoFind/1.0 (admin import tool)",
-       },
-     });
-     elements = response.data.elements;
-   } catch (err) {
-     console.error("OSM Import Error:", err.response?.data || err.message);
-     return res.status(500).json({
-       message: "Failed to connect to OpenStreetMap",
-       error: err.response?.data || err.message,
-     });
-   }
+  let elements;
+  try {
+    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
+    const response = await axios.get(url, {
+      timeout: 90000,
+      headers: {
+        "User-Agent": "HospitoFind/1.0 (admin import tool)",
+      },
+    });
+    elements = response.data.elements;
+  } catch (err) {
+    console.error("OSM Import Error:", err.response?.data || err.message);
+    return res.status(500).json({
+      message: "Failed to connect to OpenStreetMap",
+      error: err.response?.data || err.message,
+    });
+  }
 
   if (!elements || elements.length === 0) {
     return res
