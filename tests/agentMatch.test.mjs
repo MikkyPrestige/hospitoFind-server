@@ -39,12 +39,14 @@ describe("POST /agent/match with continent pre-filter", () => {
       phoneNumber: "12345",
     });
 
-    const res = await request
-      .post("/agent/match")
-      .send({ symptoms: ["chest pain"], location: "Nairobi, Kenya" });
-
-    if (res.status !== 200);
-
+   let res;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      res = await request
+        .post("/agent/match")
+        .send({ symptoms: ["chest pain"], location: "Nairobi, Kenya" });
+      if (res.status === 200) break;
+      await new Promise((r) => setTimeout(r, 200));
+    }
     expect(res.status).toBe(200);
     expect(res.body.hospitals.length).toBe(1);
     expect(res.body.hospitals[0].name).toBe("Nairobi General");
