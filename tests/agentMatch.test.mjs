@@ -39,6 +39,18 @@ describe("POST /agent/match with continent pre-filter", () => {
       phoneNumber: "12345",
     });
 
+    const docs = await Hospital.find({}).lean();
+    console.log(
+      "DEBUG Seeded docs:",
+      JSON.stringify(
+        docs.map((d) => ({
+          name: d.name,
+          verified: d.verified,
+          continent: d.continent,
+        })),
+      ),
+    );
+
     const res = await request
       .post("/agent/match")
       .send({ symptoms: ["chest pain"], location: "Nairobi, Kenya" });
