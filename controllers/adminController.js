@@ -453,6 +453,8 @@ const importFromOsm = asyncHandler(async (req, res) => {
 
   const dryRun = req.query.dryRun === "true";
   const preview = [];
+  const limit = Math.min(parseInt(req.query.limit) || 50, 100); // cap at 100 max
+
   let importedCount = 0;
   let skippedCount = 0;
 
@@ -507,15 +509,17 @@ const importFromOsm = asyncHandler(async (req, res) => {
     if (dryRun) {
       preview.push(hospitalData);
       importedCount++;
+      if (importedCount >= limit) break;
     } else {
       await Hospital.create(hospitalData);
       importedCount++;
+      if (importedCount >= limit) break;
     }
   }
 
   if (dryRun) {
     return res.status(200).json({
-      message: `DRY RUN — Would import ${importedCount} hospitals. Skipped ${skippedCount} duplicates.`,
+      message: `DRY RUN — Would import ${importedCount} hospitals (capped at ${limit}). Skipped ${skippedCount} duplicates.`,
       imported: importedCount,
       skipped: skippedCount,
       preview,
@@ -523,72 +527,10 @@ const importFromOsm = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({
-    message: `Import complete. Added ${importedCount} hospitals. Skipped ${skippedCount} duplicates.`,
+    message: `Import complete. Added ${importedCount} hospitals (capped at ${limit}). Skipped ${skippedCount} duplicates.`,
     imported: importedCount,
     skipped: skippedCount,
   });
-  // Map OSM elements to hospital schema
-  //  let importedCount = 0;
-  //  let skippedCount = 0;
-
-  //  for (const el of elements) {
-  //    const tags = el.tags || {};
-  //    const lat = el.lat || el.center?.lat;
-  //    const lon = el.lon || el.center?.lon;
-
-  //    const name = tags.name || tags["name:en"] || "Unnamed Hospital";
-  //    const exists = await Hospital.findOne({
-  //      name: name,
-  //      "address.city": city,
-  //    });
-  //    if (exists) {
-  //      skippedCount++;
-  //      continue;
-  //    }
-
-  //    // Map OSM tags to hospital fields
-  //    const hospitalData = {
-  //      name,
-  //      address: {
-  //        street: tags["addr:street"] || "",
-  //        city: city,
-  //        state: targetCountry,
-  //        country: targetCountry,
-  //      },
-  //      phoneNumber: tags.phone || tags["contact:phone"] || "",
-  //      website: tags.website || tags["contact:website"] || "",
-  //      email: "",
-  //      photoUrl: "",
-  //      longitude: lon,
-  //      latitude: lat,
-  //      hours: tags.opening_hours
-  //        ? [{ day: "See OSM", open: tags.opening_hours }]
-  //        : [],
-  //      comments: ["Imported from OpenStreetMap"],
-  //      services: tags["healthcare:speciality"]
-  //        ? tags["healthcare:speciality"].split(";").map((s) =>
-  //            s
-  //              .trim()
-  //              .replace(/_/g, " ")
-  //              .replace(/\b\w/g, (l) => l.toUpperCase()),
-  //          )
-  //        : ["General Healthcare"],
-  //      type: tags.healthcare || "Hospital",
-  //      continent: getUserContinent(targetCountry),
-  //      verified: false,
-  //      isFeatured: false,
-  //      createdBy: new mongoose.Types.ObjectId(req.userId),
-  //    };
-
-  //    await Hospital.create(hospitalData);
-  //    importedCount++;
-  //  }
-
-  //  res.status(200).json({
-  //    message: `Import complete. Added ${importedCount} hospitals. Skipped ${skippedCount} duplicates.`,
-  //    imported: importedCount,
-  //    skipped: skippedCount,
-  //  });
 });
 
 export default {
