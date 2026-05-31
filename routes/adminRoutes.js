@@ -37,6 +37,9 @@ adminRouter
   .get(adminController.getAllHospitalsAdmin)
   .post(adminController.createHospitalAdmin);
 adminRouter
+      .route("/hospitals/approve-batch")
+      .patch(adminController.batchApproveHospitals);
+adminRouter
   .route("/hospitals/:id")
   .patch(adminController.updateHospitalAdmin)
   .delete(adminController.deleteHospitalAdmin);
@@ -46,9 +49,6 @@ adminRouter
 adminRouter
   .route("/hospitals/approve/:id")
   .patch(adminController.reviewAndApproveHospital);
-  adminRouter
-    .route("/hospitals/approve-batch")
-    .patch(adminController.batchApproveHospitals);
 adminRouter
   .route("/symptoms")
   .get(symptomController.getSymptomMappings)
