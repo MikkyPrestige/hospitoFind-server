@@ -231,6 +231,29 @@ const reviewAndApproveHospital = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @desc    Batch approve pending hospitals
+ * @route   PATCH /admin/hospitals/approve-batch
+ * @access  Admin Only
+ */
+const batchApproveHospitals = asyncHandler(async (req, res) => {
+  const { ids } = req.body;
+
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ message: "Provide an array of hospital IDs" });
+  }
+
+  const result = await Hospital.updateMany(
+    { _id: { $in: ids }, verified: false },
+    { $set: { verified: true } }
+  );
+
+  res.status(200).json({
+    message: `${result.modifiedCount} hospital(s) approved.`,
+    modifiedCount: result.modifiedCount,
+  });
+});
+
+/**
  * @desc    Check for duplicates
  */
 const checkDuplicateHospital = asyncHandler(async (req, res) => {
@@ -545,6 +568,7 @@ export default {
   updateHospitalAdmin,
   toggleHospitalStatus,
   reviewAndApproveHospital,
+  batchApproveHospitals,
   checkDuplicateHospital,
   deleteHospitalAdmin,
   importFromGoogle,

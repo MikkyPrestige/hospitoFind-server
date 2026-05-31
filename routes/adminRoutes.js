@@ -46,7 +46,9 @@ adminRouter
 adminRouter
   .route("/hospitals/approve/:id")
   .patch(adminController.reviewAndApproveHospital);
-
+  adminRouter
+    .route("/hospitals/approve-batch")
+    .patch(adminController.batchApproveHospitals);
 adminRouter
   .route("/symptoms")
   .get(symptomController.getSymptomMappings)
