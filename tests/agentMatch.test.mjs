@@ -20,33 +20,40 @@ describe("POST /agent/match with continent pre-filter", () => {
   });
 
   it("only matches hospitals on the same continent", async () => {
-    await Hospital.create({
-      name: "Nairobi General",
-      type: "General",
-      services: ["general", "infectious disease"],
-      address: { city: "Nairobi", state: "Kenya" },
-      continent: "Africa",
-      verified: true,
-    });
+    await Hospital.create([
+      {
+        name: "Nairobi General",
+        type: "General",
+        services: ["general", "infectious disease"],
+        address: { city: "Nairobi", state: "Kenya" },
+        continent: "Africa",
+        verified: true,
+      },
+      {
+        name: "Berlin Heart Center",
+        type: "Specialist",
+        services: ["cardiology", "emergency"],
+        address: { city: "Berlin", state: "Germany" },
+        continent: "Europe",
+        verified: true,
+        phoneNumber: "12345",
+      },
+    ]);
 
-    await Hospital.create({
-      name: "Berlin Heart Center",
-      type: "Specialist",
-      services: ["cardiology", "emergency"],
-      address: { city: "Berlin", state: "Germany" },
-      continent: "Europe",
-      verified: true,
-      phoneNumber: "12345",
-    });
+    // Wait until the seeds are actually visible (prevents race condition)
+    let count = 0;
+    const deadline = Date.now() + 10000; // 10-second window
+    while (Date.now() < deadline && count < 2) {
+      count = await Hospital.countDocuments({});
+      if (count >= 2) break;
+      await new Promise((r) => setTimeout(r, 300));
+    }
+    expect(count).toBeGreaterThanOrEqual(2);
 
-   let res;
-       for (let attempt = 0; attempt < 5; attempt++) {
-         res = await request
-           .post("/agent/match")
-           .send({ symptoms: ["chest pain"], location: "Nairobi, Kenya" });
-         if (res.status === 200) break;
-         await new Promise((r) => setTimeout(r, 500));
-       }
+    const res = await request
+      .post("/agent/match")
+      .send({ symptoms: ["chest pain"], location: "Nairobi, Kenya" });
+
     expect(res.status).toBe(200);
     expect(res.body.hospitals.length).toBe(1);
     expect(res.body.hospitals[0].name).toBe("Nairobi General");
