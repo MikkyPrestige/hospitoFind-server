@@ -179,13 +179,7 @@ npm test -- tests/agentChat.test.mjs   # single suite
 
 ## 8. Known Limitations & Future Improvements
 
-- **Incremental embeddings**: Currently a full‑rebuild; switch to incremental
-  when hospital count > 2,000.
-- **Automated test for Auth0 JWKS validation**: Currently only tested manually
-  in staging. Add an integration test that verifies token verification with a
-  mock JWKS endpoint.
-- **Configure UptimeRobot with proper uptime monitoring and alerts**: Currently
-  only used as a keep‑alive ping. Expand to real endpoint monitoring and alerting.
+See [ROADMAP.md](ROADMAP.md) for planned future improvements.
 
 ## 9. Maintainer Notes
 
@@ -196,14 +190,3 @@ npm run seed                # Seed database from data/hospitals.json
 npm run build-embeddings    # Manually regenerate embeddings
 npm run import-osm          # Manually run OSM import (script)
 ```
-
-### Common issues
-
-| Symptom                                     | Likely cause / fix |
-|---------------------------------------------|-------------------|
-| `MongoServerSelectionError`                 | MongoDB URI missing or IP not whitelisted |
-| `ids is not defined`                        | Logger needs `import ids from "short-id"` |
-| Redis `ECONNREFUSED`                       | Redis URL wrong; app falls back to in‑memory cache |
-| AI chat 429                                 | Rate limit hit (20 req/10 min per IP) |
-| `npm run build-embeddings` takes long       | Normal – processes all verified hospitals in batches |
-| `jest did not exit` warning                 | Unclosed connections (Redis/Sentry); harmless |
