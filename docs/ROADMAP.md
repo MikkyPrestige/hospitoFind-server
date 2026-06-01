@@ -32,7 +32,7 @@ Items are grouped by area and not yet scheduled.
 ## Admin & Data Management
 
 - **Admin audit log for hospital edits** – track who changed what and when.
-- **Bulk‑delete for old pending submissions** – reject all pending submissions older than X days with one click.
+- **Batch‑delete selected pending submissions** – add `DELETE /admin/hospitals/batch` endpoint that accepts `{ ids }` and permanently removes those hospital documents.
 - **Scheduled OSM imports** – set up a cron job to automatically import hospitals from key cities on a weekly basis.
 - **Fuzzy duplicate detection** – use Levenshtein distance or similar to catch near‑duplicates, especially from OSM imports.
 
