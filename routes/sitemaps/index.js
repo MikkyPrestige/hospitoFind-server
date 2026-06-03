@@ -1,9 +1,9 @@
 import sitemapIndex from "./sitemapIndex.js";
-import sitemapStatic from "./sitemapStatic.js";
-import sitemapCountries from "./sitemapCountries.js";
-import sitemapCities from "./sitemapCities.js";
-import sitemapHospitals from "./sitemapHospitals.js";
-import sitemapImages from "./sitemapImages.js";
+import sitemapStatic from "./static.js";
+import sitemapCountries from "./countries.js";
+import sitemapCities from "./cities.js";
+import sitemapHospitals from "./hospitals.js";
+import sitemapImages from "./images.js";
 
 export default function loadSitemapRoutes(app) {
   app.use(sitemapIndex);

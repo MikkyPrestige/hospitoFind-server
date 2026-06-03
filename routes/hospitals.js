@@ -1,7 +1,13 @@
 import express from "express";
-import hospitalController from "../controllers/hospitalController.js";
+import hospitalController from "../controllers/hospital.js";
 import { verifyJWT, verifyAdmin } from "../middleware/verifyRoles.js";
 import { hospitalSubmissionLimiter } from "../middleware/rateLimiter.js";
+import validate from "../middleware/validate.js";
+import {
+  addHospitalSchema,
+  updateHospitalSchema,
+  shareHospitalsSchema,
+} from "../utils/validation.js";
 
 const hospitalRouter = express.Router();
 
@@ -15,16 +21,23 @@ hospitalRouter.get("/top", hospitalController.getTopHospitals);
 hospitalRouter.get("/explore", hospitalController.getHospitalsGroupedByCountry);
 hospitalRouter.get(
   "/explore/top",
-  hospitalController.getHospitalsGroupedByCountryTop
+  hospitalController.getHospitalsGroupedByCountryTop,
 );
 hospitalRouter.get(
   "/country/:country",
-  hospitalController.getHospitalsForCountry
+  hospitalController.getHospitalsForCountry,
 );
-hospitalRouter.get("/:country/:city/:slug", hospitalController.getHospitalBySlug);
+hospitalRouter.get(
+  "/:country/:city/:slug",
+  hospitalController.getHospitalBySlug,
+);
 hospitalRouter.get("/stats/countries", hospitalController.getCountryStats);
 
-hospitalRouter.post("/share", hospitalController.shareHospitals);
+hospitalRouter.post(
+  "/share",
+  validate(shareHospitalsSchema),
+  hospitalController.shareHospitals,
+);
 hospitalRouter.get("/share/:linkId", hospitalController.getSharedHospitals);
 hospitalRouter.get("/export", hospitalController.exportHospitals);
 
@@ -38,39 +51,45 @@ hospitalRouter.post(
   "/",
   verifyJWT,
   hospitalSubmissionLimiter,
+  validate(addHospitalSchema),
   hospitalController.addHospital,
 );
 hospitalRouter.get(
   "/submissions",
   verifyJWT,
-  hospitalController.getMySubmissions
+  hospitalController.getMySubmissions,
 );
-hospitalRouter.patch("/:id", verifyJWT, hospitalController.updateHospital);
+hospitalRouter.patch(
+  "/:id",
+  verifyJWT,
+  validate(updateHospitalSchema),
+  hospitalController.updateHospital,
+);
 
 // --- RESTRICTED ADMIN ACTIONS (Require JWT + Admin Role) ---
 hospitalRouter.get(
   "/admin/stats",
   verifyJWT,
   verifyAdmin,
-  hospitalController.getAdminStats
+  hospitalController.getAdminStats,
 );
 hospitalRouter.get(
   "/admin/pending",
   verifyJWT,
   verifyAdmin,
-  hospitalController.getPendingHospitals
+  hospitalController.getPendingHospitals,
 );
 hospitalRouter.patch(
   "/approve/:id",
   verifyJWT,
   verifyAdmin,
-  hospitalController.approveHospital
+  hospitalController.approveHospital,
 );
 hospitalRouter.delete(
   "/:id",
   verifyJWT,
   verifyAdmin,
-  hospitalController.deleteHospital
+  hospitalController.deleteHospital,
 );
 
 export default hospitalRouter;

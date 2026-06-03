@@ -5,14 +5,20 @@ import {
   updateSessionFeedback,
   deleteSession,
   clearHealthHistory,
-} from "../controllers/healthHistoryController.js";
+} from "../controllers/healthHistory.js";
+import validate from "../middleware/validate.js";
+import { updateSessionFeedbackSchema } from "../utils/validation.js";
 
 const router = express.Router();
 
 router.use(verifyJWT);
 
 router.get("/", getHealthHistory);
-router.patch("/:sessionId/feedback", updateSessionFeedback);
+router.patch(
+  "/:sessionId/feedback",
+  validate(updateSessionFeedbackSchema),
+  updateSessionFeedback,
+);
 router.delete("/:sessionId", deleteSession);
 router.delete("/", clearHealthHistory);
 
