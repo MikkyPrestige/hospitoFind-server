@@ -1,8 +1,9 @@
 import express from "express";
 import { verifyJWT, verifyAdmin } from "../middleware/verifyRoles.js";
+import { osmImportLimiter } from "../middleware/rateLimiter.js";
+import validate from "../middleware/validate.js";
 import adminController from "../controllers/admin.js";
 import * as symptomController from "../controllers/symptom.js";
-import validate from "../middleware/validate.js";
 import {
   createUserAdminSchema,
   updateUserRoleAdminSchema,
@@ -45,7 +46,11 @@ adminRouter
 
 adminRouter
   .route("/hospitals/import-osm")
-  .post(validate(importFromOsmSchema), adminController.importFromOsm);
+  .post(
+    validate(importFromOsmSchema),
+    osmImportLimiter,
+    adminController.importFromOsm,
+  );
 
 adminRouter
   .route("/hospitals/pending")
