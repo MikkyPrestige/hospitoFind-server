@@ -14,13 +14,13 @@ import corsOptions from "./config/corsOptions.js";
 import { logger } from "./middleware/logger.js";
 import errorHandler from "./middleware/errorHandler.js";
 import rootRoutes from "./routes/root.js";
-import authRoutes from "./routes/authRoutes.js";
-import healthHistoryRoutes from "./routes/healthHistoryRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
-import adminRoutes from "./routes/adminRoutes.js";
-import hospitalRoutes from "./routes/hospitalsRoutes.js";
-import agentRoutes from "./routes/agentRoutes.js";
-import healthRoutes from "./routes/healthRoutes.js";
+import authRoutes from "./routes/auth.js";
+import healthHistoryRoutes from "./routes/healthHistory.js";
+import userRoutes from "./routes/user.js";
+import adminRoutes from "./routes/admin.js";
+import hospitalRoutes from "./routes/hospitals.js";
+import agentRoutes from "./routes/agent.js";
+import healthRoutes from "./routes/health.js";
 import loadSitemapRoutes from "./routes/sitemaps/index.js";
 
 Sentry.init({
