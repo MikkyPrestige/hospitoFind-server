@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,73 +7,85 @@
     <title>HospitoFind</title>
     <link rel="stylesheet" href="../css/style.css" />
   </head>
-
   <body>
-    <h1>HospitoFind Server</h1>
-    <ul>
-      <li>
-        <a
-          href="https://hospitofind-server.onrender.com/hospitals"
-          target="_blank"
-          >Get Hospitals</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://hospitofind-server.onrender.com/hospitals/export"
-          target="_blank"
-          >Export Hospitals</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://hospitofind-server.onrender.com/hospitals/share/:linkId"
-          target="_blank"
-          >Share Hospitals</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://hospitofind-server.onrender.com/hospitals/explore"
-          target="_blank"
-          >Hospital Atlas</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://hospitofind-server.onrender.com/hospitals/explore/top"
-          target="_blank"
-          >Top Rated Hospitals</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://hospitofind-server.onrender.com/hospitals/country/:country"
-          target="_blank"
-          >Hospitals in a Country</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://hospitofind-server.onrender.com/health/tips"
-          target="_blank"
-          >Health Tips</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://hospitofind-server.onrender.com/health/news"
-          target="_blank"
-          >Health News</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://hospitofind-server.onrender.com/health/alerts"
-          target="_blank"
-          >Disease Alerts</a
-        >
-      </li>
-    </ul>
+    <div class="card">
+      <h1>Hospito<span class="highlight">Find</span></h1>
+      <p>AI‑powered hospital discovery platform</p>
+      <a href="https://hospitofind.online" class="btn">Go to App</a>
+      <div class="api-links">
+        <strong>API Reference</strong>
+
+        <div class="api-section">
+          <span class="api-category">Hospitals</span>
+          <ul>
+            <li><a href="/api/v1/hospitals">All Verified Hospitals</a></li>
+            <li>
+              <a href="/api/v1/hospitals/find?term=London">Search Hospitals</a>
+            </li>
+            <li>
+              <a href="/api/v1/hospitals/nearby?lat=51.5&lon=-0.12"
+                >Nearby Hospitals</a
+              >
+            </li>
+            <li><a href="/api/v1/hospitals/top">Top Featured</a></li>
+            <li><a href="/api/v1/hospitals/explore">Hospital Atlas</a></li>
+            <li>
+              <a href="/api/v1/hospitals/explore/top">Top Rated by Country</a>
+            </li>
+            <li>
+              <a href="/api/v1/hospitals/country/Nigeria"
+                >Hospitals in a Country</a
+              >
+            </li>
+            <li><a href="/api/v1/hospitals/count">Total Count</a></li>
+            <li>
+              <a href="/api/v1/hospitals/stats/countries">Country Statistics</a>
+            </li>
+            <li><a href="/api/v1/hospitals/random">Random Picks</a></li>
+            <li><a href="/api/v1/hospitals/export">Export to CSV</a></li>
+          </ul>
+        </div>
+
+        <div class="api-section">
+          <span class="api-category">Health</span>
+          <ul>
+            <li><a href="/api/v1/health/news">Global Health News</a></li>
+            <li><a href="/api/v1/health/alerts">Health Alerts</a></li>
+            <li><a href="/api/v1/health/tips">Health Tips</a></li>
+          </ul>
+        </div>
+
+        <div class="api-section">
+          <span class="api-category">Auth <small>(POST / GET)</small></span>
+          <ul>
+            <li class="api-post">POST /api/v1/auth — Login</li>
+            <li class="api-post">POST /api/v1/auth/register — Register</li>
+            <li class="api-post">POST /api/v1/auth/auth0 — Auth0 Login</li>
+            <li class="api-get">
+              GET /api/v1/auth/verify-email — Verify Email
+            </li>
+            <li class="api-post">
+              POST /api/v1/auth/resend-verification — Resend Link
+            </li>
+            <li class="api-post">
+              POST /api/v1/auth/forgot-password — Forgot Password
+            </li>
+            <li class="api-post">
+              PUT /api/v1/auth/reset-password/:token — Reset Password
+            </li>
+            <li class="api-get">GET /api/v1/auth/refresh — Refresh Token</li>
+            <li class="api-post">POST /api/v1/auth/logout — Logout</li>
+          </ul>
+        </div>
+
+        <div class="api-section">
+          <span class="api-category">AI Assistant <small>(POST)</small></span>
+          <ul>
+            <li class="api-post">POST /api/v1/agent/chat — Chat</li>
+            <li class="api-post">POST /api/v1/agent/match — Match Hospitals</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
