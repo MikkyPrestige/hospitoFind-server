@@ -1,5 +1,34 @@
 import jwt from "jsonwebtoken";
 import { Resend } from "resend";
+import crypto from "node:crypto";
+
+export const hashToken = (token) =>
+  crypto.createHash("sha256").update(token).digest("hex");
+
+export const generateAccessToken = (user) => {
+  return jwt.sign(
+    {
+      UserInfo: {
+        id: user._id,
+        username: user.username,
+        role: user.role,
+      },
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "15m" },
+  );
+};
+
+export const generateRefreshToken = (user, family) => {
+  const jti = crypto.randomUUID();
+  const refreshToken = jwt.sign(
+    { username: user.username, family, jti },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: "7d" },
+  );
+  const hash = hashToken(refreshToken);
+  return { refreshToken, hash };
+};
 
 export const getCookieOptions = () => {
   const isProduction = process.env.NODE_ENV === "production";
@@ -12,28 +41,6 @@ export const getCookieOptions = () => {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     ...(cookieDomain ? { domain: cookieDomain } : {}),
   };
-};
-
-export const generateTokens = (user) => {
-  const accessToken = jwt.sign(
-    {
-      UserInfo: {
-        id: user._id,
-        username: user.username,
-        role: user.role,
-      },
-    },
-    process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" },
-  );
-
-  const refreshToken = jwt.sign(
-    { username: user.username },
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "7d" },
-  );
-
-  return { accessToken, refreshToken };
 };
 
 export const sendVerificationEmail = async (email, name, token) => {

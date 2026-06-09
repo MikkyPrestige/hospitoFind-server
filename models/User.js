@@ -30,6 +30,8 @@ const userSchema = new Schema(
     isVerified: { type: Boolean, default: false },
     verificationToken: String,
     verificationTokenExpires: Date,
+    refreshTokenHash: { type: String },
+    refreshTokenFamily: { type: String },
     favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Hospital" }],
     recentlyViewed: [
       {
@@ -79,7 +81,7 @@ const userSchema = new Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const User = mongoose.model("User", userSchema);

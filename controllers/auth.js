@@ -6,7 +6,9 @@ import asyncHandler from "express-async-handler";
 import User from "../models/User.js";
 import {
   getCookieOptions,
-  generateTokens,
+  generateAccessToken,
+  generateRefreshToken,
+  hashToken,
   sendVerificationEmail,
   sendPasswordResetEmail,
 } from "../utils/authHelpers.js";
@@ -86,23 +88,12 @@ const auth0Login = asyncHandler(async (req, res) => {
   }
 
   // Generate tokens
-  const accessToken = jwt.sign(
-    {
-      UserInfo: {
-        id: user._id,
-        username: user.username,
-        role: user.role,
-      },
-    },
-    process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" },
-  );
-
-  const refreshToken = jwt.sign(
-    { username: user.username },
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "7d" },
-  );
+  const accessToken = generateAccessToken(user);
+  const family = crypto.randomUUID();
+  const { refreshToken, hash } = generateRefreshToken(user, family);
+  user.refreshTokenHash = hash;
+  user.refreshTokenFamily = family;
+  await user.save();
 
   res.cookie("jwt", refreshToken, getCookieOptions());
 
@@ -155,7 +146,12 @@ const login = asyncHandler(async (req, res) => {
     });
   }
 
-  const { accessToken, refreshToken } = generateTokens(user);
+    const accessToken = generateAccessToken(user);
+  const family = crypto.randomUUID();
+  const { refreshToken, hash } = generateRefreshToken(user, family);
+  user.refreshTokenHash = hash;
+  user.refreshTokenFamily = family;
+  await user.save();
 
   res.cookie("jwt", refreshToken, getCookieOptions());
 
@@ -238,13 +234,18 @@ const verifyEmail = asyncHandler(async (req, res) => {
       .json({ message: "Invalid or expired verification link" });
   }
 
-  // Activate User
+
+    // Activate User
   user.isVerified = true;
   user.verificationToken = undefined;
   user.verificationTokenExpires = undefined;
-  await user.save();
 
-  const { accessToken, refreshToken } = generateTokens(user);
+  const accessToken = generateAccessToken(user);
+  const family = crypto.randomUUID();
+  const { refreshToken, hash } = generateRefreshToken(user, family);
+  user.refreshTokenHash = hash;
+  user.refreshTokenFamily = family;
+  await user.save();
 
   res.cookie("jwt", refreshToken, getCookieOptions());
 
@@ -305,6 +306,7 @@ const resendVerification = asyncHandler(async (req, res) => {
   }
 });
 
+
 // @desc Refresh token
 // @route GET /auth/refresh
 const refresh = asyncHandler(async (req, res) => {
@@ -313,45 +315,56 @@ const refresh = asyncHandler(async (req, res) => {
   if (!cookies?.jwt)
     return res.status(400).json({ message: "No refresh token" });
 
-  const refreshToken = cookies.jwt;
+  const oldRefreshToken = cookies.jwt;
 
-  jwt.verify(
-    refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
-    async (err, decoded) => {
-      if (err)
-        return res.status(400).json({ message: "Token Expired or Invalid" });
+  let decoded;
+  try {
+    decoded = jwt.verify(oldRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+  } catch (err) {
+    return res.status(400).json({ message: "Token Expired or Invalid" });
+  }
 
-      const user = await User.findOne({ username: decoded.username });
+  const user = await User.findOne({ username: decoded.username });
 
-      if (!user)
-        return res.status(400).json({ message: "User no longer exists" });
+  if (!user)
+    return res.status(400).json({ message: "User no longer exists" });
 
-      // Create a NEW Access Token
-      const accessToken = jwt.sign(
-        {
-          UserInfo: {
-            username: user.username,
-            role: user.role,
-            id: user._id,
-          },
-        },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "15m" },
-      );
+  if (!user.refreshTokenHash || !user.refreshTokenFamily) {
+    // No stored token – either legacy or previously revoked
+    return res.status(401).json({ message: "Please login again" });
+  }
 
-      res.json({
-        accessToken,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        id: user._id,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-      });
-    },
-  );
+  const providedHash = hashToken(oldRefreshToken);
+
+  if (providedHash !== user.refreshTokenHash) {
+    // Reuse detected – revoke all sessions
+    user.refreshTokenHash = undefined;
+    user.refreshTokenFamily = undefined;
+    await user.save();
+    res.clearCookie("jwt", getCookieOptions());
+    return res.status(401).json({ message: "Token reuse detected. Please login again." });
+  }
+
+  // Valid token – rotate it
+  const family = user.refreshTokenFamily;
+  const { refreshToken: newRefreshToken, hash: newHash } = generateRefreshToken(user, family);
+  user.refreshTokenHash = newHash;
+  await user.save();
+
+  const accessToken = generateAccessToken(user);
+
+  res.cookie("jwt", newRefreshToken, getCookieOptions());
+
+  res.json({
+    accessToken,
+    name: user.name,
+    username: user.username,
+    email: user.email,
+    role: user.role,
+    id: user._id,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  });
 });
 
 // @desc Forgot Password
@@ -417,15 +430,28 @@ const resetPassword = asyncHandler(async (req, res) => {
     .json({ message: "Password updated successfully! Please login." });
 });
 
+
 // @desc Logout
 // @route POST /auth/logout
 const logout = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(204);
 
-  res.clearCookie("jwt", getCookieOptions());
+  const refreshToken = cookies.jwt;
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = await User.findOne({ username: decoded.username });
+    if (user) {
+      user.refreshTokenHash = undefined;
+      user.refreshTokenFamily = undefined;
+      await user.save();
+    }
+  } catch {
+    // token invalid or expired, just clear cookie
+  }
 
-  res.status(200).json({ message: "Cookie cleared" });
+  res.clearCookie("jwt", getCookieOptions());
+  res.status(200).json({ message: "Logged out" });
 });
 
 export default {
