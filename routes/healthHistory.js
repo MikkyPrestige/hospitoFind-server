@@ -1,5 +1,6 @@
 import express from "express";
 import { verifyJWT } from "../middleware/verifyRoles.js";
+import { ensureMongoUser } from "../middleware/ensureMongoUser.js";
 import {
   getHealthHistory,
   updateSessionFeedback,
@@ -12,6 +13,7 @@ import { updateSessionFeedbackSchema } from "../utils/validation.js";
 const router = express.Router();
 
 router.use(verifyJWT);
+router.use(ensureMongoUser);
 
 router.get("/", getHealthHistory);
 router.patch(

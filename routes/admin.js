@@ -1,5 +1,6 @@
 import express from "express";
 import { verifyJWT, verifyAdmin } from "../middleware/verifyRoles.js";
+import { ensureMongoUser } from "../middleware/ensureMongoUser.js";
 import { osmImportLimiter } from "../middleware/rateLimiter.js";
 import validate from "../middleware/validate.js";
 import adminController from "../controllers/admin.js";
@@ -19,6 +20,7 @@ import {
 const adminRouter = express.Router();
 
 adminRouter.use(verifyJWT);
+adminRouter.use(ensureMongoUser);
 adminRouter.use(verifyAdmin);
 
 // --- USER MANAGEMENT ---

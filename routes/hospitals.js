@@ -1,6 +1,7 @@
 import express from "express";
 import hospitalController from "../controllers/hospital.js";
 import { verifyJWT, verifyAdmin } from "../middleware/verifyRoles.js";
+import { ensureMongoUser } from "../middleware/ensureMongoUser.js";
 import { hospitalSubmissionLimiter } from "../middleware/rateLimiter.js";
 import validate from "../middleware/validate.js";
 import {
@@ -50,6 +51,7 @@ hospitalRouter.get("/sandbox", hospitalController.getUnverifiedHospitals);
 hospitalRouter.post(
   "/",
   verifyJWT,
+  ensureMongoUser,
   hospitalSubmissionLimiter,
   validate(addHospitalSchema),
   hospitalController.addHospital,
@@ -57,11 +59,13 @@ hospitalRouter.post(
 hospitalRouter.get(
   "/submissions",
   verifyJWT,
+  ensureMongoUser,
   hospitalController.getMySubmissions,
 );
 hospitalRouter.patch(
   "/:id",
   verifyJWT,
+  ensureMongoUser,
   validate(updateHospitalSchema),
   hospitalController.updateHospital,
 );
@@ -70,24 +74,28 @@ hospitalRouter.patch(
 hospitalRouter.get(
   "/admin/stats",
   verifyJWT,
+  ensureMongoUser,
   verifyAdmin,
   hospitalController.getAdminStats,
 );
 hospitalRouter.get(
   "/admin/pending",
   verifyJWT,
+  ensureMongoUser,
   verifyAdmin,
   hospitalController.getPendingHospitals,
 );
 hospitalRouter.patch(
   "/approve/:id",
   verifyJWT,
+  ensureMongoUser,
   verifyAdmin,
   hospitalController.approveHospital,
 );
 hospitalRouter.delete(
   "/:id",
   verifyJWT,
+  ensureMongoUser,
   verifyAdmin,
   hospitalController.deleteHospital,
 );

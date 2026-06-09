@@ -1,6 +1,7 @@
 import express from "express";
 import userController from "../controllers/user.js";
 import { verifyJWT, verifyAdmin } from "../middleware/verifyRoles.js";
+import { ensureMongoUser } from "../middleware/ensureMongoUser.js";
 import validate from "../middleware/validate.js";
 import {
   updateUserProfileSchema,
@@ -13,6 +14,7 @@ import {
 const userRouter = express.Router();
 
 userRouter.use(verifyJWT);
+userRouter.use(ensureMongoUser);
 
 // admin-only
 userRouter.route("/").get(verifyAdmin, userController.getAllUsers);
