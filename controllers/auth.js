@@ -67,6 +67,14 @@ const auth0Login = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Email mismatch" });
   }
 
+  // Enforce Multi-Factor Authentication
+  if (!verified.amr || !verified.amr.includes("mfa")) {
+    return res.status(403).json({
+      message:
+        "Multi-factor authentication required. Please enable MFA in your account settings.",
+    });
+  }
+
   let user = await User.findOne({ email }).exec();
 
   if (user) {
