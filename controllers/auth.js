@@ -118,6 +118,7 @@ const auth0Login = asyncHandler(async (req, res) => {
     username: user.username,
     email: user.email,
     role: user.role,
+    totpEnabled: user.totpEnabled,
     auth0Id: user.auth0Id,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
@@ -185,6 +186,7 @@ const login = asyncHandler(async (req, res) => {
     username: user.username,
     email: user.email,
     role: user.role,
+    totpEnabled: user.totpEnabled,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   });
@@ -221,6 +223,7 @@ export const register = asyncHandler(async (req, res) => {
     email,
     password: hashedPassword,
     role: "user",
+    totpEnabled: user.totpEnabled,
     isVerified: false,
     verificationToken,
     verificationTokenExpires: Date.now() + 24 * 60 * 60 * 1000,
@@ -279,6 +282,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
     username: user.username,
     email: user.email,
     role: user.role,
+    totpEnabled: user.totpEnabled,
   });
 });
 
@@ -387,6 +391,7 @@ const refresh = asyncHandler(async (req, res) => {
     username: user.username,
     email: user.email,
     role: user.role,
+    totpEnabled: user.totpEnabled,
     id: user._id,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
@@ -453,6 +458,7 @@ const totpLogin = asyncHandler(async (req, res) => {
     username: user.username,
     email: user.email,
     role: user.role,
+    totpEnabled: user.totpEnabled,
     id: user._id,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
