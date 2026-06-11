@@ -2,6 +2,9 @@ import * as Sentry from "@sentry/node";
 import User from "../models/User.js";
 
 export const ensureMongoUser = async (req, res, next) => {
+  // Only act on authenticated requests
+  if (!req.userId) return next();
+
   try {
     // Non-Auth0 users don't need recreation (already have a MongoDB doc)
     if (!req.auth0Id) {
