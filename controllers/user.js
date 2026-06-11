@@ -1,8 +1,18 @@
+import mongoose from "mongoose";
+import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import Hospital from "../models/Hospital.js";
-import asyncHandler from "express-async-handler";
-import mongoose from "mongoose";
+import {
+  generateTotpSecret,
+  generateQRCode,
+  verifyTotpCode,
+  encryptSecret,
+  decryptSecret,
+  generateRecoveryCodes,
+  hashRecoveryCode,
+} from "../utils/totpHelpers.js";
 
 // @desc    Get all users
 // @route   GET /api/user
@@ -174,9 +184,9 @@ const deleteUser = asyncHandler(async (req, res) => {
 
       const isMatch = await bcrypt.compare(password, userToDelete.password);
       if (!isMatch) {
-     return res
-       .status(400)
-       .json({ message: "Incorrect password. Account not deleted." });
+        return res
+          .status(400)
+          .json({ message: "Incorrect password. Account not deleted." });
       }
     }
   }
@@ -330,6 +340,155 @@ const getUserActivity = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Initiate TOTP setup (returns QR code)
+// @route   POST /user/totp/setup
+const setupTotp = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.userId);
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  if (user.totpEnabled) {
+    return res.status(400).json({ message: "TOTP is already enabled" });
+  }
+
+  const { secret, otpauthUrl } = generateTotpSecret(user.username);
+  const qrCodeDataUrl = await generateQRCode(otpauthUrl);
+
+  // Create a short‑lived token that carries the plain secret
+  const setupToken = jwt.sign(
+    { sub: user._id, totpSecret: secret },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "10m" },
+  );
+
+  res.status(200).json({
+    qrCode: qrCodeDataUrl,
+    setupToken,
+    message: "Scan the QR code with your authenticator app.",
+  });
+});
+
+// @desc    Verify TOTP setup and enable it
+// @route   POST /user/totp/verify
+const verifyTotpSetup = asyncHandler(async (req, res) => {
+  const { setupToken, code } = req.body;
+  if (!setupToken || !code) {
+    return res
+      .status(400)
+      .json({ message: "Setup token and code are required" });
+  }
+
+  let decoded;
+  try {
+    decoded = jwt.verify(setupToken, process.env.ACCESS_TOKEN_SECRET);
+  } catch (err) {
+    return res.status(400).json({ message: "Setup token expired or invalid" });
+  }
+
+  if (decoded.sub !== req.userId) {
+    return res
+      .status(403)
+      .json({ message: "Token does not match current user" });
+  }
+
+  const user = await User.findById(req.userId);
+  if (!user) return res.status(404).json({ message: "User not found" });
+  if (user.totpEnabled) {
+    return res.status(400).json({ message: "TOTP is already enabled" });
+  }
+
+  // Verify the provided code against the plain secret from the token
+  const isValid = verifyTotpCode(code, decoded.totpSecret);
+  if (!isValid) {
+    return res.status(400).json({ message: "Invalid verification code" });
+  }
+
+  // Encrypt secret and enable TOTP
+  user.totpSecret = encryptSecret(decoded.totpSecret);
+  user.totpEnabled = true;
+
+  // Generate one‑time recovery codes
+  const plainCodes = generateRecoveryCodes(8);
+  user.recoveryCodes = plainCodes.map(hashRecoveryCode);
+  await user.save();
+
+  res.status(200).json({
+    message: "TOTP enabled successfully",
+    recoveryCodes: plainCodes, // show only once
+  });
+});
+
+// @desc    Disable TOTP (requires password or current TOTP code)
+// @route   POST /user/totp/disable
+const disableTotp = asyncHandler(async (req, res) => {
+  const { password, code } = req.body;
+  if (!password && !code) {
+    return res
+      .status(400)
+      .json({ message: "Password or TOTP code is required" });
+  }
+
+  const user = await User.findById(req.userId);
+  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user.totpEnabled) {
+    return res.status(400).json({ message: "TOTP is not enabled" });
+  }
+
+  // Verify password if provided
+  if (password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
+  }
+  // Verify TOTP code if provided
+  if (code) {
+    const secret = decryptSecret(user.totpSecret);
+    const valid = verifyTotpCode(code, secret);
+    if (!valid) return res.status(400).json({ message: "Invalid TOTP code" });
+  }
+
+  user.totpEnabled = false;
+  user.totpSecret = undefined;
+  user.recoveryCodes = [];
+  await user.save();
+
+  res.status(200).json({ message: "TOTP disabled successfully" });
+});
+
+// @desc    Regenerate recovery codes (requires TOTP code or password)
+// @route   POST /user/totp/recovery-codes
+const regenerateRecoveryCodes = asyncHandler(async (req, res) => {
+  const { code, password } = req.body;
+  if (!code && !password) {
+    return res
+      .status(400)
+      .json({ message: "TOTP code or password is required" });
+  }
+
+  const user = await User.findById(req.userId);
+  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user.totpEnabled) {
+    return res.status(400).json({ message: "TOTP is not enabled" });
+  }
+
+  if (password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
+  }
+  if (code) {
+    const secret = decryptSecret(user.totpSecret);
+    const valid = verifyTotpCode(code, secret);
+    if (!valid) return res.status(400).json({ message: "Invalid TOTP code" });
+  }
+
+  const plainCodes = generateRecoveryCodes(8);
+  user.recoveryCodes = plainCodes.map(hashRecoveryCode);
+  await user.save();
+
+  res.status(200).json({
+    message: "Recovery codes regenerated successfully",
+    recoveryCodes: plainCodes,
+  });
+});
+
 export default {
   getAllUsers,
   getUserStats,
@@ -343,4 +502,8 @@ export default {
   removeFavorite,
   clearAllHistory,
   getUserActivity,
+  setupTotp,
+  verifyTotpSetup,
+  disableTotp,
+  regenerateRecoveryCodes,
 };

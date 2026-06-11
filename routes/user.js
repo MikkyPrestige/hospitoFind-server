@@ -9,6 +9,9 @@ import {
   recordViewSchema,
   updateUserRoleSchema,
   deleteUserSchema,
+  totpSetupVerifySchema,
+  totpDisableSchema,
+  totpRecoveryCodesSchema,
 } from "../utils/validation.js";
 
 const userRouter = express.Router();
@@ -31,15 +34,33 @@ userRouter
   .route("/")
   .patch(validate(updateUserProfileSchema), userController.updateUser)
   .delete(validate(deleteUserSchema), userController.deleteUser);
-
-userRouter.route("/stats").get(userController.getUserStats);
 userRouter
   .route("/password")
   .patch(validate(updatePasswordSchema), userController.updatePassword);
+
+// user stats and activity
+userRouter.route("/stats").get(userController.getUserStats);
 userRouter
   .route("/view")
   .post(validate(recordViewSchema), userController.recordView);
 userRouter.route("/activity").get(userController.getUserActivity);
+
+// TOTP management
+userRouter.route("/totp/setup").post(userController.setupTotp);
+userRouter
+  .route("/totp/verify")
+  .post(validate(totpSetupVerifySchema), userController.verifyTotpSetup);
+userRouter
+  .route("/totp/disable")
+  .post(validate(totpDisableSchema), userController.disableTotp);
+userRouter
+  .route("/totp/recovery-codes")
+  .post(
+    validate(totpRecoveryCodesSchema),
+    userController.regenerateRecoveryCodes,
+  );
+
+// favorites and history
 userRouter
   .route("/history/:hospitalId")
   .delete(userController.removeHistoryItem);

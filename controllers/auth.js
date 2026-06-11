@@ -8,10 +8,16 @@ import {
   getCookieOptions,
   generateAccessToken,
   generateRefreshToken,
+  generateTotpToken,
   hashToken,
   sendVerificationEmail,
   sendPasswordResetEmail,
 } from "../utils/authHelpers.js";
+import {
+  decryptSecret,
+  verifyTotpCode,
+  hashRecoveryCode,
+} from "../utils/totpHelpers.js";
 
 // @desc Auth0 login callback
 // @route GET /auth/auth0-login
@@ -67,14 +73,6 @@ const auth0Login = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Email mismatch" });
   }
 
-  // Enforce Multi-Factor Authentication
-  if (!verified.amr || !verified.amr.includes("mfa")) {
-    return res.status(403).json({
-      message:
-        "Multi-factor authentication required. Please enable MFA in your account settings.",
-    });
-  }
-
   let user = await User.findOne({ email }).exec();
 
   if (user) {
@@ -92,6 +90,15 @@ const auth0Login = asyncHandler(async (req, res) => {
       role: "user",
       isVerified: true,
       auth0Id: verified.sub,
+    });
+  }
+
+  // Check if TOTP is required
+  if (user.totpEnabled) {
+    const totpToken = generateTotpToken(user);
+    return res.status(200).json({
+      totpToken,
+      message: "TOTP code required",
     });
   }
 
@@ -154,7 +161,16 @@ const login = asyncHandler(async (req, res) => {
     });
   }
 
-    const accessToken = generateAccessToken(user);
+  // Check if TOTP is required
+  if (user.totpEnabled) {
+    const totpToken = generateTotpToken(user);
+    return res.status(200).json({
+      totpToken,
+      message: "TOTP code required",
+    });
+  }
+
+  const accessToken = generateAccessToken(user);
   const family = crypto.randomUUID();
   const { refreshToken, hash } = generateRefreshToken(user, family);
   user.refreshTokenHash = hash;
@@ -242,8 +258,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
       .json({ message: "Invalid or expired verification link" });
   }
 
-
-    // Activate User
+  // Activate User
   user.isVerified = true;
   user.verificationToken = undefined;
   user.verificationTokenExpires = undefined;
@@ -314,7 +329,6 @@ const resendVerification = asyncHandler(async (req, res) => {
   }
 });
 
-
 // @desc Refresh token
 // @route GET /auth/refresh
 const refresh = asyncHandler(async (req, res) => {
@@ -334,8 +348,7 @@ const refresh = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ username: decoded.username });
 
-  if (!user)
-    return res.status(400).json({ message: "User no longer exists" });
+  if (!user) return res.status(400).json({ message: "User no longer exists" });
 
   if (!user.refreshTokenHash || !user.refreshTokenFamily) {
     // No stored token – either legacy or previously revoked
@@ -350,12 +363,17 @@ const refresh = asyncHandler(async (req, res) => {
     user.refreshTokenFamily = undefined;
     await user.save();
     res.clearCookie("jwt", getCookieOptions());
-    return res.status(401).json({ message: "Token reuse detected. Please login again." });
+    return res
+      .status(401)
+      .json({ message: "Token reuse detected. Please login again." });
   }
 
   // Valid token – rotate it
   const family = user.refreshTokenFamily;
-  const { refreshToken: newRefreshToken, hash: newHash } = generateRefreshToken(user, family);
+  const { refreshToken: newRefreshToken, hash: newHash } = generateRefreshToken(
+    user,
+    family,
+  );
   user.refreshTokenHash = newHash;
   await user.save();
 
@@ -364,6 +382,72 @@ const refresh = asyncHandler(async (req, res) => {
   res.cookie("jwt", newRefreshToken, getCookieOptions());
 
   res.json({
+    accessToken,
+    name: user.name,
+    username: user.username,
+    email: user.email,
+    role: user.role,
+    id: user._id,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  });
+});
+
+// @desc Complete TOTP login
+// @route POST /auth/totp-login
+const totpLogin = asyncHandler(async (req, res) => {
+  const { totpToken, code, recoveryCode } = req.body;
+
+  if (!totpToken || (!code && !recoveryCode)) {
+    return res
+      .status(400)
+      .json({ message: "TOTP token and code or recovery code required" });
+  }
+
+  let decoded;
+  try {
+    decoded = jwt.verify(totpToken, process.env.ACCESS_TOKEN_SECRET);
+  } catch (err) {
+    return res.status(400).json({ message: "Invalid or expired TOTP token" });
+  }
+
+  if (decoded.purpose !== "totp") {
+    return res.status(400).json({ message: "Invalid token purpose" });
+  }
+
+  const user = await User.findById(decoded.sub);
+  if (!user) return res.status(400).json({ message: "User not found" });
+  if (!user.totpEnabled)
+    return res.status(400).json({ message: "TOTP not enabled" });
+
+  if (code) {
+    // Verify TOTP code
+    const secret = decryptSecret(user.totpSecret);
+    const valid = verifyTotpCode(code, secret);
+    if (!valid) return res.status(400).json({ message: "Invalid TOTP code" });
+  } else if (recoveryCode) {
+    // Verify recovery code
+    const hashed = hashRecoveryCode(recoveryCode);
+    const index = user.recoveryCodes.indexOf(hashed);
+    if (index === -1)
+      return res.status(400).json({ message: "Invalid recovery code" });
+    // Remove used recovery code
+    user.recoveryCodes.splice(index, 1);
+  } else {
+    return res.status(400).json({ message: "Code or recovery code required" });
+  }
+
+  // Issue real tokens
+  const accessToken = generateAccessToken(user);
+  const family = crypto.randomUUID();
+  const { refreshToken, hash } = generateRefreshToken(user, family);
+  user.refreshTokenHash = hash;
+  user.refreshTokenFamily = family;
+  await user.save();
+
+  res.cookie("jwt", refreshToken, getCookieOptions());
+
+  res.status(200).json({
     accessToken,
     name: user.name,
     username: user.username,
@@ -438,7 +522,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     .json({ message: "Password updated successfully! Please login." });
 });
 
-
 // @desc Logout
 // @route POST /auth/logout
 const logout = asyncHandler(async (req, res) => {
@@ -469,6 +552,7 @@ export default {
   verifyEmail,
   resendVerification,
   refresh,
+  totpLogin,
   forgotPassword,
   resetPassword,
   logout,

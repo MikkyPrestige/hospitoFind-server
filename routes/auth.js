@@ -6,6 +6,7 @@ import {
   loginSchema,
   registerSchema,
   auth0LoginSchema,
+  totpLoginSchema,
   resendVerificationSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
@@ -24,6 +25,10 @@ authRouter
 authRouter
   .route("/auth0")
   .post(validate(auth0LoginSchema), authController.auth0Login);
+
+authRouter
+  .route("/totp-login")
+  .post(validate(totpLoginSchema), authController.totpLogin);
 
 authRouter
   .route("/resend-verification")

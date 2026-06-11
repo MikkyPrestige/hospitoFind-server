@@ -54,6 +54,39 @@ export const auth0LoginSchema = z.object({
   idToken: z.string().min(1, "ID token is required"),
 });
 
+export const totpLoginSchema = z
+  .object({
+    totpToken: z.string().min(1, "TOTP token is required"),
+    code: z.string().optional(),
+    recoveryCode: z.string().optional(),
+  })
+  .refine((data) => data.code || data.recoveryCode, {
+    message: "Either TOTP code or recovery code must be provided",
+  });
+
+export const totpSetupVerifySchema = z.object({
+    setupToken: z.string().min(1, "Setup token is required"),
+    code: z.string().min(6, "TOTP code must be at least 6 digits"),
+  });
+
+export const totpDisableSchema = z
+    .object({
+      password: z.string().optional(),
+      code: z.string().optional(),
+    })
+    .refine((data) => data.password || data.code, {
+      message: "Either password or TOTP code is required",
+    });
+
+export const totpRecoveryCodesSchema = z
+    .object({
+      code: z.string().optional(),
+      password: z.string().optional(),
+    })
+    .refine((data) => data.code || data.password, {
+      message: "Either TOTP code or password is required",
+    });
+
 export const resendVerificationSchema = z.object({
   email: z.string().email(),
 });

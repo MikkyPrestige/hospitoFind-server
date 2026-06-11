@@ -32,6 +32,19 @@ export const generateRefreshToken = (user, family) => {
   return { refreshToken, hash };
 };
 
+export const generateTotpToken = (user) => {
+  return jwt.sign(
+    {
+      sub: user._id,
+      username: user.username,
+      role: user.role,
+      purpose: "totp",
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "5m" },
+  );
+};
+
 export const getCookieOptions = () => {
   const isProduction = process.env.NODE_ENV === "production";
   const cookieDomain = process.env.COOKIE_DOMAIN || undefined;

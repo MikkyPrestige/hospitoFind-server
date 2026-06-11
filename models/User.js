@@ -32,6 +32,9 @@ const userSchema = new Schema(
     verificationTokenExpires: Date,
     refreshTokenHash: { type: String },
     refreshTokenFamily: { type: String },
+    totpSecret: { type: String }, // encrypted TOTP secret
+    totpEnabled: { type: Boolean, default: false },
+    recoveryCodes: [{ type: String }], // hashed recovery codes
     favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Hospital" }],
     recentlyViewed: [
       {
