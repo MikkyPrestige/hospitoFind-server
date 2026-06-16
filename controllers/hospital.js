@@ -643,6 +643,7 @@ const shareHospitals = asyncHandler(async (req, res) => {
       email: hospital.email,
       website: hospital.website,
       photoUrl: hospital.photoUrl,
+      type: hospital.type,
       services: hospital.services,
       verified: hospital.verified,
       latitude: hospital.latitude,

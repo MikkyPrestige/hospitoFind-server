@@ -20,6 +20,7 @@ const sharedHospitalSchema = new Schema(
     email: { type: String },
     website: { type: String },
     photoUrl: { type: String },
+    type: { type: String },
     services: { type: [String] },
     verified: { type: Boolean, default: true },
     latitude: { type: Number },
