@@ -17,10 +17,13 @@ const sharedHospitalSchema = new Schema(
       state: { type: String, required: true },
     },
     phone: { type: String },
+    email: { type: String },
     website: { type: String },
     photoUrl: { type: String },
     services: { type: [String] },
     verified: { type: Boolean, default: true },
+    latitude: { type: Number },
+    longitude: { type: Number },
   },
   { _id: false },
 );
