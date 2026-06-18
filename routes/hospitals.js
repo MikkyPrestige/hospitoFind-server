@@ -46,6 +46,7 @@ hospitalRouter.get("/id/:id", hospitalController.getHospitalById);
 hospitalRouter.get("/name/:name", hospitalController.getHospitalByName);
 
 hospitalRouter.get("/sandbox", hospitalController.getUnverifiedHospitals);
+hospitalRouter.get("/autocomplete", hospitalController.autocompleteHospitals);
 
 // --- PROTECTED USER ACTIONS (Require JWT) ---
 hospitalRouter.post(

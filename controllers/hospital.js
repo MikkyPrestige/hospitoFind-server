@@ -817,6 +817,40 @@ const getUnverifiedHospitals = asyncHandler(async (req, res) => {
   return res.json(hospitals);
 });
 
+// @desc Autocomplete hospital names & cities
+// @route GET /hospitals/autocomplete?q=...
+// @access Public
+const autocompleteHospitals = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || typeof q !== "string" || q.trim().length < 2) {
+    return res.json([]);
+  }
+
+  const safe = escapeRegex(q.trim());
+
+  const results = await Hospital.find({
+    verified: true,
+    $or: [
+      { name: { $regex: safe, $options: "i" } },
+      { "address.city": { $regex: safe, $options: "i" } },
+    ],
+  })
+    .select("name address.city address.state slug type")
+    .limit(8)
+    .lean();
+
+  const suggestions = results.map((h) => ({
+    name: h.name,
+    city: h.address?.city || "",
+    state: h.address?.state || "",
+    slug: h.slug,
+    type: h.type,
+  }));
+
+  res.json(suggestions);
+});
+
 export default {
   getHospitals,
   getHospitalCount,
@@ -842,4 +876,5 @@ export default {
   deleteHospital,
   getAdminStats,
   getUnverifiedHospitals,
+  autocompleteHospitals,
 };
