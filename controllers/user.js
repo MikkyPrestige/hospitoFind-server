@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
-import asyncHandler from "express-async-handler";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import User from "../models/User.js";
-import Hospital from "../models/Hospital.js";
+import mongoose from 'mongoose';
+import asyncHandler from 'express-async-handler';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import Hospital from '../models/Hospital.js';
 import {
   generateTotpSecret,
   generateQRCode,
@@ -12,14 +12,13 @@ import {
   decryptSecret,
   generateRecoveryCodes,
   hashRecoveryCode,
-} from "../utils/totpHelpers.js";
+} from '../utils/totpHelpers.js';
 
 // @desc    Get all users
 // @route   GET /api/user
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select("-password").lean();
-  if (!users || users.length === 0)
-    return res.status(404).json({ message: "No users found" });
+  const users = await User.find().select('-password').lean();
+  if (!users || users.length === 0) return res.status(404).json({ message: 'No users found' });
 
   res.json(users);
 });
@@ -34,9 +33,9 @@ const getUserStats = asyncHandler(async (req, res) => {
     Hospital.countDocuments({ createdBy: userId, verified: true }),
   ]);
 
-  let level = "Beginner";
-  if (total > 5) level = "Active";
-  if (total > 20) level = "Directory";
+  let level = 'Beginner';
+  if (total > 5) level = 'Active';
+  if (total > 20) level = 'Directory';
 
   res.status(200).json({
     totalSubmissions: total,
@@ -51,12 +50,12 @@ const getUserStats = asyncHandler(async (req, res) => {
 const updateUserRole = asyncHandler(async (req, res) => {
   const { userId, newRole } = req.body;
 
-  if (!["user", "admin"].includes(newRole)) {
-    return res.status(400).json({ message: "Invalid role type" });
+  if (!['user', 'admin'].includes(newRole)) {
+    return res.status(400).json({ message: 'Invalid role type' });
   }
 
   const user = await User.findById(userId);
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) return res.status(404).json({ message: 'User not found' });
 
   user.role = newRole;
   await user.save();
@@ -70,37 +69,31 @@ const updateUser = asyncHandler(async (req, res) => {
   const { name, username, email, password, role } = req.body;
 
   const userToUpdate = await User.findOne({ username }).exec();
-  if (!userToUpdate) return res.status(404).json({ message: "User not found" });
+  if (!userToUpdate) return res.status(404).json({ message: 'User not found' });
 
   const isOwner = req.user === userToUpdate.username;
-  const isAdmin = req.role === "admin";
+  const isAdmin = req.role === 'admin';
 
   if (!isOwner && !isAdmin) {
-    return res
-      .status(400)
-      .json({ message: "Unauthorized to update this profile" });
+    return res.status(400).json({ message: 'Unauthorized to update this profile' });
   }
 
   if (role && role !== userToUpdate.role && !isAdmin) {
-    return res
-      .status(400)
-      .json({ message: "Only admins can change user roles" });
+    return res.status(400).json({ message: 'Only admins can change user roles' });
   }
 
   if (isOwner) {
     if (!password)
-      return res
-        .status(400)
-        .json({ message: "Current password required for security" });
+      return res.status(400).json({ message: 'Current password required for security' });
     const isMatch = await bcrypt.compare(password, userToUpdate.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
+    if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
   }
 
   if (name) userToUpdate.name = name;
   if (email) {
     const existingEmailUser = await User.findOne({ email }).exec();
     if (existingEmailUser && existingEmailUser.username !== username) {
-      return res.status(409).json({ message: "Email already taken" });
+      return res.status(409).json({ message: 'Email already taken' });
     }
     userToUpdate.email = email;
   }
@@ -125,35 +118,32 @@ const updatePassword = asyncHandler(async (req, res) => {
 
   if (!username || !password || !newPassword) {
     return res.status(400).json({
-      message: "Username, current password, and new password are required",
+      message: 'Username, current password, and new password are required',
     });
   }
 
   const user = await User.findOne({ username }).exec();
-  if (!user) return res.status(404).json({ message: "User does not exist" });
+  if (!user) return res.status(404).json({ message: 'User does not exist' });
 
   if (user.auth0Id && !user.password) {
     return res.status(400).json({
-      message:
-        "This account uses social login. Please check your provider settings.",
+      message: 'This account uses social login. Please check your provider settings.',
     });
   }
 
   if (req.user !== user.username) {
-    return res
-      .status(400)
-      .json({ message: "You can only change your own password" });
+    return res.status(400).json({ message: 'You can only change your own password' });
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(400).json({ message: "Invalid current password" });
+    return res.status(400).json({ message: 'Invalid current password' });
   }
 
   user.password = await bcrypt.hash(newPassword, 10);
   await user.save();
 
-  res.status(200).json({ message: "Password updated successfully" });
+  res.status(200).json({ message: 'Password updated successfully' });
 });
 
 // @desc    Delete user
@@ -162,31 +152,25 @@ const deleteUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 
   const userToDelete = await User.findOne({ username }).exec();
-  if (!userToDelete) return res.status(404).json({ message: "User not found" });
+  if (!userToDelete) return res.status(404).json({ message: 'User not found' });
 
   const isOwner = req.user === userToDelete.username;
-  const isAdmin = req.role === "admin";
+  const isAdmin = req.role === 'admin';
 
   if (!isOwner && !isAdmin) {
-    return res
-      .status(400)
-      .json({ message: "Unauthorized to delete this account" });
+    return res.status(400).json({ message: 'Unauthorized to delete this account' });
   }
 
   if (isOwner) {
     const isSocialUser = userToDelete.auth0Id && !userToDelete.password;
     if (!isSocialUser) {
       if (!password) {
-        return res
-          .status(400)
-          .json({ message: "Password required to delete account" });
+        return res.status(400).json({ message: 'Password required to delete account' });
       }
 
       const isMatch = await bcrypt.compare(password, userToDelete.password);
       if (!isMatch) {
-        return res
-          .status(400)
-          .json({ message: "Incorrect password. Account not deleted." });
+        return res.status(400).json({ message: 'Incorrect password. Account not deleted.' });
       }
     }
   }
@@ -194,11 +178,11 @@ const deleteUser = asyncHandler(async (req, res) => {
   await userToDelete.deleteOne();
 
   if (isOwner) {
-    res.clearCookie("jwt", {
+    res.clearCookie('jwt', {
       httpOnly: true,
-      sameSite: "None",
+      sameSite: 'None',
       secure: true,
-      domain: ".hospitofind.online",
+      domain: '.hospitofind.online',
     });
   }
   res.status(200).json({ message: `User ${username} deleted successfully` });
@@ -213,9 +197,9 @@ const toggleFavoriteStatus = asyncHandler(async (req, res) => {
   const userExists = await User.exists({ _id: userId });
   if (!userExists) {
     res.status(404);
-    throw new Error("User not found");
+    throw new Error('User not found');
   }
-  const user = await User.findById(userId).select("favorites").lean();
+  const user = await User.findById(userId).select('favorites').lean();
 
   const favorites = user.favorites || [];
   const isFavorite = favorites.some((id) => id.toString() === hospitalId);
@@ -224,14 +208,12 @@ const toggleFavoriteStatus = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(userId, {
       $pull: { favorites: hospitalId },
     });
-    res
-      .status(200)
-      .json({ message: "Removed from favorites", isFavorite: false });
+    res.status(200).json({ message: 'Removed from favorites', isFavorite: false });
   } else {
     await User.findByIdAndUpdate(userId, {
       $addToSet: { favorites: hospitalId },
     });
-    res.status(200).json({ message: "Added to favorites", isFavorite: true });
+    res.status(200).json({ message: 'Added to favorites', isFavorite: true });
   }
 });
 
@@ -244,7 +226,7 @@ const recordView = asyncHandler(async (req, res) => {
   const user = await User.findById(userId);
 
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    return res.status(404).json({ message: 'User not found' });
   }
 
   user.recentlyViewed = user.recentlyViewed.filter(
@@ -272,7 +254,7 @@ const recordView = asyncHandler(async (req, res) => {
   }
 
   await user.save();
-  res.status(200).json({ message: "View recorded" });
+  res.status(200).json({ message: 'View recorded' });
 });
 
 // @desc    Remove a specific hospital from history
@@ -288,7 +270,7 @@ const removeHistoryItem = asyncHandler(async (req, res) => {
     },
   });
 
-  res.status(200).json({ message: "Removed from history" });
+  res.status(200).json({ message: 'Removed from history' });
 });
 
 // @desc    Remove a specific favorite
@@ -302,7 +284,7 @@ const removeFavorite = asyncHandler(async (req, res) => {
     $pull: { favorites: oid },
   });
 
-  res.status(200).json({ message: "Removed from favorites" });
+  res.status(200).json({ message: 'Removed from favorites' });
 });
 
 // @desc    Clear ALL history
@@ -314,17 +296,17 @@ const clearAllHistory = asyncHandler(async (req, res) => {
     $set: { recentlyViewed: [] },
   });
 
-  res.status(200).json({ message: "History cleared" });
+  res.status(200).json({ message: 'History cleared' });
 });
 
 // @desc    Get All Activity ( Dashboard)
 // @route   GET /api/user/activity
 const getUserActivity = asyncHandler(async (req, res) => {
   const user = await User.findById(req.userId)
-    .populate("favorites")
-    .populate("recentlyViewed.hospital");
+    .populate('favorites')
+    .populate('recentlyViewed.hospital');
 
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) return res.status(404).json({ message: 'User not found' });
 
   const formattedRecents = user.recentlyViewed
     .filter((item) => item.hospital)
@@ -344,10 +326,10 @@ const getUserActivity = asyncHandler(async (req, res) => {
 // @route   POST /user/totp/setup
 const setupTotp = asyncHandler(async (req, res) => {
   const user = await User.findById(req.userId);
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) return res.status(404).json({ message: 'User not found' });
 
   if (user.totpEnabled) {
-    return res.status(400).json({ message: "TOTP is already enabled" });
+    return res.status(400).json({ message: 'TOTP is already enabled' });
   }
 
   const { secret, otpauthUrl } = generateTotpSecret(user.username);
@@ -357,13 +339,13 @@ const setupTotp = asyncHandler(async (req, res) => {
   const setupToken = jwt.sign(
     { sub: user._id, totpSecret: secret },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "10m" },
+    { expiresIn: '10m' },
   );
 
   res.status(200).json({
     qrCode: qrCodeDataUrl,
     setupToken,
-    message: "Scan the QR code with your authenticator app.",
+    message: 'Scan the QR code with your authenticator app.',
   });
 });
 
@@ -372,34 +354,30 @@ const setupTotp = asyncHandler(async (req, res) => {
 const verifyTotpSetup = asyncHandler(async (req, res) => {
   const { setupToken, code } = req.body;
   if (!setupToken || !code) {
-    return res
-      .status(400)
-      .json({ message: "Setup token and code are required" });
+    return res.status(400).json({ message: 'Setup token and code are required' });
   }
 
   let decoded;
   try {
     decoded = jwt.verify(setupToken, process.env.ACCESS_TOKEN_SECRET);
-  } catch (err) {
-    return res.status(400).json({ message: "Setup token expired or invalid" });
+  } catch {
+    return res.status(400).json({ message: 'Setup token expired or invalid' });
   }
 
   if (decoded.sub !== req.userId) {
-    return res
-      .status(403)
-      .json({ message: "Token does not match current user" });
+    return res.status(403).json({ message: 'Token does not match current user' });
   }
 
   const user = await User.findById(req.userId);
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) return res.status(404).json({ message: 'User not found' });
   if (user.totpEnabled) {
-    return res.status(400).json({ message: "TOTP is already enabled" });
+    return res.status(400).json({ message: 'TOTP is already enabled' });
   }
 
   // Verify the provided code against the plain secret from the token
   const isValid = verifyTotpCode(code, decoded.totpSecret);
   if (!isValid) {
-    return res.status(400).json({ message: "Invalid verification code" });
+    return res.status(400).json({ message: 'Invalid verification code' });
   }
 
   // Encrypt secret and enable TOTP
@@ -412,7 +390,7 @@ const verifyTotpSetup = asyncHandler(async (req, res) => {
   await user.save();
 
   res.status(200).json({
-    message: "TOTP enabled successfully",
+    message: 'TOTP enabled successfully',
     recoveryCodes: plainCodes, // show only once
   });
 });
@@ -422,27 +400,25 @@ const verifyTotpSetup = asyncHandler(async (req, res) => {
 const disableTotp = asyncHandler(async (req, res) => {
   const { password, code } = req.body;
   if (!password && !code) {
-    return res
-      .status(400)
-      .json({ message: "Password or TOTP code is required" });
+    return res.status(400).json({ message: 'Password or TOTP code is required' });
   }
 
   const user = await User.findById(req.userId);
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) return res.status(404).json({ message: 'User not found' });
   if (!user.totpEnabled) {
-    return res.status(400).json({ message: "TOTP is not enabled" });
+    return res.status(400).json({ message: 'TOTP is not enabled' });
   }
 
   // Verify password if provided
   if (password) {
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
+    if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
   }
   // Verify TOTP code if provided
   if (code) {
     const secret = decryptSecret(user.totpSecret);
     const valid = verifyTotpCode(code, secret);
-    if (!valid) return res.status(400).json({ message: "Invalid TOTP code" });
+    if (!valid) return res.status(400).json({ message: 'Invalid TOTP code' });
   }
 
   user.totpEnabled = false;
@@ -450,7 +426,7 @@ const disableTotp = asyncHandler(async (req, res) => {
   user.recoveryCodes = [];
   await user.save();
 
-  res.status(200).json({ message: "TOTP disabled successfully" });
+  res.status(200).json({ message: 'TOTP disabled successfully' });
 });
 
 // @desc    Regenerate recovery codes (requires TOTP code or password)
@@ -458,25 +434,23 @@ const disableTotp = asyncHandler(async (req, res) => {
 const regenerateRecoveryCodes = asyncHandler(async (req, res) => {
   const { code, password } = req.body;
   if (!code && !password) {
-    return res
-      .status(400)
-      .json({ message: "TOTP code or password is required" });
+    return res.status(400).json({ message: 'TOTP code or password is required' });
   }
 
   const user = await User.findById(req.userId);
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) return res.status(404).json({ message: 'User not found' });
   if (!user.totpEnabled) {
-    return res.status(400).json({ message: "TOTP is not enabled" });
+    return res.status(400).json({ message: 'TOTP is not enabled' });
   }
 
   if (password) {
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
+    if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
   }
   if (code) {
     const secret = decryptSecret(user.totpSecret);
     const valid = verifyTotpCode(code, secret);
-    if (!valid) return res.status(400).json({ message: "Invalid TOTP code" });
+    if (!valid) return res.status(400).json({ message: 'Invalid TOTP code' });
   }
 
   const plainCodes = generateRecoveryCodes(8);
@@ -484,7 +458,7 @@ const regenerateRecoveryCodes = asyncHandler(async (req, res) => {
   await user.save();
 
   res.status(200).json({
-    message: "Recovery codes regenerated successfully",
+    message: 'Recovery codes regenerated successfully',
     recoveryCodes: plainCodes,
   });
 });

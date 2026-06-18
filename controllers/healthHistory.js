@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from '../models/User.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GET /user/health-history
@@ -6,13 +6,13 @@ import User from "../models/User.js";
 export const getHealthHistory = async (req, res) => {
   try {
     const user = await User.findById(req.userId)
-      .select("healthHistory")
-      .populate("healthHistory.matchedHospitals.hospitalId", "name slug address photoUrl")
-      .populate("healthHistory.hospitalVisited", "name slug address photoUrl")
+      .select('healthHistory')
+      .populate('healthHistory.matchedHospitals.hospitalId', 'name slug address photoUrl')
+      .populate('healthHistory.hospitalVisited', 'name slug address photoUrl')
       .lean();
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     // Return newest sessions first
@@ -24,8 +24,8 @@ export const getHealthHistory = async (req, res) => {
       history,
     });
   } catch (err) {
-    console.error("getHealthHistory error:", err);
-    return res.status(500).json({ message: "Failed to fetch health history" });
+    console.error('getHealthHistory error:', err);
+    return res.status(500).json({ message: 'Failed to fetch health history' });
   }
 };
 
@@ -37,23 +37,23 @@ export const updateSessionFeedback = async (req, res) => {
   const { hospitalVisited, rating, feedback } = req.body;
 
   if (rating && (rating < 1 || rating > 5)) {
-    return res.status(400).json({ message: "Rating must be between 1 and 5" });
+    return res.status(400).json({ message: 'Rating must be between 1 and 5' });
   }
 
   try {
     const user = await User.findById(req.userId);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     const session = user.healthHistory.id(sessionId);
 
     if (!session) {
-      return res.status(404).json({ message: "Session not found" });
+      return res.status(404).json({ message: 'Session not found' });
     }
 
-    if (hospitalVisited !== undefined && hospitalVisited !== "none") {
+    if (hospitalVisited !== undefined && hospitalVisited !== 'none') {
       session.hospitalVisited = hospitalVisited;
     }
     if (rating !== undefined) session.rating = rating;
@@ -63,12 +63,12 @@ export const updateSessionFeedback = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Feedback saved",
+      message: 'Feedback saved',
       session,
     });
   } catch (err) {
-    console.error("updateSessionFeedback error:", err);
-    return res.status(500).json({ message: "Failed to save feedback" });
+    console.error('updateSessionFeedback error:', err);
+    return res.status(500).json({ message: 'Failed to save feedback' });
   }
 };
 
@@ -82,22 +82,22 @@ export const deleteSession = async (req, res) => {
     const user = await User.findById(req.userId);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     const session = user.healthHistory.id(sessionId);
 
     if (!session) {
-      return res.status(404).json({ message: "Session not found" });
+      return res.status(404).json({ message: 'Session not found' });
     }
 
     session.deleteOne();
     await user.save();
 
-    return res.status(200).json({ success: true, message: "Session deleted" });
+    return res.status(200).json({ success: true, message: 'Session deleted' });
   } catch (err) {
-    console.error("deleteSession error:", err);
-    return res.status(500).json({ message: "Failed to delete session" });
+    console.error('deleteSession error:', err);
+    return res.status(500).json({ message: 'Failed to delete session' });
   }
 };
 
@@ -110,9 +110,9 @@ export const clearHealthHistory = async (req, res) => {
       $set: { healthHistory: [] },
     });
 
-    return res.status(200).json({ success: true, message: "Health history cleared" });
+    return res.status(200).json({ success: true, message: 'Health history cleared' });
   } catch (err) {
-    console.error("clearHealthHistory error:", err);
-    return res.status(500).json({ message: "Failed to clear history" });
+    console.error('clearHealthHistory error:', err);
+    return res.status(500).json({ message: 'Failed to clear history' });
   }
 };

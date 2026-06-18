@@ -5,7 +5,14 @@
 }
 
 html {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
   font-size: 16px;
 }
 
@@ -122,13 +129,13 @@ p {
 .api-post,
 .api-get {
   color: #6b7280;
-  font-family: "SF Mono", "Fira Code", monospace;
+  font-family: 'SF Mono', 'Fira Code', monospace;
   font-size: 0.8rem;
 }
 
 .api-post::before,
 .api-get::before {
-  content: "● ";
+  content: '● ';
 }
 
 .api-post::before {

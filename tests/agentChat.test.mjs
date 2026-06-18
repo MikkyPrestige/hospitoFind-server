@@ -1,11 +1,10 @@
-import { jest } from "@jest/globals";
-import mongoose from "mongoose";
-import supertest from "supertest";
-import { connectTestDB, disconnectTestDB } from "./dbHelper.mjs";
+import { jest } from '@jest/globals';
+import supertest from 'supertest';
+import { connectTestDB } from './dbHelper.mjs';
 
 // 1. Mock Groq before importing the app
 const mockCreate = jest.fn();
-jest.unstable_mockModule("groq-sdk", () => ({
+jest.unstable_mockModule('groq-sdk', () => ({
   default: jest.fn(() => ({
     chat: {
       completions: {
@@ -16,7 +15,7 @@ jest.unstable_mockModule("groq-sdk", () => ({
 }));
 
 // 2. Dynamically import the app AFTER the mock
-const { default: app } = await import("../app.js");
+const { default: app } = await import('../app.js');
 
 let request;
 
@@ -29,28 +28,28 @@ beforeEach(() => {
   mockCreate.mockReset();
 });
 
-describe("POST /agent/chat", () => {
-  it("returns a normal AI text message", async () => {
+describe('POST /agent/chat', () => {
+  it('returns a normal AI text message', async () => {
     mockCreate.mockResolvedValueOnce({
       choices: [
         {
           message: {
-            content: "What symptoms are you experiencing?",
+            content: 'What symptoms are you experiencing?',
           },
         },
       ],
     });
 
-    const res = await request.post("/agent/chat").send({
-      messages: [{ role: "user", content: "I need help" }],
+    const res = await request.post('/agent/chat').send({
+      messages: [{ role: 'user', content: 'I need help' }],
     });
 
     expect(res.status).toBe(200);
-    expect(res.body.type).toBe("MESSAGE");
-    expect(res.body.message).toBe("What symptoms are you experiencing?");
+    expect(res.body.type).toBe('MESSAGE');
+    expect(res.body.message).toBe('What symptoms are you experiencing?');
   });
 
-  it("returns MATCH_READY when AI triggers a match", async () => {
+  it('returns MATCH_READY when AI triggers a match', async () => {
     mockCreate.mockResolvedValueOnce({
       choices: [
         {
@@ -62,15 +61,13 @@ describe("POST /agent/chat", () => {
       ],
     });
 
-    const res = await request.post("/agent/chat").send({
-      messages: [
-        { role: "user", content: "I have a headache and I'm in Lagos" },
-      ],
+    const res = await request.post('/agent/chat').send({
+      messages: [{ role: 'user', content: "I have a headache and I'm in Lagos" }],
     });
 
     expect(res.status).toBe(200);
-    expect(res.body.type).toBe("MATCH_READY");
-    expect(res.body.profile.symptoms).toContain("headache");
-    expect(res.body.profile.location).toBe("Lagos");
+    expect(res.body.type).toBe('MATCH_READY');
+    expect(res.body.profile.symptoms).toContain('headache');
+    expect(res.body.profile.location).toBe('Lagos');
   });
 });

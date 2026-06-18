@@ -30,32 +30,32 @@ Express Server (app.js)
 
 ### External services
 
-| Service          | Purpose                                      |
-|------------------|----------------------------------------------|
-| MongoDB Atlas    | Primary data store                           |
-| Redis (Upstash)  | Shared cache with in‑memory fallback         |
-| Groq             | LLM for the AI chat agent                    |
-| TensorFlow.js    | Local semantic embeddings for RAG matching   |
-| Sentry           | Error monitoring & alerting                  |
-| Overpass API     | OpenStreetMap hospital import                |
-| Google Places    | (Optional) Google hospital import            |
-| Resend           | Transactional emails (verification, reset)   |
+| Service         | Purpose                                    |
+| --------------- | ------------------------------------------ |
+| MongoDB Atlas   | Primary data store                         |
+| Redis (Upstash) | Shared cache with in‑memory fallback       |
+| Groq            | LLM for the AI chat agent                  |
+| TensorFlow.js   | Local semantic embeddings for RAG matching |
+| Sentry          | Error monitoring & alerting                |
+| Overpass API    | OpenStreetMap hospital import              |
+| Google Places   | (Optional) Google hospital import          |
+| Resend          | Transactional emails (verification, reset) |
 
 ## 3. Technology Stack
 
-| Component         | Technology                       | Why                                               |
-|-------------------|----------------------------------|---------------------------------------------------|
-| Runtime           | Node.js (≥22, ESM)               | Modern JS, native ESM support                     |
-| Framework         | Express                          | Lightweight, widely supported                     |
-| Database          | MongoDB (Mongoose)               | Flexible schemas, geospatial queries              |
-| Caching           | Redis (Upstash) + in‑memory fallback | Fast, shared cache with graceful degradation  |
-| AI Chat           | Groq SDK (llama‑3.3‑70b)         | Fast, cost‑effective LLM                          |
-| Semantic Search   | TensorFlow.js (Universal Sentence Encoder) | Zero‑cost local embeddings                |
-| Authentication    | Local JWT (bcrypt) + Auth0       | Secure, flexible auth options                     |
-| Validation        | Zod                              | Type‑safe schema validation                       |
-| Error Tracking    | Sentry                           | Real‑time production error alerts                 |
-| Testing           | Jest, Supertest                  | ESM‑compatible testing framework                  |
-| CI                | GitHub Actions                   | Automated tests on push/PR                        |
+| Component       | Technology                                 | Why                                          |
+| --------------- | ------------------------------------------ | -------------------------------------------- |
+| Runtime         | Node.js (≥22, ESM)                         | Modern JS, native ESM support                |
+| Framework       | Express                                    | Lightweight, widely supported                |
+| Database        | MongoDB (Mongoose)                         | Flexible schemas, geospatial queries         |
+| Caching         | Redis (Upstash) + in‑memory fallback       | Fast, shared cache with graceful degradation |
+| AI Chat         | Groq SDK (llama‑3.3‑70b)                   | Fast, cost‑effective LLM                     |
+| Semantic Search | TensorFlow.js (Universal Sentence Encoder) | Zero‑cost local embeddings                   |
+| Authentication  | Local JWT (bcrypt) + Auth0                 | Secure, flexible auth options                |
+| Validation      | Zod                                        | Type‑safe schema validation                  |
+| Error Tracking  | Sentry                                     | Real‑time production error alerts            |
+| Testing         | Jest, Supertest                            | ESM‑compatible testing framework             |
+| CI              | GitHub Actions                             | Automated tests on push/PR                   |
 
 ## 4. Key Design Decisions
 
@@ -141,11 +141,11 @@ a hard‑coded fallback map for cold starts.
 
 ### 6.1 Test Types
 
-| Type        | Files                                 | Description                       |
-|-------------|---------------------------------------|-----------------------------------|
-| Unit        | `matchingEngine.test.mjs`             | Pure‑function matching tests      |
+| Type        | Files                                                        | Description                         |
+| ----------- | ------------------------------------------------------------ | ----------------------------------- |
+| Unit        | `matchingEngine.test.mjs`                                    | Pure‑function matching tests        |
 | Integration | `agentMatch.test.mjs`, `agentChat.test.mjs`, `auth.test.mjs` | Full endpoint tests with a database |
-| Embedding   | `embedding.test.mjs`                  | Verifies TensorFlow.js embeddings |
+| Embedding   | `embedding.test.mjs`                                         | Verifies TensorFlow.js embeddings   |
 
 ### 6.2 Test Database
 

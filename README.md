@@ -20,38 +20,44 @@ The application is built on Express and connects to a MongoDB database. Key comp
 ## Features
 
 ### AI‑Driven Hospital Matching
+
 A conversational agent (Groq LLM) interviews the user to collect symptoms and location. The system then matches hospitals using a combination of keyword‑based service lookup and semantic similarity search (RAG) that understands vague descriptions like “tightness in my chest and difficulty breathing”.
 
 ### Hospital Directory
+
 Verified hospitals can be searched by name, location, or proximity (geospatial queries). Results are filtered by continent first to keep responses fast.
 
 ### Admin Tools
+
 Admin users can:
+
 - Manage user accounts and roles.
 - Review and approve user‑submitted hospitals.
 - Import hospital data from OpenStreetMap (with a dry‑run preview) or Google Places.
 - Maintain the symptom‑to‑service mapping that powers keyword matching.
 
 ### Caching
+
 Frequently accessed data (nearby hospitals, featured listings, symptom mappings) is cached via Redis, with an automatic fallback to in‑memory storage if Redis is unavailable.
 
 ### Logging and Monitoring
+
 Requests are logged as structured JSON with unique request IDs for tracing. Errors are automatically reported to Sentry for real‑time monitoring.
 
 ## Technology Stack
 
-| Component         | Technology                       |
-|-------------------|----------------------------------|
-| Runtime           | Node.js (≥22)                    |
-| Framework         | Express                          |
-| Database          | MongoDB (Atlas)                  |
-| Caching           | Redis (Upstash)                  |
-| AI / LLM          | Groq SDK (llama‑3.3‑70b)         |
-| Semantic Search   | TensorFlow.js + Universal Sentence Encoder |
-| Authentication    | Local JWT + Auth0                |
-| Validation        | Zod                              |
-| Error Tracking    | Sentry                           |
-| Testing           | Jest, Supertest                  |
+| Component       | Technology                                 |
+| --------------- | ------------------------------------------ |
+| Runtime         | Node.js (≥22)                              |
+| Framework       | Express                                    |
+| Database        | MongoDB (Atlas)                            |
+| Caching         | Redis (Upstash)                            |
+| AI / LLM        | Groq SDK (llama‑3.3‑70b)                   |
+| Semantic Search | TensorFlow.js + Universal Sentence Encoder |
+| Authentication  | Local JWT + Auth0                          |
+| Validation      | Zod                                        |
+| Error Tracking  | Sentry                                     |
+| Testing         | Jest, Supertest                            |
 
 ## API Outline
 
@@ -68,8 +74,8 @@ Admin routes require a JWT with the `admin` role.
 
 - Rate limits: login (10 req/15 min), AI chat (20 req/10 min). Both log violations separately.
 - Semantic embeddings are stored in `data/hospital-embeddings.json`.  
-They are **automatically regenerated** in the background whenever a hospital is added, approved, updated, toggled, or deleted.  
-A manual rebuild can still be triggered with `npm run build-embeddings` if needed.
+  They are **automatically regenerated** in the background whenever a hospital is added, approved, updated, toggled, or deleted.  
+  A manual rebuild can still be triggered with `npm run build-embeddings` if needed.
 - The OpenStreetMap import accepts `?dryRun=true` to preview without committing data.
 - Testing uses a separate database derived from the main `MONGODB_URI`. In CI, a MongoDB container is used.
 

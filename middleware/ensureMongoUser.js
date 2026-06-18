@@ -1,5 +1,5 @@
-import * as Sentry from "@sentry/node";
-import User from "../models/User.js";
+import * as Sentry from '@sentry/node';
+import User from '../models/User.js';
 
 export const ensureMongoUser = async (req, res, next) => {
   // Only act on authenticated requests
@@ -11,7 +11,7 @@ export const ensureMongoUser = async (req, res, next) => {
       // Just verify the user still exists
       const user = await User.findById(req.userId);
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: 'User not found' });
       }
       return next();
     }
@@ -35,19 +35,14 @@ export const ensureMongoUser = async (req, res, next) => {
     const newUser = await User.create({
       username: req.user,
       email: req.email,
-      role: req.role || "user",
+      role: req.role || 'user',
       isVerified: true,
       auth0Id: req.auth0Id,
     });
 
     // Log and alert that a fallback creation occurred
-    console.warn(
-      `ensureMongoUser: Recreated missing MongoDB user for auth0Id ${req.auth0Id}`,
-    );
-    Sentry.captureMessage(
-      `Fallback user creation for auth0Id: ${req.auth0Id}`,
-      "warning",
-    );
+    console.warn(`ensureMongoUser: Recreated missing MongoDB user for auth0Id ${req.auth0Id}`);
+    Sentry.captureMessage(`Fallback user creation for auth0Id: ${req.auth0Id}`, 'warning');
 
     // Update request with the new user's ID so downstream handlers work
     req.userId = newUser._id.toString();
@@ -57,6 +52,6 @@ export const ensureMongoUser = async (req, res, next) => {
     next();
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };

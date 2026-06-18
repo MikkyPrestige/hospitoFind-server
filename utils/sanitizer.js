@@ -1,17 +1,17 @@
-import createDOMPurify from "dompurify";
-import { JSDOM } from "jsdom";
+import createDOMPurify from 'dompurify';
+import { JSDOM } from 'jsdom';
 
-const window = new JSDOM("").window;
+const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
 export const sanitizeInput = (data) => {
-  if (typeof data === "string") {
+  if (typeof data === 'string') {
     return DOMPurify.sanitize(data).trim();
   }
   if (Array.isArray(data)) {
     return data.map((item) => sanitizeInput(item));
   }
-  if (typeof data === "object" && data !== null) {
+  if (typeof data === 'object' && data !== null) {
     const sanitizedObject = {};
     for (const key in data) {
       sanitizedObject[key] = sanitizeInput(data[key]);
@@ -21,9 +21,8 @@ export const sanitizeInput = (data) => {
   return data;
 };
 
-
 export function sanitize(value) {
-  if (!value) return "";
+  if (!value) return '';
 
   return (
     value
@@ -31,13 +30,13 @@ export function sanitize(value) {
       .trim()
       .toLowerCase()
       // replace accented characters
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
       // replace non-alphanumeric with hyphens
-      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/[^a-z0-9]+/g, '-')
       // remove multiple hyphens
-      .replace(/-+/g, "-")
+      .replace(/-+/g, '-')
       // trim hyphens from start/end
-      .replace(/^-|-$/g, "")
+      .replace(/^-|-$/g, '')
   );
 }

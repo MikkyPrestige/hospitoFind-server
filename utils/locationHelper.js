@@ -1,56 +1,55 @@
 export const nigeriaStates = [
-  "Abia",
-  "Adamawa",
-  "Akwa Ibom",
-  "Anambra",
-  "Bauchi",
-  "Bayelsa",
-  "Benue",
-  "Borno",
-  "Cross River",
-  "Delta",
-  "Ebonyi",
-  "Edo",
-  "Ekiti",
-  "Enugu",
-  "Gombe",
-  "Imo",
-  "Jigawa",
-  "Kaduna",
-  "Kano",
-  "Katsina",
-  "Kebbi",
-  "Kogi",
-  "Kwara",
-  "Lagos",
-  "Nasarawa",
-  "Ogun",
-  "Ondo",
-  "Osun",
-  "Oyo",
-  "Plateau",
-  "Rivers",
-  "Sokoto",
-  "Taraba",
-  "Yobe",
-  "Zamfara",
-  "FCT",
-  "Abuja",
+  'Abia',
+  'Adamawa',
+  'Akwa Ibom',
+  'Anambra',
+  'Bauchi',
+  'Bayelsa',
+  'Benue',
+  'Borno',
+  'Cross River',
+  'Delta',
+  'Ebonyi',
+  'Edo',
+  'Ekiti',
+  'Enugu',
+  'Gombe',
+  'Imo',
+  'Jigawa',
+  'Kaduna',
+  'Kano',
+  'Katsina',
+  'Kebbi',
+  'Kogi',
+  'Kwara',
+  'Lagos',
+  'Nasarawa',
+  'Ogun',
+  'Ondo',
+  'Osun',
+  'Oyo',
+  'Plateau',
+  'Rivers',
+  'Sokoto',
+  'Taraba',
+  'Yobe',
+  'Zamfara',
+  'FCT',
+  'Abuja',
 ].map((state) => state.toLowerCase());
 
 /**
  * Maps any Nigerian state to "Nigeria", otherwise returns the state name.
  */
 export const normalizeCountry = (stateValue) => {
-  if (!stateValue) return "Unknown";
+  if (!stateValue) return 'Unknown';
 
   const trimmedState = stateValue.trim().toLowerCase();
-  if (nigeriaStates.includes(trimmedState) || trimmedState === "nigeria") {
-    return "Nigeria";
+  if (nigeriaStates.includes(trimmedState) || trimmedState === 'nigeria') {
+    return 'Nigeria';
   }
   return stateValue.charAt(0).toUpperCase() + stateValue.slice(1);
 };
-
 
 export const getDistance = (a, b) => {
   const R = 6371e3; // meters

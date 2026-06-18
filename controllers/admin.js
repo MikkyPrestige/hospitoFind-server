@@ -1,16 +1,12 @@
-import axios from "axios";
-import bcrypt from "bcrypt";
-import asyncHandler from "express-async-handler";
-import mongoose from "mongoose";
-import User from "../models/User.js";
-import Hospital from "../models/Hospital.js";
-import {
-  formatHours,
-  getPhotoUrl,
-  formatHospitalData,
-} from "../utils/hospitalHelpers.js";
-import { getUserContinent } from "../utils/matchingEngine.js";
-import { scheduleRebuild } from "../utils/debouncedRebuild.js";
+import axios from 'axios';
+import bcrypt from 'bcrypt';
+import asyncHandler from 'express-async-handler';
+import mongoose from 'mongoose';
+import User from '../models/User.js';
+import Hospital from '../models/Hospital.js';
+import { formatHours, getPhotoUrl, formatHospitalData } from '../utils/hospitalHelpers.js';
+import { getUserContinent } from '../utils/matchingEngine.js';
+import { scheduleRebuild } from '../utils/debouncedRebuild.js';
 
 // --- USER MANAGEMENT ---
 /**
@@ -18,8 +14,8 @@ import { scheduleRebuild } from "../utils/debouncedRebuild.js";
  * @route   GET /admin/users
  */
 const getAllUsersAdmin = asyncHandler(async (req, res) => {
-  const users = await User.find({}).select("-password").sort({ createdAt: -1 });
-  if (!users) return res.status(404).json({ message: "No users found" });
+  const users = await User.find({}).select('-password').sort({ createdAt: -1 });
+  if (!users) return res.status(404).json({ message: 'No users found' });
   res.json(users);
 });
 
@@ -31,16 +27,12 @@ const createUserAdmin = asyncHandler(async (req, res) => {
   const { name, username, email, password, role } = req.body;
 
   if (!username || !email || !password) {
-    return res
-      .status(400)
-      .json({ message: "Username, email, and password are required" });
+    return res.status(400).json({ message: 'Username, email, and password are required' });
   }
 
   const userExists = await User.findOne({ $or: [{ email }, { username }] });
   if (userExists) {
-    return res
-      .status(409)
-      .json({ message: "User with this email or username already exists" });
+    return res.status(409).json({ message: 'User with this email or username already exists' });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -50,7 +42,7 @@ const createUserAdmin = asyncHandler(async (req, res) => {
     username,
     email,
     password: hashedPassword,
-    role: role || "user",
+    role: role || 'user',
   });
 
   res.status(201).json({
@@ -66,15 +58,15 @@ const createUserAdmin = asyncHandler(async (req, res) => {
 const updateUserRoleAdmin = asyncHandler(async (req, res) => {
   const { userId, newRole } = req.body;
 
-  if (!["user", "admin"].includes(newRole)) {
-    return res.status(400).json({ message: "Invalid role" });
+  if (!['user', 'admin'].includes(newRole)) {
+    return res.status(400).json({ message: 'Invalid role' });
   }
 
   const user = await User.findById(userId);
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) return res.status(404).json({ message: 'User not found' });
 
-  if (user._id.toString() === req.userId.toString() && newRole !== "admin") {
-    return res.status(400).json({ message: "You cannot demote yourself." });
+  if (user._id.toString() === req.userId.toString() && newRole !== 'admin') {
+    return res.status(400).json({ message: 'You cannot demote yourself.' });
   }
 
   user.role = newRole;
@@ -89,7 +81,7 @@ const toggleUserStatus = asyncHandler(async (req, res) => {
 
   const user = await User.findById(id);
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    return res.status(404).json({ message: 'User not found' });
   }
 
   user.isActive = !user.isActive;
@@ -97,7 +89,7 @@ const toggleUserStatus = asyncHandler(async (req, res) => {
   await user.save();
 
   res.status(200).json({
-    message: `User ${user.isActive ? "activated" : "suspended"}`,
+    message: `User ${user.isActive ? 'activated' : 'suspended'}`,
     isActive: user.isActive,
   });
 });
@@ -110,12 +102,10 @@ const deleteUserAdmin = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const user = await User.findById(id);
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) return res.status(404).json({ message: 'User not found' });
 
   if (user.email === req.user) {
-    return res
-      .status(400)
-      .json({ message: "You cannot delete your own admin account from here." });
+    return res.status(400).json({ message: 'You cannot delete your own admin account from here.' });
   }
 
   await user.deleteOne();
@@ -147,7 +137,7 @@ const createHospitalAdmin = asyncHandler(async (req, res) => {
   const data = formatHospitalData(req.body);
 
   if (!data.address.city || !data.address.state) {
-    return res.status(400).json({ message: "City and State are required." });
+    return res.status(400).json({ message: 'City and State are required.' });
   }
 
   const hospital = await Hospital.create({
@@ -173,7 +163,7 @@ const updateHospitalAdmin = asyncHandler(async (req, res) => {
   );
 
   if (!hospital) {
-    return res.status(404).json({ message: "Hospital not found" });
+    return res.status(404).json({ message: 'Hospital not found' });
   }
 
   scheduleRebuild();
@@ -189,7 +179,7 @@ const toggleHospitalStatus = asyncHandler(async (req, res) => {
   const hospital = await Hospital.findById(req.params.id);
 
   if (!hospital) {
-    return res.status(404).json({ message: "Hospital not found" });
+    return res.status(404).json({ message: 'Hospital not found' });
   }
 
   hospital.verified = !hospital.verified;
@@ -198,7 +188,7 @@ const toggleHospitalStatus = asyncHandler(async (req, res) => {
   scheduleRebuild();
 
   res.status(200).json({
-    message: `Hospital is now ${hospital.verified ? "Live" : "Hidden"}`,
+    message: `Hospital is now ${hospital.verified ? 'Live' : 'Hidden'}`,
     verified: hospital.verified,
   });
 });
@@ -222,12 +212,12 @@ const reviewAndApproveHospital = asyncHandler(async (req, res) => {
   );
 
   if (!hospital) {
-    return res.status(404).json({ message: "Hospital not found" });
+    return res.status(404).json({ message: 'Hospital not found' });
   }
 
   scheduleRebuild();
 
-  res.status(200).json({ message: "Hospital approved!", hospital });
+  res.status(200).json({ message: 'Hospital approved!', hospital });
 });
 
 /**
@@ -239,12 +229,12 @@ const batchApproveHospitals = asyncHandler(async (req, res) => {
   const { ids } = req.body;
 
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
-    return res.status(400).json({ message: "Provide an array of hospital IDs" });
+    return res.status(400).json({ message: 'Provide an array of hospital IDs' });
   }
 
   const result = await Hospital.updateMany(
     { _id: { $in: ids }, verified: false },
-    { $set: { verified: true } }
+    { $set: { verified: true } },
   );
 
   res.status(200).json({
@@ -260,19 +250,19 @@ const checkDuplicateHospital = asyncHandler(async (req, res) => {
   const { name, city, currentId } = req.query;
 
   if (!name || !city) {
-    return res.status(400).json({ message: "Name and City are required." });
+    return res.status(400).json({ message: 'Name and City are required.' });
   }
 
   const query = {
-    name: { $regex: new RegExp(`^${name.trim()}$`, "i") },
-    "address.city": { $regex: new RegExp(`^${city.trim()}$`, "i") },
+    name: { $regex: new RegExp(`^${name.trim()}$`, 'i') },
+    'address.city': { $regex: new RegExp(`^${city.trim()}$`, 'i') },
   };
 
-  if (currentId && currentId !== "undefined") {
+  if (currentId && currentId !== 'undefined') {
     query._id = { $ne: currentId };
   }
 
-  const duplicate = await Hospital.findOne(query).select("name address.city");
+  const duplicate = await Hospital.findOne(query).select('name address.city');
 
   if (duplicate) {
     return res.status(200).json({
@@ -290,9 +280,9 @@ const checkDuplicateHospital = asyncHandler(async (req, res) => {
  */
 const deleteHospitalAdmin = asyncHandler(async (req, res) => {
   const hospital = await Hospital.findByIdAndDelete(req.params.id);
-  if (!hospital) return res.status(404).json({ message: "Hospital not found" });
+  if (!hospital) return res.status(404).json({ message: 'Hospital not found' });
 
-  res.status(200).json({ message: "Hospital deleted successfully" });
+  res.status(200).json({ message: 'Hospital deleted successfully' });
 });
 
 // --- GOOGLE IMPORT ---
@@ -303,7 +293,7 @@ const importFromGoogle = asyncHandler(async (req, res) => {
   const { city, targetCountry } = req.body;
 
   if (!city || !targetCountry) {
-    return res.status(400).json({ message: "City and Country are required" });
+    return res.status(400).json({ message: 'City and Country are required' });
   }
 
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
@@ -315,25 +305,16 @@ const importFromGoogle = asyncHandler(async (req, res) => {
   let searchResults;
   try {
     const response = await axios.get(searchUrl);
-    if (
-      response.data.status !== "OK" &&
-      response.data.status !== "ZERO_RESULTS"
-    ) {
-      return res
-        .status(400)
-        .json({ message: `Google API Error: ${response.data.status}` });
+    if (response.data.status !== 'OK' && response.data.status !== 'ZERO_RESULTS') {
+      return res.status(400).json({ message: `Google API Error: ${response.data.status}` });
     }
     searchResults = response.data.results;
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Failed to connect to Google Search" });
+  } catch {
+    return res.status(500).json({ message: 'Failed to connect to Google Search' });
   }
 
   if (!searchResults || searchResults.length === 0) {
-    return res
-      .status(404)
-      .json({ message: `No hospitals found in ${city}, ${targetCountry}.` });
+    return res.status(404).json({ message: `No hospitals found in ${city}, ${targetCountry}.` });
   }
 
   let importedCount = 0;
@@ -342,7 +323,7 @@ const importFromGoogle = asyncHandler(async (req, res) => {
   for (const place of searchResults) {
     const exists = await Hospital.findOne({
       name: place.name,
-      "address.city": city,
+      'address.city': city,
     });
     if (exists) {
       skippedCount++;
@@ -355,7 +336,7 @@ const importFromGoogle = asyncHandler(async (req, res) => {
     try {
       const detailRes = await axios.get(detailsUrl);
       details = detailRes.data.result;
-    } catch (err) {
+    } catch {
       console.log(`Skipping details for ${place.name} due to error`);
       continue;
     }
@@ -364,53 +345,40 @@ const importFromGoogle = asyncHandler(async (req, res) => {
 
     const realPhotoUrl = details.photos
       ? getPhotoUrl(details.photos[0].photo_reference, apiKey)
-      : "";
+      : '';
     const hoursFormatted = formatHours(details.opening_hours);
 
     // Map Reviews to Comments (Take top 3)
     const googleComments = details.reviews
-      ? details.reviews
-          .slice(0, 3)
-          .map((r) => `"${r.text}" - ${r.author_name} (Google Review)`)
+      ? details.reviews.slice(0, 3).map((r) => `"${r.text}" - ${r.author_name} (Google Review)`)
       : [`Imported from Google`];
 
     const validServices = details.types
       ? details.types
-          .filter(
-            (t) =>
-              ![
-                "point_of_interest",
-                "establishment",
-                "hospital",
-                "health",
-              ].includes(t),
-          )
-          .map((t) =>
-            t.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
-          )
-      : ["General Healthcare"];
+          .filter((t) => !['point_of_interest', 'establishment', 'hospital', 'health'].includes(t))
+          .map((t) => t.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()))
+      : ['General Healthcare'];
 
-    if (validServices.length === 0)
-      validServices.push("General Medical Services");
+    if (validServices.length === 0) validServices.push('General Medical Services');
 
     const newHospital = new Hospital({
       name: details.name,
       address: {
-        street: details.formatted_address?.split(",")[0] || "Imported Address",
+        street: details.formatted_address?.split(',')[0] || 'Imported Address',
         city: city,
         state: targetCountry,
         country: targetCountry,
       },
-      phoneNumber: details.formatted_phone_number || "",
-      website: details.website || "",
-      email: "",
+      phoneNumber: details.formatted_phone_number || '',
+      website: details.website || '',
+      email: '',
       photoUrl: realPhotoUrl,
       longitude: details.geometry?.location?.lng,
       latitude: details.geometry?.location?.lat,
       hours: hoursFormatted,
       comments: googleComments,
       services: validServices,
-      type: "Public",
+      type: 'Public',
       verified: false,
       isFeatured: false,
       createdBy: new mongoose.Types.ObjectId(req.userId),
@@ -435,7 +403,7 @@ const importFromOsm = asyncHandler(async (req, res) => {
   const { city, targetCountry } = req.body;
 
   if (!city || !targetCountry) {
-    return res.status(400).json({ message: "City and Country are required" });
+    return res.status(400).json({ message: 'City and Country are required' });
   }
 
   // Overpass QL: find hospitals within the country, matching city name
@@ -456,25 +424,23 @@ const importFromOsm = asyncHandler(async (req, res) => {
     const response = await axios.get(url, {
       timeout: 90000,
       headers: {
-        "User-Agent": "HospitoFind/1.0 (admin import tool)",
+        'User-Agent': 'HospitoFind/1.0 (admin import tool)',
       },
     });
     elements = response.data.elements;
   } catch (err) {
-    console.error("OSM Import Error:", err.response?.data || err.message);
+    console.error('OSM Import Error:', err.response?.data || err.message);
     return res.status(500).json({
-      message: "Failed to connect to OpenStreetMap",
+      message: 'Failed to connect to OpenStreetMap',
       error: err.response?.data || err.message,
     });
   }
 
   if (!elements || elements.length === 0) {
-    return res
-      .status(404)
-      .json({ message: `No hospitals found in ${city}, ${targetCountry}.` });
+    return res.status(404).json({ message: `No hospitals found in ${city}, ${targetCountry}.` });
   }
 
-  const dryRun = req.query.dryRun === "true";
+  const dryRun = req.query.dryRun === 'true';
   const preview = [];
   const limit = Math.min(parseInt(req.query.limit) || 50, 100); // cap at 100 max
 
@@ -486,10 +452,10 @@ const importFromOsm = asyncHandler(async (req, res) => {
     const lat = el.lat || el.center?.lat;
     const lon = el.lon || el.center?.lon;
 
-    const name = tags.name || tags["name:en"] || "Unnamed Hospital";
+    const name = tags.name || tags['name:en'] || 'Unnamed Hospital';
     const exists = await Hospital.findOne({
       name: name,
-      "address.city": city,
+      'address.city': city,
     });
     if (exists) {
       skippedCount++;
@@ -499,30 +465,28 @@ const importFromOsm = asyncHandler(async (req, res) => {
     const hospitalData = {
       name,
       address: {
-        street: tags["addr:street"] || "",
+        street: tags['addr:street'] || '',
         city: city,
         state: targetCountry,
         country: targetCountry,
       },
-      phoneNumber: tags.phone || tags["contact:phone"] || "",
-      website: tags.website || tags["contact:website"] || "",
-      email: "",
-      photoUrl: "",
+      phoneNumber: tags.phone || tags['contact:phone'] || '',
+      website: tags.website || tags['contact:website'] || '',
+      email: '',
+      photoUrl: '',
       longitude: lon,
       latitude: lat,
-      hours: tags.opening_hours
-        ? [{ day: "See OSM", open: tags.opening_hours }]
-        : [],
-      comments: ["Imported from OpenStreetMap"],
-      services: tags["healthcare:speciality"]
-        ? tags["healthcare:speciality"].split(";").map((s) =>
+      hours: tags.opening_hours ? [{ day: 'See OSM', open: tags.opening_hours }] : [],
+      comments: ['Imported from OpenStreetMap'],
+      services: tags['healthcare:speciality']
+        ? tags['healthcare:speciality'].split(';').map((s) =>
             s
               .trim()
-              .replace(/_/g, " ")
+              .replace(/_/g, ' ')
               .replace(/\b\w/g, (l) => l.toUpperCase()),
           )
-        : ["General Healthcare"],
-      type: tags.healthcare || "Hospital",
+        : ['General Healthcare'],
+      type: tags.healthcare || 'Hospital',
       continent: getUserContinent(targetCountry),
       verified: false,
       isFeatured: false,

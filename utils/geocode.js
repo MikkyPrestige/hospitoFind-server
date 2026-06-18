@@ -1,24 +1,18 @@
-import axios from "axios";
-import dotenv from "dotenv";
+import axios from 'axios';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 
 export async function getCoordinates(fullAddress, retries = 2, delay = 3000) {
-  if (
-    !fullAddress ||
-    typeof fullAddress !== "string" ||
-    fullAddress.trim() === ""
-  ) {
-    console.error("Geocoding Error: No address provided.");
+  if (!fullAddress || typeof fullAddress !== 'string' || fullAddress.trim() === '') {
+    console.error('Geocoding Error: No address provided.');
     return { longitude: null, latitude: null };
   }
 
   if (!MAPBOX_TOKEN) {
-    console.error(
-      "Geocoding Error: Missing MAPBOX_TOKEN in environment variables.",
-    );
+    console.error('Geocoding Error: Missing MAPBOX_TOKEN in environment variables.');
     return { longitude: null, latitude: null };
   }
 
@@ -45,9 +39,7 @@ export async function getCoordinates(fullAddress, retries = 2, delay = 3000) {
         const coords = features[0].center;
 
         if (attempt > 1) {
-          console.log(
-            `Geocode Success: Succeeded on attempt ${attempt} for "${fullAddress}"`,
-          );
+          console.log(`Geocode Success: Succeeded on attempt ${attempt} for "${fullAddress}"`);
         }
 
         return {
@@ -55,9 +47,7 @@ export async function getCoordinates(fullAddress, retries = 2, delay = 3000) {
           latitude: coords[1],
         };
       } else {
-        console.warn(
-          `Geocode Warning: No location results for "${fullAddress}"`,
-        );
+        console.warn(`Geocode Warning: No location results for "${fullAddress}"`);
         break;
       }
     } catch (err) {
@@ -65,30 +55,22 @@ export async function getCoordinates(fullAddress, retries = 2, delay = 3000) {
 
       if (status === 401 || status === 403) {
         console.error(
-          "CRITICAL: Mapbox Token is invalid, expired, or unauthorized. Stopping retries.",
+          'CRITICAL: Mapbox Token is invalid, expired, or unauthorized. Stopping retries.',
         );
         break;
       }
 
       if (status === 429) {
-        console.warn(
-          `Geocode Warning: Rate limit hit (429). Attempt ${attempt} failed.`,
-        );
+        console.warn(`Geocode Warning: Rate limit hit (429). Attempt ${attempt} failed.`);
       } else {
-        console.warn(
-          `Geocode Attempt ${attempt} failed for "${fullAddress}": ${err.message}`,
-        );
+        console.warn(`Geocode Attempt ${attempt} failed for "${fullAddress}": ${err.message}`);
       }
 
       if (attempt <= retries) {
         console.log(`Waiting ${delay}ms before next retry...`);
         await sleep(delay);
       } else {
-        console.error(
-          `Geocode Error: All ${
-            retries + 1
-          } attempts failed for "${fullAddress}".`,
-        );
+        console.error(`Geocode Error: All ${retries + 1} attempts failed for "${fullAddress}".`);
       }
     }
   }

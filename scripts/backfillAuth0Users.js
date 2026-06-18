@@ -1,14 +1,9 @@
-import "dotenv/config";
-import mongoose from "mongoose";
-import axios from "axios";
-import User from "../models/User.js";
+import 'dotenv/config';
+import mongoose from 'mongoose';
+import axios from 'axios';
+import User from '../models/User.js';
 
-const {
-  MONGODB_URI,
-  AUTH0_MGMT_CLIENT_ID,
-  AUTH0_MGMT_CLIENT_SECRET,
-  AUTH0_ISSUER,
-} = process.env;
+const { MONGODB_URI, AUTH0_MGMT_CLIENT_ID, AUTH0_MGMT_CLIENT_SECRET, AUTH0_ISSUER } = process.env;
 
 const AUTH0_DOMAIN = new URL(AUTH0_ISSUER).hostname;
 
@@ -16,13 +11,13 @@ async function getManagementApiToken() {
   const response = await axios.post(
     `https://${AUTH0_DOMAIN}/oauth/token`,
     new URLSearchParams({
-      grant_type: "client_credentials",
+      grant_type: 'client_credentials',
       client_id: AUTH0_MGMT_CLIENT_ID,
       client_secret: AUTH0_MGMT_CLIENT_SECRET,
       audience: `https://${AUTH0_DOMAIN}/api/v2/`,
-      scope: "read:users",
+      scope: 'read:users',
     }),
-    { headers: { "content-type": "application/x-www-form-urlencoded" } },
+    { headers: { 'content-type': 'application/x-www-form-urlencoded' } },
   );
   return response.data.access_token;
 }
@@ -31,7 +26,7 @@ async function fetchAllUsers(token) {
   let users = [];
   let page = 0;
   const perPage = 100;
-  let total = null;
+  let total;
 
   do {
     const response = await axios.get(`https://${AUTH0_DOMAIN}/api/v2/users`, {
@@ -49,10 +44,10 @@ async function fetchAllUsers(token) {
 async function backfill() {
   try {
     await mongoose.connect(MONGODB_URI);
-    console.log("Connected to MongoDB");
+    console.log('Connected to MongoDB');
 
     const token = await getManagementApiToken();
-    console.log("Obtained Auth0 Management API token");
+    console.log('Obtained Auth0 Management API token');
 
     const auth0Users = await fetchAllUsers(token);
     console.log(`Fetched ${auth0Users.length} users from Auth0`);
@@ -86,7 +81,7 @@ async function backfill() {
       }
 
       // Derive username from email
-      let baseUsername = email.split("@")[0];
+      let baseUsername = email.split('@')[0];
       let username = baseUsername;
       let suffix = 1;
       while (await User.findOne({ username })) {
@@ -100,7 +95,7 @@ async function backfill() {
         auth0Id: auth0User.user_id,
         username,
         name: auth0User.name || username,
-        role: "user",
+        role: 'user',
         isVerified: true,
       });
 
@@ -110,11 +105,11 @@ async function backfill() {
 
     console.log(`Done. Created: ${created}, Skipped: ${skipped}`);
   } catch (err) {
-    console.error("Backfill error:", err);
+    console.error('Backfill error:', err);
     process.exit(1);
   } finally {
     await mongoose.disconnect();
-    console.log("Disconnected from MongoDB");
+    console.log('Disconnected from MongoDB');
   }
 }
 

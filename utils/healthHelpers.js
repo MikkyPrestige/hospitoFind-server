@@ -1,4 +1,4 @@
-export const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "").trim();
+export const stripHtml = (html = '') => html.replace(/<[^>]+>/g, '').trim();
 
 export const dedupeByTitle = (arr) => {
   const seen = new Set();
@@ -11,26 +11,26 @@ export const dedupeByTitle = (arr) => {
 };
 
 export const OUTBREAK_KEYWORDS = [
-  "outbreak",
-  "epidemic",
-  "pandemic",
-  "virus",
-  "infection",
-  "infectious",
-  "disease",
-  "fever",
-  "health alert",
-  "covid",
-  "flu",
-  "malaria",
-  "cholera",
-  "ebola",
-  "dengue",
-  "typhoid",
-  "zika",
-  "yellow fever",
-  "plague",
-  "measles",
-  "mpox",
-  "health emergency",
+  'outbreak',
+  'epidemic',
+  'pandemic',
+  'virus',
+  'infection',
+  'infectious',
+  'disease',
+  'fever',
+  'health alert',
+  'covid',
+  'flu',
+  'malaria',
+  'cholera',
+  'ebola',
+  'dengue',
+  'typhoid',
+  'zika',
+  'yellow fever',
+  'plague',
+  'measles',
+  'mpox',
+  'health emergency',
 ];

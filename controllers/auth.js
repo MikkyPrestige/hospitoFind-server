@@ -1,9 +1,9 @@
-import crypto from "node:crypto";
-import jwt from "jsonwebtoken";
-import { JwksClient } from "jwks-rsa";
-import bcrypt from "bcrypt";
-import asyncHandler from "express-async-handler";
-import User from "../models/User.js";
+import crypto from 'node:crypto';
+import jwt from 'jsonwebtoken';
+import { JwksClient } from 'jwks-rsa';
+import bcrypt from 'bcrypt';
+import asyncHandler from 'express-async-handler';
+import User from '../models/User.js';
 import {
   getCookieOptions,
   generateAccessToken,
@@ -12,12 +12,8 @@ import {
   hashToken,
   sendVerificationEmail,
   sendPasswordResetEmail,
-} from "../utils/authHelpers.js";
-import {
-  decryptSecret,
-  verifyTotpCode,
-  hashRecoveryCode,
-} from "../utils/totpHelpers.js";
+} from '../utils/authHelpers.js';
+import { decryptSecret, verifyTotpCode, hashRecoveryCode } from '../utils/totpHelpers.js';
 
 // @desc Auth0 login callback
 // @route GET /auth/auth0-login
@@ -25,7 +21,7 @@ const auth0Login = asyncHandler(async (req, res) => {
   const { email, name, username, idToken } = req.body;
 
   if (!idToken) {
-    return res.status(400).json({ message: "ID Token is required" });
+    return res.status(400).json({ message: 'ID Token is required' });
   }
 
   const client = new JwksClient({
@@ -36,9 +32,7 @@ const auth0Login = asyncHandler(async (req, res) => {
   const decodedToken = jwt.decode(idToken, { complete: true });
 
   if (!decodedToken || !decodedToken.header || !decodedToken.header.kid) {
-    return res
-      .status(400)
-      .json({ message: "Unable to retrieve key ID from token" });
+    return res.status(400).json({ message: 'Unable to retrieve key ID from token' });
   }
 
   const getKey = (header, callback) => {
@@ -58,7 +52,7 @@ const auth0Login = asyncHandler(async (req, res) => {
       idToken,
       getKey,
       {
-        algorithms: ["RS256"],
+        algorithms: ['RS256'],
         audience: process.env.AUTH0_AUDIENCE,
         issuer: process.env.AUTH0_ISSUER,
       },
@@ -70,7 +64,7 @@ const auth0Login = asyncHandler(async (req, res) => {
   });
 
   if (verified.email !== email) {
-    return res.status(400).json({ message: "Email mismatch" });
+    return res.status(400).json({ message: 'Email mismatch' });
   }
 
   let user = await User.findOne({ email }).exec();
@@ -79,15 +73,15 @@ const auth0Login = asyncHandler(async (req, res) => {
     user.isVerified = true;
     if (!user.auth0Id) user.auth0Id = verified.sub;
     if (!user.username) {
-      user.username = username || email.split("@")[0];
+      user.username = username || email.split('@')[0];
     }
     await user.save();
   } else {
     user = await User.create({
       name,
-      username: username || email.split("@")[0],
+      username: username || email.split('@')[0],
       email: email,
-      role: "user",
+      role: 'user',
       isVerified: true,
       auth0Id: verified.sub,
     });
@@ -98,7 +92,7 @@ const auth0Login = asyncHandler(async (req, res) => {
     const totpToken = generateTotpToken(user);
     return res.status(200).json({
       totpToken,
-      message: "TOTP code required",
+      message: 'TOTP code required',
     });
   }
 
@@ -110,7 +104,7 @@ const auth0Login = asyncHandler(async (req, res) => {
   user.refreshTokenFamily = family;
   await user.save();
 
-  res.cookie("jwt", refreshToken, getCookieOptions());
+  res.cookie('jwt', refreshToken, getCookieOptions());
 
   res.status(200).json({
     accessToken,
@@ -131,7 +125,7 @@ const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: "Please fill in all fields" });
+    return res.status(400).json({ message: 'Please fill in all fields' });
   }
 
   const user = await User.findOne({
@@ -139,26 +133,23 @@ const login = asyncHandler(async (req, res) => {
   }).exec();
 
   if (!user) {
-    return res
-      .status(400)
-      .json({ message: "User not found. Please check your email or sign up." });
+    return res.status(400).json({ message: 'User not found. Please check your email or sign up.' });
   }
 
   if (user && !user.password) {
     return res.status(400).json({
-      message: "This account uses Social Login. Please sign in with socials",
+      message: 'This account uses Social Login. Please sign in with socials',
     });
   }
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    return res.status(400).json({ message: "Invalid credentials" });
+    return res.status(400).json({ message: 'Invalid credentials' });
   }
 
   if (!user.isVerified) {
     return res.status(403).json({
-      message:
-        "Your email is not verified. Please check your inbox for the link.",
+      message: 'Your email is not verified. Please check your inbox for the link.',
     });
   }
 
@@ -167,7 +158,7 @@ const login = asyncHandler(async (req, res) => {
     const totpToken = generateTotpToken(user);
     return res.status(200).json({
       totpToken,
-      message: "TOTP code required",
+      message: 'TOTP code required',
     });
   }
 
@@ -178,7 +169,7 @@ const login = asyncHandler(async (req, res) => {
   user.refreshTokenFamily = family;
   await user.save();
 
-  res.cookie("jwt", refreshToken, getCookieOptions());
+  res.cookie('jwt', refreshToken, getCookieOptions());
 
   res.status(201).json({
     accessToken,
@@ -198,7 +189,7 @@ export const register = asyncHandler(async (req, res) => {
   const { name, username, email, password } = req.body;
 
   if (!name || !username || !password || !email) {
-    return res.status(400).json({ message: "Please fill in all fields" });
+    return res.status(400).json({ message: 'Please fill in all fields' });
   }
 
   const existingUser = await User.findOne({ email }).exec();
@@ -210,19 +201,19 @@ export const register = asyncHandler(async (req, res) => {
           "This email is already registered but not verified. Check your inbox or use the 'Resend Link' option.",
       });
     }
-    return res.status(409).json({ message: "Email already exists" });
+    return res.status(409).json({ message: 'Email already exists' });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const verificationToken = crypto.randomBytes(32).toString("hex");
+  const verificationToken = crypto.randomBytes(32).toString('hex');
 
   const user = await User.create({
     name,
     username,
     email,
     password: hashedPassword,
-    role: "user",
+    role: 'user',
     totpEnabled: user.totpEnabled,
     isVerified: false,
     verificationToken,
@@ -233,14 +224,12 @@ export const register = asyncHandler(async (req, res) => {
     try {
       await sendVerificationEmail(email, name, verificationToken);
     } catch (emailError) {
-      console.error("Resend Error:", emailError);
+      console.error('Resend Error:', emailError);
     }
 
-    res
-      .status(201)
-      .json({ message: "Registration successful! Verify your email." });
+    res.status(201).json({ message: 'Registration successful! Verify your email.' });
   } else {
-    res.status(400).json({ message: "Invalid user data" });
+    res.status(400).json({ message: 'Invalid user data' });
   }
 });
 
@@ -248,7 +237,7 @@ export const register = asyncHandler(async (req, res) => {
 const verifyEmail = asyncHandler(async (req, res) => {
   const { token } = req.query;
 
-  if (!token) return res.status(400).json({ message: "Token is required" });
+  if (!token) return res.status(400).json({ message: 'Token is required' });
 
   const user = await User.findOne({
     verificationToken: token,
@@ -256,9 +245,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
   });
 
   if (!user) {
-    return res
-      .status(400)
-      .json({ message: "Invalid or expired verification link" });
+    return res.status(400).json({ message: 'Invalid or expired verification link' });
   }
 
   // Activate User
@@ -273,10 +260,10 @@ const verifyEmail = asyncHandler(async (req, res) => {
   user.refreshTokenFamily = family;
   await user.save();
 
-  res.cookie("jwt", refreshToken, getCookieOptions());
+  res.cookie('jwt', refreshToken, getCookieOptions());
 
   res.status(200).json({
-    message: "Email verified successfully!",
+    message: 'Email verified successfully!',
     accessToken,
     name: user.name,
     username: user.username,
@@ -291,21 +278,20 @@ const resendVerification = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
   if (!email) {
-    return res.status(400).json({ message: "Email is required" });
+    return res.status(400).json({ message: 'Email is required' });
   }
 
   const user = await User.findOne({ email });
 
   if (!user) {
     return res.status(200).json({
-      message:
-        "If an account exists with this email, a new link has been sent.",
+      message: 'If an account exists with this email, a new link has been sent.',
     });
   }
 
   if (user.isVerified) {
     return res.status(400).json({
-      message: "This account is already verified.",
+      message: 'This account is already verified.',
     });
   }
 
@@ -316,20 +302,20 @@ const resendVerification = asyncHandler(async (req, res) => {
     user.verificationTokenExpires - now > 23 * 60 * 60 * 1000 + 58 * 60 * 1000
   ) {
     return res.status(429).json({
-      message: "Please wait a few minutes before requesting another link.",
+      message: 'Please wait a few minutes before requesting another link.',
     });
   }
 
-  const verificationToken = crypto.randomBytes(32).toString("hex");
+  const verificationToken = crypto.randomBytes(32).toString('hex');
   user.verificationToken = verificationToken;
   user.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
   await user.save();
 
   try {
     await sendVerificationEmail(email, user.name, verificationToken);
-    res.status(200).json({ message: "Verification email sent!" });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to send email." });
+    res.status(200).json({ message: 'Verification email sent!' });
+  } catch {
+    res.status(500).json({ message: 'Failed to send email.' });
   }
 });
 
@@ -338,25 +324,24 @@ const resendVerification = asyncHandler(async (req, res) => {
 const refresh = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
 
-  if (!cookies?.jwt)
-    return res.status(400).json({ message: "No refresh token" });
+  if (!cookies?.jwt) return res.status(400).json({ message: 'No refresh token' });
 
   const oldRefreshToken = cookies.jwt;
 
   let decoded;
   try {
     decoded = jwt.verify(oldRefreshToken, process.env.REFRESH_TOKEN_SECRET);
-  } catch (err) {
-    return res.status(400).json({ message: "Token Expired or Invalid" });
+  } catch {
+    return res.status(400).json({ message: 'Token Expired or Invalid' });
   }
 
   const user = await User.findOne({ username: decoded.username });
 
-  if (!user) return res.status(400).json({ message: "User no longer exists" });
+  if (!user) return res.status(400).json({ message: 'User no longer exists' });
 
   if (!user.refreshTokenHash || !user.refreshTokenFamily) {
     // No stored token – either legacy or previously revoked
-    return res.status(401).json({ message: "Please login again" });
+    return res.status(401).json({ message: 'Please login again' });
   }
 
   const providedHash = hashToken(oldRefreshToken);
@@ -366,24 +351,19 @@ const refresh = asyncHandler(async (req, res) => {
     user.refreshTokenHash = undefined;
     user.refreshTokenFamily = undefined;
     await user.save();
-    res.clearCookie("jwt", getCookieOptions());
-    return res
-      .status(401)
-      .json({ message: "Token reuse detected. Please login again." });
+    res.clearCookie('jwt', getCookieOptions());
+    return res.status(401).json({ message: 'Token reuse detected. Please login again.' });
   }
 
   // Valid token – rotate it
   const family = user.refreshTokenFamily;
-  const { refreshToken: newRefreshToken, hash: newHash } = generateRefreshToken(
-    user,
-    family,
-  );
+  const { refreshToken: newRefreshToken, hash: newHash } = generateRefreshToken(user, family);
   user.refreshTokenHash = newHash;
   await user.save();
 
   const accessToken = generateAccessToken(user);
 
-  res.cookie("jwt", newRefreshToken, getCookieOptions());
+  res.cookie('jwt', newRefreshToken, getCookieOptions());
 
   res.json({
     accessToken,
@@ -404,42 +384,38 @@ const totpLogin = asyncHandler(async (req, res) => {
   const { totpToken, code, recoveryCode } = req.body;
 
   if (!totpToken || (!code && !recoveryCode)) {
-    return res
-      .status(400)
-      .json({ message: "TOTP token and code or recovery code required" });
+    return res.status(400).json({ message: 'TOTP token and code or recovery code required' });
   }
 
   let decoded;
   try {
     decoded = jwt.verify(totpToken, process.env.ACCESS_TOKEN_SECRET);
-  } catch (err) {
-    return res.status(400).json({ message: "Invalid or expired TOTP token" });
+  } catch {
+    return res.status(400).json({ message: 'Invalid or expired TOTP token' });
   }
 
-  if (decoded.purpose !== "totp") {
-    return res.status(400).json({ message: "Invalid token purpose" });
+  if (decoded.purpose !== 'totp') {
+    return res.status(400).json({ message: 'Invalid token purpose' });
   }
 
   const user = await User.findById(decoded.sub);
-  if (!user) return res.status(400).json({ message: "User not found" });
-  if (!user.totpEnabled)
-    return res.status(400).json({ message: "TOTP not enabled" });
+  if (!user) return res.status(400).json({ message: 'User not found' });
+  if (!user.totpEnabled) return res.status(400).json({ message: 'TOTP not enabled' });
 
   if (code) {
     // Verify TOTP code
     const secret = decryptSecret(user.totpSecret);
     const valid = verifyTotpCode(code, secret);
-    if (!valid) return res.status(400).json({ message: "Invalid TOTP code" });
+    if (!valid) return res.status(400).json({ message: 'Invalid TOTP code' });
   } else if (recoveryCode) {
     // Verify recovery code
     const hashed = hashRecoveryCode(recoveryCode);
     const index = user.recoveryCodes.indexOf(hashed);
-    if (index === -1)
-      return res.status(400).json({ message: "Invalid recovery code" });
+    if (index === -1) return res.status(400).json({ message: 'Invalid recovery code' });
     // Remove used recovery code
     user.recoveryCodes.splice(index, 1);
   } else {
-    return res.status(400).json({ message: "Code or recovery code required" });
+    return res.status(400).json({ message: 'Code or recovery code required' });
   }
 
   // Issue real tokens
@@ -450,7 +426,7 @@ const totpLogin = asyncHandler(async (req, res) => {
   user.refreshTokenFamily = family;
   await user.save();
 
-  res.cookie("jwt", refreshToken, getCookieOptions());
+  res.cookie('jwt', refreshToken, getCookieOptions());
 
   res.status(200).json({
     accessToken,
@@ -473,29 +449,24 @@ const forgotPassword = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res
-      .status(200)
-      .json({ message: "If email exists, a reset link has been sent." });
+    return res.status(200).json({ message: 'If email exists, a reset link has been sent.' });
   }
 
-  const resetToken = crypto.randomBytes(20).toString("hex");
+  const resetToken = crypto.randomBytes(20).toString('hex');
 
   // Hash and save to DB
-  user.resetPasswordToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
+  user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
   user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 Minutes
   await user.save();
 
   try {
     await sendPasswordResetEmail(user.email, resetToken);
-    res.status(200).json({ message: "Email Sent" });
-  } catch (error) {
+    res.status(200).json({ message: 'Email Sent' });
+  } catch {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save();
-    return res.status(500).json({ message: "Email could not be sent" });
+    return res.status(500).json({ message: 'Email could not be sent' });
   }
 });
 
@@ -503,9 +474,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
 // @route   PUT /auth/reset-password/:resetToken
 const resetPassword = asyncHandler(async (req, res) => {
   const resetPasswordToken = crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(req.params.resetToken)
-    .digest("hex");
+    .digest('hex');
 
   const user = await User.findOne({
     resetPasswordToken,
@@ -513,7 +484,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   });
 
   if (!user) {
-    return res.status(400).json({ message: "Invalid or Expired Token" });
+    return res.status(400).json({ message: 'Invalid or Expired Token' });
   }
 
   user.password = await bcrypt.hash(req.body.password, 10);
@@ -523,9 +494,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   user.resetPasswordExpire = undefined;
   await user.save();
 
-  res
-    .status(200)
-    .json({ message: "Password updated successfully! Please login." });
+  res.status(200).json({ message: 'Password updated successfully! Please login.' });
 });
 
 // @desc Logout
@@ -547,8 +516,8 @@ const logout = asyncHandler(async (req, res) => {
     // token invalid or expired, just clear cookie
   }
 
-  res.clearCookie("jwt", getCookieOptions());
-  res.status(200).json({ message: "Logged out" });
+  res.clearCookie('jwt', getCookieOptions());
+  res.status(200).json({ message: 'Logged out' });
 });
 
 export default {

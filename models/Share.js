@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -6,7 +6,7 @@ const sharedHospitalSchema = new Schema(
   {
     hospitalId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "hospital",
+      ref: 'hospital',
       required: true,
     },
     slug: { type: String, required: true },
@@ -43,7 +43,7 @@ const shareableLinkSchema = new Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: false,
     },
     createdAt: {
@@ -55,6 +55,6 @@ const shareableLinkSchema = new Schema(
   { timestamps: true },
 );
 
-const ShareableLink = mongoose.model("ShareableLink", shareableLinkSchema);
+const ShareableLink = mongoose.model('ShareableLink', shareableLinkSchema);
 
 export default ShareableLink;

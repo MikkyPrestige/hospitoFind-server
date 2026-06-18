@@ -1,10 +1,10 @@
-import express from "express";
-import { verifyJWT, verifyAdmin } from "../middleware/verifyRoles.js";
-import { ensureMongoUser } from "../middleware/ensureMongoUser.js";
-import { osmImportLimiter } from "../middleware/rateLimiter.js";
-import validate from "../middleware/validate.js";
-import adminController from "../controllers/admin.js";
-import * as symptomController from "../controllers/symptom.js";
+import express from 'express';
+import { verifyJWT, verifyAdmin } from '../middleware/verifyRoles.js';
+import { ensureMongoUser } from '../middleware/ensureMongoUser.js';
+import { osmImportLimiter } from '../middleware/rateLimiter.js';
+import validate from '../middleware/validate.js';
+import adminController from '../controllers/admin.js';
+import * as symptomController from '../controllers/symptom.js';
 import {
   createUserAdminSchema,
   updateUserRoleAdminSchema,
@@ -15,7 +15,7 @@ import {
   batchApproveSchema,
   createSymptomMappingSchema,
   updateSymptomMappingSchema,
-} from "../utils/validation.js";
+} from '../utils/validation.js';
 
 const adminRouter = express.Router();
 
@@ -25,89 +25,61 @@ adminRouter.use(verifyAdmin);
 
 // --- USER MANAGEMENT ---
 adminRouter
-  .route("/users")
+  .route('/users')
   .get(adminController.getAllUsersAdmin)
   .post(validate(createUserAdminSchema), adminController.createUserAdmin);
 
 adminRouter
-  .route("/users/role")
-  .patch(
-    validate(updateUserRoleAdminSchema),
-    adminController.updateUserRoleAdmin,
-  );
+  .route('/users/role')
+  .patch(validate(updateUserRoleAdminSchema), adminController.updateUserRoleAdmin);
 
 adminRouter
-  .route("/users/:id")
+  .route('/users/:id')
   .patch(adminController.toggleUserStatus)
   .delete(adminController.deleteUserAdmin);
 
 // --- HOSPITAL MANAGEMENT ---
 adminRouter
-  .route("/hospitals/import-google")
+  .route('/hospitals/import-google')
   .post(validate(importFromGoogleSchema), adminController.importFromGoogle);
 
 adminRouter
-  .route("/hospitals/import-osm")
-  .post(
-    validate(importFromOsmSchema),
-    osmImportLimiter,
-    adminController.importFromOsm,
-  );
+  .route('/hospitals/import-osm')
+  .post(validate(importFromOsmSchema), osmImportLimiter, adminController.importFromOsm);
+
+adminRouter.route('/hospitals/pending').get(adminController.getPendingHospitals);
+
+adminRouter.route('/hospitals/check-duplicate').get(adminController.checkDuplicateHospital);
 
 adminRouter
-  .route("/hospitals/pending")
-  .get(adminController.getPendingHospitals);
-
-adminRouter
-  .route("/hospitals/check-duplicate")
-  .get(adminController.checkDuplicateHospital);
-
-adminRouter
-  .route("/hospitals")
+  .route('/hospitals')
   .get(adminController.getAllHospitalsAdmin)
-  .post(
-    validate(createHospitalAdminSchema),
-    adminController.createHospitalAdmin,
-  );
+  .post(validate(createHospitalAdminSchema), adminController.createHospitalAdmin);
 
 adminRouter
-  .route("/hospitals/approve-batch")
+  .route('/hospitals/approve-batch')
   .patch(validate(batchApproveSchema), adminController.batchApproveHospitals);
 
 adminRouter
-  .route("/hospitals/:id")
-  .patch(
-    validate(updateHospitalAdminSchema),
-    adminController.updateHospitalAdmin,
-  )
+  .route('/hospitals/:id')
+  .patch(validate(updateHospitalAdminSchema), adminController.updateHospitalAdmin)
   .delete(adminController.deleteHospitalAdmin);
 
-adminRouter
-  .route("/hospitals/:id/toggle-status")
-  .patch(adminController.toggleHospitalStatus);
+adminRouter.route('/hospitals/:id/toggle-status').patch(adminController.toggleHospitalStatus);
 
 adminRouter
-  .route("/hospitals/approve/:id")
-  .patch(
-    validate(createHospitalAdminSchema),
-    adminController.reviewAndApproveHospital,
-  );
+  .route('/hospitals/approve/:id')
+  .patch(validate(createHospitalAdminSchema), adminController.reviewAndApproveHospital);
 
 // --- SYMPTOM MAPPINGS ---
 adminRouter
-  .route("/symptoms")
+  .route('/symptoms')
   .get(symptomController.getSymptomMappings)
-  .post(
-    validate(createSymptomMappingSchema),
-    symptomController.createSymptomMapping,
-  );
+  .post(validate(createSymptomMappingSchema), symptomController.createSymptomMapping);
 
 adminRouter
-  .route("/symptoms/:id")
-  .put(
-    validate(updateSymptomMappingSchema),
-    symptomController.updateSymptomMapping,
-  )
+  .route('/symptoms/:id')
+  .put(validate(updateSymptomMappingSchema), symptomController.updateSymptomMapping)
   .delete(symptomController.deleteSymptomMapping);
 
 export default adminRouter;

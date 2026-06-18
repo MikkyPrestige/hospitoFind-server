@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const symptomMappingSchema = new mongoose.Schema(
   {
@@ -15,4 +15,4 @@ const symptomMappingSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export default mongoose.model("SymptomMapping", symptomMappingSchema);
+export default mongoose.model('SymptomMapping', symptomMappingSchema);

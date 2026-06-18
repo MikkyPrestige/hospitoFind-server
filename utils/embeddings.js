@@ -1,5 +1,5 @@
-import * as tf from "@tensorflow/tfjs";
-import * as use from "@tensorflow-models/universal-sentence-encoder";
+import * as tf from '@tensorflow/tfjs';
+import * as use from '@tensorflow-models/universal-sentence-encoder';
 
 let model = null;
 

@@ -1,9 +1,9 @@
-import fs from "fs";
-import path from "path";
-import Hospital from "../models/Hospital.js";
-import { embedTexts } from "./embeddings.js";
+import fs from 'fs';
+import path from 'path';
+import Hospital from '../models/Hospital.js';
+import { embedTexts } from './embeddings.js';
 
-const EMBEDDINGS_FILE = path.resolve("data/hospital-embeddings.json");
+const EMBEDDINGS_FILE = path.resolve('data/hospital-embeddings.json');
 const BATCH_SIZE = 5;
 
 /**
@@ -17,10 +17,8 @@ export const rebuildEmbeddings = async () => {
 
   if (total === 0) {
     // Write an empty file rather than leaving stale data
-    fs.writeFileSync(EMBEDDINGS_FILE, "[]", "utf-8");
-    console.log(
-      "Embeddings rebuild: no verified hospitals, written empty file.",
-    );
+    fs.writeFileSync(EMBEDDINGS_FILE, '[]', 'utf-8');
+    console.log('Embeddings rebuild: no verified hospitals, written empty file.');
     return;
   }
 
@@ -28,16 +26,13 @@ export const rebuildEmbeddings = async () => {
 
   for (let i = 0; i < total; i += BATCH_SIZE) {
     const batch = hospitals.slice(i, i + BATCH_SIZE);
-    const texts = batch.map((h) => (h.services || []).join(" ").toLowerCase());
+    const texts = batch.map((h) => (h.services || []).join(' ').toLowerCase());
 
     let batchEmbeddings;
     try {
       batchEmbeddings = await embedTexts(texts);
     } catch (err) {
-      console.error(
-        `Embeddings rebuild: batch starting at index ${i} failed:`,
-        err.message,
-      );
+      console.error(`Embeddings rebuild: batch starting at index ${i} failed:`, err.message);
       continue;
     }
 
@@ -59,6 +54,6 @@ export const rebuildEmbeddings = async () => {
     console.log(`Embeddings rebuild: ${done}/${total} hospitals embedded`);
   }
 
-  fs.writeFileSync(EMBEDDINGS_FILE, JSON.stringify(allEmbeddings), "utf-8");
+  fs.writeFileSync(EMBEDDINGS_FILE, JSON.stringify(allEmbeddings), 'utf-8');
   console.log(`Embeddings rebuild: saved to ${EMBEDDINGS_FILE}`);
 };

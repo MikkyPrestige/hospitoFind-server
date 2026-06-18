@@ -1,19 +1,18 @@
-import * as Sentry from "@sentry/node";
-import { logEvents } from "./logger.js";
+import * as Sentry from '@sentry/node';
+import { logEvents } from './logger.js';
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, _next) => {
   Sentry.captureException(err);
-  const requestId = req.reqId || "N/A";
-  const status =
-    res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+  const requestId = req.reqId || 'N/A';
+  const status = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
 
   const errorLogMsg = `${err.name}: ${err.message}\t${req.method}\t${req.url}\t${req.headers.origin}\tReqID: ${requestId}`;
-  logEvents(errorLogMsg, "errLog.log");
+  logEvents(errorLogMsg, 'errLog.log');
 
   console.error(`ERROR [${requestId}]:`, err.stack);
 
   res.status(status).json({
-    message: err.message || "Internal Server Error",
+    message: err.message || 'Internal Server Error',
     isError: true,
     requestId: requestId,
   });

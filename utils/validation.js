@@ -1,24 +1,24 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // ─── COMMON SUB‑SCHEMAS ────────────────────────────────────────────────────
 const mongoId = z.string().refine((val) => /^[0-9a-fA-F]{24}$/.test(val), {
-  message: "Invalid ID format",
+  message: 'Invalid ID format',
 });
 
 const hospitalAddressSchema = z.object({
   street: z.string().optional(),
-  city: z.string().min(1, "City is required"),
-  state: z.string().min(1, "Country / State is required"),
+  city: z.string().min(1, 'City is required'),
+  state: z.string().min(1, 'Country / State is required'),
 });
 
 // Full hospital body – used for creation (POST /hospitals and admin create)
 const hospitalBodySchema = z
   .object({
-    name: z.string().min(1, "Hospital name is required"),
+    name: z.string().min(1, 'Hospital name is required'),
     address: hospitalAddressSchema,
     phoneNumber: z.string().optional(),
     website: z.string().optional(),
-    email: z.string().email().optional().or(z.literal("")),
+    email: z.string().email().optional().or(z.literal('')),
     photoUrl: z.string().optional(),
     type: z.string().optional(),
     services: z.array(z.string()).optional(),
@@ -36,56 +36,56 @@ const hospitalBodySchema = z
 
 // ─── AUTH SCHEMAS ──────────────────────────────────────────────────────────
 export const loginSchema = z.object({
-  email: z.string().min(1, "Email is required"),
-  password: z.string().min(1, "Password is required"),
+  email: z.string().min(1, 'Email is required'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 export const registerSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  username: z.string().min(1, "Username is required"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
+  name: z.string().min(1, 'Name is required'),
+  username: z.string().min(1, 'Username is required'),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 export const auth0LoginSchema = z.object({
   email: z.string().email(),
   name: z.string().optional(),
   username: z.string().optional(),
-  idToken: z.string().min(1, "ID token is required"),
+  idToken: z.string().min(1, 'ID token is required'),
 });
 
 export const totpLoginSchema = z
   .object({
-    totpToken: z.string().min(1, "TOTP token is required"),
+    totpToken: z.string().min(1, 'TOTP token is required'),
     code: z.string().optional(),
     recoveryCode: z.string().optional(),
   })
   .refine((data) => data.code || data.recoveryCode, {
-    message: "Either TOTP code or recovery code must be provided",
+    message: 'Either TOTP code or recovery code must be provided',
   });
 
 export const totpSetupVerifySchema = z.object({
-    setupToken: z.string().min(1, "Setup token is required"),
-    code: z.string().min(6, "TOTP code must be at least 6 digits"),
-  });
+  setupToken: z.string().min(1, 'Setup token is required'),
+  code: z.string().min(6, 'TOTP code must be at least 6 digits'),
+});
 
 export const totpDisableSchema = z
-    .object({
-      password: z.string().optional(),
-      code: z.string().optional(),
-    })
-    .refine((data) => data.password || data.code, {
-      message: "Either password or TOTP code is required",
-    });
+  .object({
+    password: z.string().optional(),
+    code: z.string().optional(),
+  })
+  .refine((data) => data.password || data.code, {
+    message: 'Either password or TOTP code is required',
+  });
 
 export const totpRecoveryCodesSchema = z
-    .object({
-      code: z.string().optional(),
-      password: z.string().optional(),
-    })
-    .refine((data) => data.code || data.password, {
-      message: "Either TOTP code or password is required",
-    });
+  .object({
+    code: z.string().optional(),
+    password: z.string().optional(),
+  })
+  .refine((data) => data.code || data.password, {
+    message: 'Either TOTP code or password is required',
+  });
 
 export const resendVerificationSchema = z.object({
   email: z.string().email(),
@@ -96,7 +96,7 @@ export const forgotPasswordSchema = z.object({
 });
 
 export const resetPasswordSchema = z.object({
-  password: z.string().min(1, "New password is required"),
+  password: z.string().min(1, 'New password is required'),
 });
 
 // ─── HOSPITAL SCHEMAS ──────────────────────────────────────────────────────
@@ -120,25 +120,25 @@ export const shareHospitalsSchema = z.object({
 // ─── ADMIN SCHEMAS ─────────────────────────────────────────────────────────
 export const createUserAdminSchema = z.object({
   name: z.string().optional(),
-  username: z.string().min(1, "Username is required"),
+  username: z.string().min(1, 'Username is required'),
   email: z.string().email(),
-  password: z.string().min(1, "Password is required"),
+  password: z.string().min(1, 'Password is required'),
   role: z.string().optional(),
 });
 
 export const updateUserRoleAdminSchema = z.object({
   userId: mongoId,
-  newRole: z.enum(["user", "admin"]),
+  newRole: z.enum(['user', 'admin']),
 });
 
 export const importFromGoogleSchema = z.object({
-  city: z.string().min(1, "City is required"),
-  targetCountry: z.string().min(1, "Country is required"),
+  city: z.string().min(1, 'City is required'),
+  targetCountry: z.string().min(1, 'Country is required'),
 });
 
 export const importFromOsmSchema = z.object({
-  city: z.string().min(1, "City is required"),
-  targetCountry: z.string().min(1, "Country is required"),
+  city: z.string().min(1, 'City is required'),
+  targetCountry: z.string().min(1, 'Country is required'),
 });
 
 export const createHospitalAdminSchema = hospitalBodySchema;
@@ -148,16 +148,12 @@ export const updateHospitalAdminSchema = hospitalBodySchema.partial().extend({
 });
 
 export const batchApproveSchema = z.object({
-  ids: z.array(mongoId).min(1, "At least one hospital ID is required"),
+  ids: z.array(mongoId).min(1, 'At least one hospital ID is required'),
 });
 
 export const createSymptomMappingSchema = z.object({
-  symptomKeywords: z
-    .array(z.string().min(1))
-    .min(1, "At least one keyword is required"),
-  services: z
-    .array(z.string().min(1))
-    .min(1, "At least one service is required"),
+  symptomKeywords: z.array(z.string().min(1)).min(1, 'At least one keyword is required'),
+  services: z.array(z.string().min(1)).min(1, 'At least one service is required'),
 });
 
 export const updateSymptomMappingSchema = z.object({
@@ -176,13 +172,13 @@ export const updateUserProfileSchema = z.object({
 
 export const updateUserRoleSchema = z.object({
   userId: mongoId,
-  newRole: z.enum(["user", "admin"]),
+  newRole: z.enum(['user', 'admin']),
 });
 
 export const updatePasswordSchema = z.object({
   username: z.string().min(1),
-  password: z.string().min(1, "Current password is required"),
-  newPassword: z.string().min(1, "New password is required"),
+  password: z.string().min(1, 'Current password is required'),
+  newPassword: z.string().min(1, 'New password is required'),
 });
 
 export const recordViewSchema = z.object({
@@ -190,7 +186,7 @@ export const recordViewSchema = z.object({
 });
 
 export const deleteUserSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  username: z.string().min(1, 'Username is required'),
   password: z.string().optional(),
 });
 
@@ -210,14 +206,12 @@ export const chatSchema = z.object({
         content: z.string().min(1),
       }),
     )
-    .min(1, "Messages array must not be empty"),
+    .min(1, 'Messages array must not be empty'),
   userLocation: z.string().optional(),
 });
 
 export const matchSchema = z.object({
-  symptoms: z
-    .array(z.string().min(1))
-    .min(1, "At least one symptom is required"),
-  location: z.string().min(1, "Location is required"),
-  additionalNeeds: z.string().optional().default(""),
+  symptoms: z.array(z.string().min(1)).min(1, 'At least one symptom is required'),
+  location: z.string().min(1, 'Location is required'),
+  additionalNeeds: z.string().optional().default(''),
 });

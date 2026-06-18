@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -20,8 +20,8 @@ const userSchema = new Schema(
     auth0Id: { type: String, unique: true, sparse: true },
     role: {
       type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      enum: ['user', 'admin'],
+      default: 'user',
     },
     isActive: {
       type: Boolean,
@@ -35,10 +35,10 @@ const userSchema = new Schema(
     totpSecret: { type: String }, // encrypted TOTP secret
     totpEnabled: { type: Boolean, default: false },
     recoveryCodes: [{ type: String }], // hashed recovery codes
-    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Hospital" }],
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Hospital' }],
     recentlyViewed: [
       {
-        hospital: { type: mongoose.Schema.Types.ObjectId, ref: "Hospital" },
+        hospital: { type: mongoose.Schema.Types.ObjectId, ref: 'Hospital' },
         viewedAt: { type: Date, default: Date.now },
       },
     ],
@@ -59,7 +59,7 @@ const userSchema = new Schema(
           {
             hospitalId: {
               type: mongoose.Schema.Types.ObjectId,
-              ref: "Hospital",
+              ref: 'Hospital',
             },
             name: { type: String },
             matchScore: { type: Number },
@@ -67,7 +67,7 @@ const userSchema = new Schema(
         ],
         hospitalVisited: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Hospital",
+          ref: 'Hospital',
           default: null,
         },
         rating: {
@@ -87,6 +87,6 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 export default User;

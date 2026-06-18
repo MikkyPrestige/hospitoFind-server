@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
-import Hospital from "../models/hospitalsModel.js";
-import { sanitize } from "../config/sanitize.js";
-import dotenv from "dotenv";
+import mongoose from 'mongoose';
+import Hospital from '../models/hospitalsModel.js';
+import { sanitize } from '../config/sanitize.js';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -11,19 +11,19 @@ async function run() {
     useUnifiedTopology: true,
   });
 
-  const cursor = Hospital.find({}, "name address.slug").cursor();
+  const cursor = Hospital.find({}, 'name address.slug').cursor();
   let updated = 0;
 
   for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
     try {
-      if (!doc.slug || doc.slug.trim() === "") {
-        const base = sanitize(doc.name || "hospital");
+      if (!doc.slug || doc.slug.trim() === '') {
+        const base = sanitize(doc.name || 'hospital');
         let slug = base;
         let i = 0;
         while (
           await Hospital.exists({
-            "address.state": doc.address?.state,
-            "address.city": doc.address?.city,
+            'address.state': doc.address?.state,
+            'address.city': doc.address?.city,
             slug,
           })
         ) {
@@ -40,7 +40,7 @@ async function run() {
         if (updated % 100 === 0) console.log(`Updated ${updated} hospitals`);
       }
     } catch (err) {
-      console.error("Error for doc", doc._id, err);
+      console.error('Error for doc', doc._id, err);
     }
   }
 

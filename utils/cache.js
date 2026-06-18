@@ -1,4 +1,4 @@
-import redis from "../config/redis.js";
+import redis from '../config/redis.js';
 
 const fallback = new Map();
 
@@ -17,7 +17,9 @@ export const cacheGet = async (key) => {
       const raw = await redis.get(key);
       return raw ? JSON.parse(raw) : null;
     }
-  } catch {}
+  } catch {
+    /* redis unavailable */
+  }
   const entry = fallback.get(key);
   if (entry && Date.now() > entry.expiry) {
     fallback.delete(key);
@@ -30,10 +32,12 @@ export const cacheSet = async (key, value, ttlMs = 600000) => {
   const payload = JSON.stringify(value);
   try {
     if (await isRedisAvailable()) {
-      await redis.set(key, payload, "PX", ttlMs);
+      await redis.set(key, payload, 'PX', ttlMs);
       return;
     }
-  } catch {}
+  } catch {
+    /* redis unavailable */
+  }
   fallback.set(key, {
     value,
     expiry: Date.now() + ttlMs,

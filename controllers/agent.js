@@ -1,8 +1,8 @@
-import Groq from "groq-sdk";
-import Hospital from "../models/Hospital.js";
-import User from "../models/User.js";
-import { matchHospitals, getUserContinent } from "../utils/matchingEngine.js";
-import { matchSchema } from "../utils/validation.js";
+import Groq from 'groq-sdk';
+import Hospital from '../models/Hospital.js';
+import User from '../models/User.js';
+import { matchHospitals, getUserContinent } from '../utils/matchingEngine.js';
+import { matchSchema } from '../utils/validation.js';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -27,13 +27,12 @@ CONVERSATION RULES:
 
 TONE: Friendly, concise, professional. Like a knowledgeable healthcare receptionist.`;
 
-
 const extractMatchTrigger = (text) => {
   try {
     const trimmed = text.trim();
 
     // Case 1 — pure JSON
-    if (trimmed.startsWith("{") && trimmed.includes('"action":"MATCH"')) {
+    if (trimmed.startsWith('{') && trimmed.includes('"action":"MATCH"')) {
       return JSON.parse(trimmed);
     }
 
@@ -41,23 +40,20 @@ const extractMatchTrigger = (text) => {
     const fenceMatch = trimmed.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
     if (fenceMatch) {
       const parsed = JSON.parse(fenceMatch[1]);
-      if (parsed.action === "MATCH") return parsed;
+      if (parsed.action === 'MATCH') return parsed;
     }
 
     // Case 3 — JSON embedded anywhere in prose
-    const embeddedMatch = trimmed.match(
-      /\{[\s\S]*?"action"\s*:\s*"MATCH"[\s\S]*?\}/,
-    );
+    const embeddedMatch = trimmed.match(/\{[\s\S]*?"action"\s*:\s*"MATCH"[\s\S]*?\}/);
     if (embeddedMatch) {
       const parsed = JSON.parse(embeddedMatch[0]);
-      if (parsed.action === "MATCH") return parsed;
+      if (parsed.action === 'MATCH') return parsed;
     }
   } catch {
     // Not a trigger
   }
   return null;
 };
-
 
 const detectPatterns = (healthHistory) => {
   if (!healthHistory || healthHistory.length < 3) return null;
@@ -75,7 +71,7 @@ const detectPatterns = (healthHistory) => {
     .map(([symptom]) => symptom);
 
   if (repeated.length > 0) {
-    return `You've mentioned ${repeated.join(", ")} in multiple recent sessions. Consider seeing a specialist.`;
+    return `You've mentioned ${repeated.join(', ')} in multiple recent sessions. Consider seeing a specialist.`;
   }
   return null;
 };
@@ -85,23 +81,21 @@ export const chat = async (req, res) => {
   const { messages = [], userLocation } = req.body;
 
   if (!messages.length) {
-    return res.status(400).json({ message: "No messages provided" });
+    return res.status(400).json({ message: 'No messages provided' });
   }
 
   try {
-    let historyContext = "";
+    let historyContext = '';
 
     if (req.userId) {
-      const user = await User.findById(req.userId)
-        .select("healthHistory")
-        .lean();
+      const user = await User.findById(req.userId).select('healthHistory').lean();
 
       if (user?.healthHistory?.length > 0) {
         const recent = user.healthHistory.slice(-3);
         const recentSymptoms = recent
           .flatMap((s) => s.symptoms)
           .filter(Boolean)
-          .join(", ");
+          .join(', ');
 
         if (recentSymptoms) {
           historyContext = `\n\nUSER HEALTH CONTEXT (from previous sessions): This returning user has previously reported: ${recentSymptoms}. Reference this naturally if relevant.`;
@@ -119,9 +113,9 @@ export const chat = async (req, res) => {
     }
 
     const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: 'llama-3.3-70b-versatile',
       messages: [
-        { role: "system", content: SYSTEM_PROMPT + historyContext },
+        { role: 'system', content: SYSTEM_PROMPT + historyContext },
         ...messages.map(({ role, content }) => ({ role, content })),
       ],
       max_tokens: 1000,
@@ -137,22 +131,22 @@ export const chat = async (req, res) => {
       }
 
       return res.status(200).json({
-        type: "MATCH_READY",
+        type: 'MATCH_READY',
         profile: {
           symptoms: matchTrigger.symptoms,
-          location: matchTrigger.location || userLocation || "",
-          additionalNeeds: matchTrigger.additionalNeeds || "",
+          location: matchTrigger.location || userLocation || '',
+          additionalNeeds: matchTrigger.additionalNeeds || '',
         },
       });
     }
 
     return res.status(200).json({
-      type: "MESSAGE",
+      type: 'MESSAGE',
       message: responseText,
     });
   } catch (err) {
-    console.error("Agent chat error:", err);
-    return res.status(500).json({ message: "Agent service unavailable" });
+    console.error('Agent chat error:', err);
+    return res.status(500).json({ message: 'Agent service unavailable' });
   }
 };
 
@@ -166,28 +160,22 @@ export const match = async (req, res) => {
     additionalNeeds = parsed.additionalNeeds;
   } catch (err) {
     return res.status(400).json({
-      message: "Validation failed",
+      message: 'Validation failed',
       errors: err.errors || err.message,
     });
   }
 
   try {
-        const continent = getUserContinent(location);
-        const filter = { verified: true };
-        if (continent) filter.continent = continent;
-        const hospitals = await Hospital.find(filter).lean();
+    const continent = getUserContinent(location);
+    const filter = { verified: true };
+    if (continent) filter.continent = continent;
+    const hospitals = await Hospital.find(filter).lean();
 
-        if (!hospitals.length) {
-          return res
-            .status(404)
-            .json({ message: "No hospitals found in your region" });
-        }
+    if (!hospitals.length) {
+      return res.status(404).json({ message: 'No hospitals found in your region' });
+    }
 
-        const matchResult = await matchHospitals(
-          { symptoms, location, additionalNeeds },
-          hospitals,
-          5,
-        );
+    const matchResult = await matchHospitals({ symptoms, location, additionalNeeds }, hospitals, 5);
 
     if (matchResult.noResults) {
       return res.status(200).json({
@@ -227,7 +215,7 @@ export const match = async (req, res) => {
       hospitals: matchResult.results,
     });
   } catch (err) {
-    console.error("Agent match error:", err);
-    return res.status(500).json({ message: "Matching service unavailable" });
+    console.error('Agent match error:', err);
+    return res.status(500).json({ message: 'Matching service unavailable' });
   }
 };

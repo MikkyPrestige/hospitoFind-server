@@ -1,4 +1,4 @@
-import { rebuildEmbeddings } from "./rebuildEmbeddings.js";
+import { rebuildEmbeddings } from './rebuildEmbeddings.js';
 
 let rebuildTimer = null;
 let isRebuilding = false;
@@ -11,7 +11,7 @@ const runRebuild = async () => {
   try {
     await rebuildEmbeddings();
   } catch (err) {
-    console.error("Debounced rebuild failed:", err);
+    console.error('Debounced rebuild failed:', err);
   } finally {
     isRebuilding = false;
     if (pending) {

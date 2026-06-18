@@ -1,24 +1,24 @@
-import express from "express";
-import Hospital from "../../models/Hospital.js";
-import { sanitize } from "../../utils/sanitize.js";
+import express from 'express';
+import Hospital from '../../models/Hospital.js';
+import { sanitize } from '../../utils/sanitize.js';
 
 const router = express.Router();
-const FRONTEND_URL = process.env.FRONTEND_URL || "https://hospitofind.online";
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://hospitofind.online';
 
-router.get("/sitemap-cities.xml", async (req, res) => {
+router.get('/sitemap-cities.xml', async (req, res) => {
   try {
     const locations = await Hospital.aggregate([
       {
         $match: {
-          "address.state": { $exists: true, $ne: null },
-          "address.city": { $exists: true, $ne: null },
+          'address.state': { $exists: true, $ne: null },
+          'address.city': { $exists: true, $ne: null },
         },
       },
       {
         $group: {
           _id: {
-            state: "$address.state",
-            city: "$address.city",
+            state: '$address.state',
+            city: '$address.city',
           },
         },
       },
@@ -28,7 +28,7 @@ router.get("/sitemap-cities.xml", async (req, res) => {
       .map((loc) => {
         const stateSlug = sanitize(loc._id.state);
         const citySlug = sanitize(loc._id.city);
-        const lastmod = new Date().toISOString().split("T")[0];
+        const lastmod = new Date().toISOString().split('T')[0];
 
         return `
         <url>
@@ -38,18 +38,18 @@ router.get("/sitemap-cities.xml", async (req, res) => {
           <priority>0.75</priority>
         </url>`;
       })
-      .join("");
+      .join('');
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     ${xmlItems}
 </urlset>`;
 
-    res.header("Content-Type", "application/xml");
+    res.header('Content-Type', 'application/xml');
     res.send(xml.trim());
   } catch (error) {
-    console.error("Sitemap Cities Error:", error);
-    res.status(500).send("Error generating sitemap");
+    console.error('Sitemap Cities Error:', error);
+    res.status(500).send('Error generating sitemap');
   }
 });
 

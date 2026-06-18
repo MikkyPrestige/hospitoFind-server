@@ -1,5 +1,5 @@
-import asyncHandler from "express-async-handler";
-import SymptomMapping from "../models/SymptomMapping.js";
+import asyncHandler from 'express-async-handler';
+import SymptomMapping from '../models/SymptomMapping.js';
 
 // @desc Get all symptom mappings
 // @route GET /api/v1/admin/symptoms
@@ -14,9 +14,7 @@ export const createSymptomMapping = asyncHandler(async (req, res) => {
   const { symptomKeywords, services } = req.body;
 
   if (!symptomKeywords?.length || !services?.length) {
-    return res
-      .status(400)
-      .json({ message: "symptomKeywords and services are required arrays" });
+    return res.status(400).json({ message: 'symptomKeywords and services are required arrays' });
   }
 
   const mapping = await SymptomMapping.create({ symptomKeywords, services });
@@ -30,8 +28,7 @@ export const updateSymptomMapping = asyncHandler(async (req, res) => {
   const { symptomKeywords, services } = req.body;
 
   const mapping = await SymptomMapping.findById(id);
-  if (!mapping)
-    return res.status(404).json({ message: "Symptom mapping not found" });
+  if (!mapping) return res.status(404).json({ message: 'Symptom mapping not found' });
 
   if (symptomKeywords) mapping.symptomKeywords = symptomKeywords;
   if (services) mapping.services = services;
@@ -45,9 +42,8 @@ export const updateSymptomMapping = asyncHandler(async (req, res) => {
 export const deleteSymptomMapping = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const mapping = await SymptomMapping.findById(id);
-  if (!mapping)
-    return res.status(404).json({ message: "Symptom mapping not found" });
+  if (!mapping) return res.status(404).json({ message: 'Symptom mapping not found' });
 
   await mapping.deleteOne();
-  res.json({ message: "Symptom mapping deleted" });
+  res.json({ message: 'Symptom mapping deleted' });
 });

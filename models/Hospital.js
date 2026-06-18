@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { sanitize } from "../utils/sanitize.js";
+import mongoose from 'mongoose';
+import { sanitize } from '../utils/sanitize.js';
 
 const Schema = mongoose.Schema;
 
@@ -33,32 +33,32 @@ const hospitalSchema = new Schema(
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
     longitude: { type: Number },
     latitude: { type: Number },
     location: {
       type: {
         type: String,
-        enum: ["Point"],
-        default: "Point",
+        enum: ['Point'],
+        default: 'Point',
       },
       coordinates: {
         type: [Number],
-        index: "2dsphere",
+        index: '2dsphere',
       },
     },
   },
   { timestamps: true },
 );
 
-hospitalSchema.index({ "address.state": 1, "address.city": 1, slug: 1 });
+hospitalSchema.index({ 'address.state': 1, 'address.city': 1, slug: 1 });
 
 // Pre-save: auto-generate slug from name if not present
-hospitalSchema.pre("save", async function (next) {
+hospitalSchema.pre('save', async function (next) {
   if (this.latitude && this.longitude) {
     this.location = {
-      type: "Point",
+      type: 'Point',
       coordinates: [this.longitude, this.latitude],
     };
   }
@@ -71,8 +71,8 @@ hospitalSchema.pre("save", async function (next) {
     let i = 0;
     while (
       await Hospital.exists({
-        "address.state": this.address?.state,
-        "address.city": this.address?.city,
+        'address.state': this.address?.state,
+        'address.city': this.address?.city,
         slug,
       })
     ) {
@@ -88,5 +88,5 @@ hospitalSchema.pre("save", async function (next) {
   next();
 });
 
-const Hospital = mongoose.model("Hospital", hospitalSchema);
+const Hospital = mongoose.model('Hospital', hospitalSchema);
 export default Hospital;
