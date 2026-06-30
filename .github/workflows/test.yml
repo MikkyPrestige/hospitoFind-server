@@ -35,7 +35,7 @@ jobs:
         run: npm install
 
       - name: Run tests
-        run: npm test -- --runInBand
+        run: npm test
         env:
           NODE_OPTIONS: --experimental-vm-modules
           SKIP_RAG: true
