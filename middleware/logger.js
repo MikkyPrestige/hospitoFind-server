@@ -1,4 +1,4 @@
-import ids from 'short-id';
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -35,7 +35,7 @@ const logEvents = async (message, logFileName, level = 'INFO') => {
  * Express middleware that assigns a request ID and logs the request.
  */
 const logger = (req, res, next) => {
-  req.reqId = ids.generate();
+  req.reqId = crypto.randomUUID();
 
   const clientIp = req.ip || req.headers['x-forwarded-for'] || 'unknown-ip';
   const origin = req.headers.origin || 'no-origin';

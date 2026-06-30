@@ -33,8 +33,6 @@
     "express-async-handler": "^1.2.0",
     "express-rate-limit": "^6.11.2",
     "fs": "^0.0.1-security",
-    "geoip-lite": "^1.4.10",
-    "geoip2-lite": "^1.0.11",
     "groq-sdk": "^1.1.1",
     "haversine-distance": "^1.2.4",
     "helmet": "^8.1.0",
@@ -49,7 +47,6 @@
     "papaparse": "^5.4.1",
     "qrcode": "^1.5.4",
     "resend": "^6.12.3",
-    "short-id": "^0.1.0-1",
     "zod": "^4.4.3"
   },
   "devDependencies": {

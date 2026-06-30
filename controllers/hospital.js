@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import ids from 'short-id';
+import crypto from 'crypto';
 import papa from 'papaparse';
 import mongoose from 'mongoose';
 import Hospital from '../models/Hospital.js';
@@ -584,7 +584,7 @@ const shareHospitals = asyncHandler(async (req, res) => {
   }
 
   // Generate unique ID for the shareable link
-  const linkId = ids.generate();
+  const linkId = crypto.randomUUID();
   const shareableLink = new ShareableLink({
     linkId,
     createdBy: req.userId ? req.userId : null,
