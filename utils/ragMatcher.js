@@ -42,10 +42,14 @@ export const semanticMatch = async (query, topK = 5) => {
   console.log('RAG: query embedding generated, length:', queryVec ? queryVec.length : 'null');
   if (!queryVec) return [];
 
-  const scored = entries.map(({ hospitalId, embedding }) => ({
-    hospitalId,
-    score: cosineSimilarity(queryVec, embedding),
-  }));
+  const scored = entries.map(({ hospitalId, embeddings }) => {
+    if (!embeddings || embeddings.length === 0) {
+      return { hospitalId, score: 0 };
+    }
+    // Score each service embedding against the query, take the best match
+    const best = Math.max(...embeddings.map((vec) => cosineSimilarity(queryVec, vec)));
+    return { hospitalId, score: best };
+  });
 
   scored.sort((a, b) => b.score - a.score);
   console.log('RAG: top score:', scored[0]?.score);
