@@ -45,7 +45,7 @@ describe('POST /agent/match with continent pre-filter', () => {
     while (Date.now() < deadline && count < 2) {
       count = await Hospital.countDocuments({});
       if (count >= 2) break;
-      await new Promise((r) => setTimeout(r, 300));
+      await new Promise((r) => setTimeout(r, 100));
     }
     expect(count).toBeGreaterThanOrEqual(2);
 
