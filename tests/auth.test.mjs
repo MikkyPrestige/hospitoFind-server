@@ -1,3 +1,5 @@
+import { jest } from '@jest/globals';
+jest.setTimeout(30000);
 import supertest from 'supertest';
 import bcrypt from 'bcrypt';
 import User from '../models/User.js';

@@ -8,7 +8,7 @@
     "start": "node server",
     "dev": "nodemon server",
     "seed": "node scripts/seedHospitals.js",
-    "test": "cross-env NODE_OPTIONS=\"--experimental-vm-modules\" SKIP_RAG=true jest",
+    "test": "cross-env NODE_ENV=test NODE_OPTIONS=\"--experimental-vm-modules\" SKIP_RAG=true jest --runInBand",
     "test:rag": "cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest tests/embedding.test.mjs",
     "build-embeddings": "node scripts/buildEmbeddings.js",
     "format": "prettier --write .",

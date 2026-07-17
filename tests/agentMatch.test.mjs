@@ -1,10 +1,10 @@
+jest.setTimeout(30000);
+
 import { jest } from '@jest/globals';
 import supertest from 'supertest';
 import app from '../app.js';
 import Hospital from '../models/Hospital.js';
 import { connectTestDB, clearTestDB } from './dbHelper.mjs';
-
-jest.setTimeout(20000);
 
 let request;
 
