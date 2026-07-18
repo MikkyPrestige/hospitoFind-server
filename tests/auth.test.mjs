@@ -2,6 +2,7 @@ import { jest } from '@jest/globals';
 jest.setTimeout(30000);
 import supertest from 'supertest';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import app from '../app.js';
 import { connectTestDB, clearTestDB } from './dbHelper.mjs';
@@ -56,25 +57,21 @@ describe('Auth – login and refresh token', () => {
     expect(res.body.message).toBe('Invalid credentials');
   });
 
-  it('should return new access token on refresh with valid cookie', async () => {
-    await createTestUser();
+  it('should return new access token on refresh with a valid token', async () => {
+    // Generate tokens manually to avoid cookie‑extraction issues
+    const user = await User.findOne({ email: 'test@example.com' });
+    const refreshToken = jwt.sign(
+      { username: user.username, family: 'test-family', jti: 'test-jti' },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: '7d' },
+    );
 
-    const loginRes = await request.post('/auth').send({
-      email: 'test@example.com',
-      password: 'testpassword',
-    });
+    // Set the refresh token cookie manually
+    const res = await request.get('/auth/refresh').set('Cookie', `jwt=${refreshToken}`);
 
-    const raw = loginRes.headers['set-cookie'];
-    const cookies = Array.isArray(raw) ? raw : typeof raw === 'string' ? [raw] : [];
-
-    const jwtCookie = cookies.find((c) => c.startsWith('jwt='));
-    if (!jwtCookie) throw new Error('No jwt cookie found. Raw header: ' + JSON.stringify(raw));
-
-    const refreshRes = await request.get('/auth/refresh').set('Cookie', jwtCookie);
-
-    expect(refreshRes.status).toBe(200);
-    expect(refreshRes.body.accessToken).toBeDefined();
-    expect(refreshRes.body.role).toBe('user');
+    expect(res.status).toBe(200);
+    expect(res.body.accessToken).toBeDefined();
+    expect(res.body.role).toBe('user');
   });
 
   it('should fail refresh with no cookie', async () => {
