@@ -17,6 +17,11 @@ export const getPhotoUrl = (photoReference, apiKey) => {
 export const formatHospitalData = (body) => {
   const { address, street, city, state, services, comments, hours, ...rest } = body;
 
+  const location =
+    rest.longitude && rest.latitude
+      ? { type: 'Point', coordinates: [Number(rest.longitude), Number(rest.latitude)] }
+      : undefined;
+
   return {
     ...rest,
     address: {
@@ -35,5 +40,6 @@ export const formatHospitalData = (body) => {
           : [],
     comments: Array.isArray(comments) ? comments.filter(Boolean) : [],
     hours: Array.isArray(hours) ? hours.filter((h) => h.day && h.open) : [],
+    ...(location ? { location } : {}),
   };
 };

@@ -214,7 +214,7 @@ export const register = asyncHandler(async (req, res) => {
     email,
     password: hashedPassword,
     role: 'user',
-    totpEnabled: user.totpEnabled,
+    totpEnabled: false,
     isVerified: false,
     verificationToken,
     verificationTokenExpires: Date.now() + 24 * 60 * 60 * 1000,
