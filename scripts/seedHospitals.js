@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Hospital from '../models/hospitalsModel.js';
+import Hospital from '../models/Hospital.js';
 import { readFileSync } from 'fs';
 const hospitalsData = JSON.parse(readFileSync(new URL('../data/hospitals.json', import.meta.url)));
-import { sanitize } from '../config/sanitize.js';
-import { getCoordinates } from '../config/geocode.js';
+import { sanitize } from '../utils/sanitize.js';
+import { getCoordinates } from '../utils/geocode.js';
 
 dotenv.config();
 
