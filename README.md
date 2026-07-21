@@ -73,10 +73,14 @@ Admin routes require a JWT with the `admin` role.
 ## Internal Notes
 
 - Rate limits: login (10 req/15 min), AI chat (20 req/10 min). Both log violations separately.
-- Semantic embeddings are stored in `data/hospital-embeddings.json`.  
-  They are **automatically regenerated** in the background whenever a hospital is added, approved, updated, toggled, or deleted.  
+- Semantic embeddings are stored in `data/hospital-embeddings.json`.
+  They are **automatically regenerated** in the background whenever a hospital is added, approved, updated, toggled, or deleted.
   A manual rebuild can still be triggered with `npm run build-embeddings` if needed.
 - The OpenStreetMap import accepts `?dryRun=true` to preview without committing data.
 - Testing uses a separate database derived from the main `MONGODB_URI`. In CI, a MongoDB container is used.
+
+## Staging
+
+See [docs/STAGING.md](docs/STAGING.md) for details on the staging environment.
 
 ---
