@@ -47,12 +47,12 @@ node -e "import('mongoose').then(async (mongoose) => { const uri='<staging-mongo
 
 All variables are set in Render under the `hospitofind-server-staging` service → Environment tab. The key ones:
 
-| Variable        | Value                                                    |
-| --------------- | -------------------------------------------------------- |
-| `MONGODB_URI`   | `mongodb+srv://staging-user:.../hospitofind-staging?...` |
-| `FRONTEND_URL`  | `https://hospitofind-staging.vercel.app`                 |
-| `BACKEND_URL`   | `https://hospitofind-server-staging.onrender.com`        |
-| `COOKIE_DOMAIN` | `.vercel.app`                                            |
+| Variable        | Value                                             |
+| --------------- | ------------------------------------------------- |
+| `MONGODB_URI`   | `<staging-mongodb-uri>`                           |
+| `FRONTEND_URL`  | `https://hospitofind-staging.vercel.app`          |
+| `BACKEND_URL`   | `https://hospitofind-server-staging.onrender.com` |
+| `COOKIE_DOMAIN` | `.vercel.app`                                     |
 
 ## Frontend (Vercel)
 
