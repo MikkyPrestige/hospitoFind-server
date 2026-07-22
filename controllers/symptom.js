@@ -1,15 +1,37 @@
 import asyncHandler from 'express-async-handler';
 import SymptomMapping from '../models/SymptomMapping.js';
 
-// @desc Get all symptom mappings
-// @route GET /api/v1/admin/symptoms
+/**
+ * @desc    Get all symptom mappings with pagination
+ * @route   GET /api/v1/admin/symptoms
+ * @access  Private/Admin
+ */
 export const getSymptomMappings = asyncHandler(async (req, res) => {
-  const mappings = await SymptomMapping.find().lean();
-  res.json(mappings);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  const filter = {};
+
+  const [mappings, total] = await Promise.all([
+    SymptomMapping.find(filter).skip(skip).limit(limit).lean(),
+    SymptomMapping.countDocuments(filter),
+  ]);
+
+  res.json({
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    mappings,
+  });
 });
 
-// @desc Create a symptom mapping
-// @route POST /api/v1/admin/symptoms
+/**
+ * @desc    Create a new symptom mapping
+ * @route   POST /api/v1/admin/symptoms
+ * @access  Private/Admin
+ */
 export const createSymptomMapping = asyncHandler(async (req, res) => {
   const { symptomKeywords, services } = req.body;
 
@@ -21,8 +43,11 @@ export const createSymptomMapping = asyncHandler(async (req, res) => {
   res.status(201).json(mapping);
 });
 
-// @desc Update a symptom mapping
-// @route PUT /api/v1/admin/symptoms/:id
+/**
+ * @desc    Update an existing symptom mapping
+ * @route   PUT /api/v1/admin/symptoms/:id
+ * @access  Private/Admin
+ */
 export const updateSymptomMapping = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { symptomKeywords, services } = req.body;
@@ -37,8 +62,11 @@ export const updateSymptomMapping = asyncHandler(async (req, res) => {
   res.json(mapping);
 });
 
-// @desc Delete a symptom mapping
-// @route DELETE /api/v1/admin/symptoms/:id
+/**
+ * @desc    Delete a symptom mapping
+ * @route   DELETE /api/v1/admin/symptoms/:id
+ * @access  Private/Admin
+ */
 export const deleteSymptomMapping = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const mapping = await SymptomMapping.findById(id);

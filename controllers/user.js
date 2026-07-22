@@ -14,17 +14,11 @@ import {
   hashRecoveryCode,
 } from '../utils/totpHelpers.js';
 
-// @desc    Get all users
-// @route   GET /api/user
-const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select('-password').lean();
-  if (!users || users.length === 0) return res.status(404).json({ message: 'No users found' });
-
-  res.json(users);
-});
-
-// @desc Get dashboard stats
-// @route   GET /api/user/stats
+/**
+ * @desc    Get user stats (total submissions, verified submissions, pending submissions, contributor level)
+ * @route   GET /api/user/stats
+ * @access  Private
+ */
 const getUserStats = asyncHandler(async (req, res) => {
   const userId = req.userId;
 
@@ -45,8 +39,11 @@ const getUserStats = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Update user role
-// @route   PATCH /api/user/role
+/**
+ * @desc    Update user role
+ * @route   PATCH /api/user/role
+ * @access  Private
+ */
 const updateUserRole = asyncHandler(async (req, res) => {
   const { userId, newRole } = req.body;
 
@@ -63,8 +60,11 @@ const updateUserRole = asyncHandler(async (req, res) => {
   res.json({ message: `User role updated to ${newRole}` });
 });
 
-// @desc    Update user profile
-// @route   PATCH /user
+/**
+ * @desc    Update user profile
+ * @route   PATCH /user
+ * @access  Private
+ */
 const updateUser = asyncHandler(async (req, res) => {
   const { name, username, email, password, role } = req.body;
 
@@ -111,8 +111,11 @@ const updateUser = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc Update Password
-// @route PATCH /user/password
+/**
+ * @desc    Update Password
+ * @route   PATCH /user/password
+ * @access  Private
+ */
 const updatePassword = asyncHandler(async (req, res) => {
   const { username, password, newPassword } = req.body;
 
@@ -146,8 +149,11 @@ const updatePassword = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Password updated successfully' });
 });
 
-// @desc    Delete user
-// @route   DELETE /user
+/**
+ * @desc    Delete user
+ * @route   DELETE /user
+ * @access  Private
+ */
 const deleteUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 
@@ -188,8 +194,11 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.status(200).json({ message: `User ${username} deleted successfully` });
 });
 
-// @desc    Toggle hospital favorite status
-// @route   POST /api/user/favorites/:hospitalId
+/**
+ * @desc    Toggle hospital favorite status
+ * @route   POST /api/user/favorites/:hospitalId
+ * @access  Private
+ */
 const toggleFavoriteStatus = asyncHandler(async (req, res) => {
   const { hospitalId } = req.params;
   const userId = req.userId;
@@ -217,8 +226,11 @@ const toggleFavoriteStatus = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Record a View (Recent & Weekly Stats)
-// @route   POST /api/user/view
+/**
+ * @desc    Record a View (Recent & Weekly Stats)
+ * @route   POST /api/user/view
+ * @access  Private
+ */
 const recordView = asyncHandler(async (req, res) => {
   const { hospitalId } = req.body;
   const userId = req.userId;
@@ -257,8 +269,11 @@ const recordView = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'View recorded' });
 });
 
-// @desc    Remove a specific hospital from history
-// @route   DELETE /api/user/history/:hospitalId
+/**
+ * @desc    Remove a specific hospital from history
+ * @route   DELETE /api/user/history/:hospitalId
+ * @access  Private
+ */
 const removeHistoryItem = asyncHandler(async (req, res) => {
   const { hospitalId } = req.params;
   const userId = req.userId;
@@ -273,8 +288,11 @@ const removeHistoryItem = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Removed from history' });
 });
 
-// @desc    Remove a specific favorite
-// @route   DELETE /api/user/favorites/:hospitalId
+/**
+ * @desc    Remove a specific favorite
+ * @route   DELETE /api/user/favorites/:hospitalId
+ * @access  Private
+ */
 const removeFavorite = asyncHandler(async (req, res) => {
   const { hospitalId } = req.params;
   const userId = req.userId;
@@ -287,8 +305,11 @@ const removeFavorite = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Removed from favorites' });
 });
 
-// @desc    Clear ALL history
-// @route   DELETE /api/user/history
+/**
+ * @desc    Clear ALL history
+ * @route   DELETE /api/user/history
+ * @access  Private
+ */
 const clearAllHistory = asyncHandler(async (req, res) => {
   const userId = req.userId;
 
@@ -299,8 +320,11 @@ const clearAllHistory = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'History cleared' });
 });
 
-// @desc    Get All Activity ( Dashboard)
-// @route   GET /api/user/activity
+/**
+ * @desc    See All Activities ( Dashboard)
+ * @route   GET /api/user/activity
+ * @access  Private
+ */
 const getUserActivity = asyncHandler(async (req, res) => {
   const user = await User.findById(req.userId)
     .populate('favorites')
@@ -322,8 +346,11 @@ const getUserActivity = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Initiate TOTP setup (returns QR code)
-// @route   POST /user/totp/setup
+/**
+ * @desc    Initiate TOTP setup (returns QR code)
+ * @route   POST /user/totp/setup
+ * @access  Private
+ */
 const setupTotp = asyncHandler(async (req, res) => {
   const user = await User.findById(req.userId);
   if (!user) return res.status(404).json({ message: 'User not found' });
@@ -349,8 +376,11 @@ const setupTotp = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Verify TOTP setup and enable it
-// @route   POST /user/totp/verify
+/**
+ * @desc    Verify TOTP setup and enable it
+ * @route   POST /user/totp/verify
+ * @access  Private
+ */
 const verifyTotpSetup = asyncHandler(async (req, res) => {
   const { setupToken, code } = req.body;
   if (!setupToken || !code) {
@@ -395,8 +425,11 @@ const verifyTotpSetup = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Disable TOTP (requires password or current TOTP code)
-// @route   POST /user/totp/disable
+/**
+ * @desc    Disable TOTP (requires password or current TOTP code)
+ * @route   POST /user/totp/disable
+ * @access  Private
+ */
 const disableTotp = asyncHandler(async (req, res) => {
   const { password, code } = req.body;
   if (!password && !code) {
@@ -429,8 +462,11 @@ const disableTotp = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'TOTP disabled successfully' });
 });
 
-// @desc    Regenerate recovery codes (requires TOTP code or password)
-// @route   POST /user/totp/recovery-codes
+/**
+ * @desc    Regenerate recovery codes (requires TOTP code or password)
+ * @route   POST /user/totp/recovery-codes
+ * @access  Private
+ */
 const regenerateRecoveryCodes = asyncHandler(async (req, res) => {
   const { code, password } = req.body;
   if (!code && !password) {
@@ -464,7 +500,6 @@ const regenerateRecoveryCodes = asyncHandler(async (req, res) => {
 });
 
 export default {
-  getAllUsers,
   getUserStats,
   updateUserRole,
   updateUser,

@@ -20,7 +20,6 @@ userRouter.use(verifyJWT);
 userRouter.use(ensureMongoUser);
 
 // admin-only
-userRouter.route('/').get(verifyAdmin, userController.getAllUsers);
 userRouter
   .route('/role')
   .patch(verifyAdmin, validate(updateUserRoleSchema), userController.updateUserRole);

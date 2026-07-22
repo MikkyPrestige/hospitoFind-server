@@ -12,6 +12,10 @@ let tipsCache = { results: [], lastFetchedDate: null };
 /* =====================================================
     FETCH NEWS
 ===================================================== */
+/**
+ * @desc    Fetch news data from the API
+ * @returns {Promise<Array>} - A promise resolving to the news articles
+ */
 async function fetchNewsData() {
   const now = Date.now();
 
@@ -44,8 +48,11 @@ async function fetchNewsData() {
 /* =====================================================
     CONTROLLER FUNCTIONS
 ===================================================== */
-// @desc    Get Global Health News
-// @route   GET /api/health/news
+/**
+ * @desc    Get Global Health News
+ * @route   GET /api/health/news
+ * @access  Public
+ */
 const getGlobalHealthNews = async (req, res) => {
   try {
     const news = await fetchNewsData();
@@ -77,8 +84,11 @@ const getGlobalHealthNews = async (req, res) => {
   }
 };
 
-// @desc    Get Health Alerts (WHO + NewsData)
-// @route   GET /api/health/alerts
+/**
+ * @desc    Get Health Alerts (WHO + NewsData)
+ * @route   GET /api/health/alerts
+ * @access  Public
+ */
 const getHealthAlerts = async (req, res) => {
   const WHO_URL = 'https://www.who.int/api/news/diseaseoutbreaknews';
   const BASE_LINK = 'https://www.who.int/emergencies/disease-outbreak-news/item';
@@ -147,8 +157,11 @@ const getHealthAlerts = async (req, res) => {
   res.json(unique.slice(0, 9));
 };
 
-// @desc    Get Health Tips (MyHealthFinder)
-// @route   GET /health/tips
+/**
+ * @desc    Get Health Tips (MyHealthFinder)
+ * @route   GET /health/tips
+ * @access  Public
+ */
 const getHealthTips = async (req, res) => {
   const today = new Date().toISOString().split('T')[0];
 

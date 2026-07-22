@@ -1,8 +1,10 @@
 import User from '../models/User.js';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// GET /user/health-history
-// ─────────────────────────────────────────────────────────────────────────────
+/**
+ * @desc    Get health history for the authenticated user
+ * @route   GET /user/health-history
+ * @access  Private
+ */
 export const getHealthHistory = async (req, res) => {
   try {
     const user = await User.findById(req.userId)
@@ -29,9 +31,11 @@ export const getHealthHistory = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PATCH /user/health-history/:sessionId/feedback
-// ─────────────────────────────────────────────────────────────────────────────
+/**
+ * @desc    Update feedback for a specific health session
+ * @route   PATCH /user/health-history/:sessionId/feedback
+ * @access  Private
+ */
 export const updateSessionFeedback = async (req, res) => {
   const { sessionId } = req.params;
   const { hospitalVisited, rating, feedback } = req.body;
@@ -72,9 +76,11 @@ export const updateSessionFeedback = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DELETE /user/health-history/:sessionId
-// ─────────────────────────────────────────────────────────────────────────────
+/**
+ * @desc    Delete a specific health session
+ * @route   DELETE /user/health-history/:sessionId
+ * @access  Private
+ */
 export const deleteSession = async (req, res) => {
   const { sessionId } = req.params;
 
@@ -101,9 +107,11 @@ export const deleteSession = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DELETE /user/health-history
-// ─────────────────────────────────────────────────────────────────────────────
+/**
+ * @desc    Clear all health history for the authenticated user
+ * @route   DELETE /user/health-history
+ * @access  Private
+ */
 export const clearHealthHistory = async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.userId, {

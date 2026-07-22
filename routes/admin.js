@@ -23,6 +23,9 @@ adminRouter.use(verifyJWT);
 adminRouter.use(ensureMongoUser);
 adminRouter.use(verifyAdmin);
 
+/// --- ADMIN DASHBOARD ---
+adminRouter.route('/stats').get(adminController.getAdminStats);
+
 // --- USER MANAGEMENT ---
 adminRouter
   .route('/users')
