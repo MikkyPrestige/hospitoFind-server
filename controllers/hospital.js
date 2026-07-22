@@ -4,7 +4,6 @@ import papa from 'papaparse';
 import mongoose from 'mongoose';
 import Hospital from '../models/Hospital.js';
 import ShareableLink from '../models/Share.js';
-import User from '../models/User.js';
 import { getCoordinates } from '../utils/geocode.js';
 import { normalizeCountry, getDistance } from '../utils/locationHelper.js';
 import { escapeRegex } from '../utils/stringUtils.js';
@@ -15,11 +14,17 @@ import { cacheGet, cacheSet } from '../utils/cache.js';
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 const FEATURED_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
 
+const MAX_SHARE_HOSPITALS = 100;
+const MAX_EXPORT_HOSPITALS = 100;
+
 /* =====================================================
     READ OPERATIONS (Public)
 ===================================================== */
-// @desc Get all verified hospitals
-// @route GET /hospitals
+/**
+ * @desc    Get all verified hospitals with pagination
+ * @route   GET /hospitals
+ * @access  Public
+ */
 const getHospitals = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 20;
@@ -43,15 +48,21 @@ const getHospitals = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc  Get total count (Verified)
+/**
+ * @desc    Get total count (Verified)
+ * @route   GET /hospitals/count
+ * @access  Public
+ */
 const getHospitalCount = asyncHandler(async (req, res) => {
   const count = await Hospital.countDocuments({ verified: true });
   res.json({ total: count });
 });
 
-// @desc Get hospital stats by country
-// @route GET /hospitals/stats/countries
-// @access Public
+/**
+ * @desc    Get hospital stats by country
+ * @route   GET /hospitals/stats/countries
+ * @access  Public
+ */
 const getCountryStats = asyncHandler(async (req, res) => {
   const hospitals = await Hospital.find({ verified: true }, { 'address.state': 1 }).lean();
   const stats = {};
@@ -71,8 +82,11 @@ const getCountryStats = asyncHandler(async (req, res) => {
   res.json(result);
 });
 
-// @desc Get random hospitals
-// @route GET /hospitals/random
+/**
+ * @desc    Get random hospitals
+ * @route   GET /hospitals/random
+ * @access  Public
+ */
 const getRandomHospitals = asyncHandler(async (req, res) => {
   const hospitals = await Hospital.aggregate([
     { $match: { verified: true } },
@@ -85,8 +99,11 @@ const getRandomHospitals = asyncHandler(async (req, res) => {
   return res.json(hospitals);
 });
 
-// @desc Get hospital by name (Verified Only)
-// @route GET /hospitals/:name
+/**
+ * @desc    Get hospital by name (Verified Only)
+ * @route   GET /hospitals/:name
+ * @access  Public
+ */
 const getHospitalByName = asyncHandler(async (req, res) => {
   const { name } = req.params;
   const hospital = await Hospital.findOne({ name, verified: true }).lean();
@@ -96,9 +113,11 @@ const getHospitalByName = asyncHandler(async (req, res) => {
   return res.json(hospital);
 });
 
-// @desc Get hospital by ID (Verified Only)
-// @route GET /hospitals/:id
-// @access Public
+/**
+ * @desc    Get hospital by ID (Verified Only)
+ * @route   GET /hospitals/:id
+ * @access  Public
+ */
 const getHospitalById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
@@ -117,8 +136,11 @@ const getHospitalById = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc   Get Hospital By Slug
-// @route  GET /hospitals/:country/:city/:slug
+/**
+ * @desc    Get Hospital By Slug
+ * @route   GET /hospitals/:country/:city/:slug
+ * @access  Public
+ */
 const getHospitalBySlug = asyncHandler(async (req, res) => {
   const { country, city, slug } = req.params;
 
@@ -158,8 +180,11 @@ const getHospitalBySlug = asyncHandler(async (req, res) => {
 /* =====================================================
     SEARCH & DISCOVERY (Public)
 ===================================================== */
-// @desc Find hospitals (Smart Search) (Name, City, State/Country)
-// @route GET /hospitals/find?term=... OR ?city=...&state=...
+/**
+ * @desc    Find hospitals (Smart Search) (Name, City, State/Country)
+ * @route   GET /hospitals/find?term=... OR ?city=...&state=...
+ * @access  Public
+ */
 const findHospitals = asyncHandler(async (req, res) => {
   let { term, city, state } = req.query;
 
@@ -245,8 +270,11 @@ const findHospitals = asyncHandler(async (req, res) => {
   return res.status(200).json(hospitals || []);
 });
 
-// @desc Get nearby hospitals based on lat/lon or IP
-// @route GET /hospitals/nearby
+/**
+ * @desc    Get nearby hospitals based on lat/lon or IP
+ * @route   GET /hospitals/nearby
+ * @access  Public
+ */
 const getNearbyHospitals = async (req, res) => {
   const { lat, lon, limit } = req.query;
   const max = parseInt(limit) || 3;
@@ -335,8 +363,11 @@ const getNearbyHospitals = async (req, res) => {
   }
 };
 
-// @desc    Get top featured hospitals
-// @route   GET /hospitals/featured
+/**
+ * @desc    Get top featured hospitals
+ * @route   GET /hospitals/featured
+ * @access  Public
+ */
 const getTopHospitals = async (req, res) => {
   const featuredCacheKey = 'featured:hospitals';
   const cachedFeatured = await cacheGet(featuredCacheKey);
@@ -362,14 +393,19 @@ const getTopHospitals = async (req, res) => {
 /* =====================================================
     EXPLORE & FILTERING (Public)
 ===================================================== */
-// GET /hospitals/explore
+/**
+ * @desc    Get hospitals grouped by country
+ * @route   GET /hospitals/explore
+ * @access  Public
+ */
 const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
+  const limit = parseInt(req.query.limit) || 50; // hospitals per country
+
   const hospitals = await Hospital.find({ verified: true }).lean();
   const grouped = {};
 
   hospitals.forEach((h) => {
     const country = normalizeCountry(h.address?.state);
-
     if (!grouped[country]) grouped[country] = [];
     grouped[country].push({
       ...h,
@@ -377,6 +413,7 @@ const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
     });
   });
 
+  // Sort countries by hospital count (descending), then alphabetically
   const result = Object.keys(grouped)
     .sort((a, b) => {
       const diff = grouped[b].length - grouped[a].length;
@@ -384,13 +421,17 @@ const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
     })
     .map((country) => ({
       country,
-      hospitals: grouped[country],
+      hospitals: grouped[country].slice(0, limit),
     }));
 
   res.json(result);
 });
 
-// GET /hospitals/country/:country
+/**
+ * @desc    Get hospitals for a specific country
+ * @route   GET /hospitals/country/:country
+ * @access  Public
+ */
 const getHospitalsForCountry = asyncHandler(async (req, res) => {
   const rawParam = (req.params.country || '').trim();
   const page = parseInt(req.query.page) || 1;
@@ -419,15 +460,19 @@ const getHospitalsForCountry = asyncHandler(async (req, res) => {
   });
 });
 
-// GET /hospitals/explore/top
+/**
+ * @desc    Get hospitals grouped by country (Top)
+ * @route   GET /hospitals/explore/top
+ * @access  Public
+ */
 const getHospitalsGroupedByCountryTop = asyncHandler(async (req, res) => {
-  const hospitals = await Hospital.find({ verified: true }).lean();
+  const limit = parseInt(req.query.limit) || 50; // hospitals per country
 
+  const hospitals = await Hospital.find({ verified: true }).lean();
   const grouped = {};
 
   hospitals.forEach((h) => {
     const country = normalizeCountry(h.address?.state);
-
     if (!grouped[country]) grouped[country] = [];
     grouped[country].push({
       ...h,
@@ -439,7 +484,7 @@ const getHospitalsGroupedByCountryTop = asyncHandler(async (req, res) => {
     .sort((a, b) => a.localeCompare(b))
     .map((country) => ({
       country,
-      hospitals: grouped[country],
+      hospitals: grouped[country].slice(0, limit),
     }));
 
   res.json(result);
@@ -448,24 +493,45 @@ const getHospitalsGroupedByCountryTop = asyncHandler(async (req, res) => {
 /* =====================================================
     USER ACTIONS (Private/Public Mixed)
 ===================================================== */
-// @desc Get user submissions
-// @route GET /hospitals/mine
+/**
+ * @desc    Get user submissions
+ * @route   GET /hospitals/mine
+ * @access  Public (Verified) / Private (Unverified)
+ */
 const getMySubmissions = asyncHandler(async (req, res) => {
   const userId = req.userId;
-
   if (!userId) {
     return res.status(401).json({ message: 'Unauthorized: No User ID' });
   }
-  const userObjectId = new mongoose.Types.ObjectId(req.userId);
-  const myHospitals = await Hospital.find({
-    $or: [{ createdBy: userObjectId }, { createdBy: req.userId }],
-  }).sort({ createdAt: -1 });
 
-  res.status(200).json(myHospitals);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  const userObjectId = new mongoose.Types.ObjectId(req.userId);
+  const filter = {
+    $or: [{ createdBy: userObjectId }, { createdBy: req.userId }],
+  };
+
+  const [hospitals, total] = await Promise.all([
+    Hospital.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    Hospital.countDocuments(filter),
+  ]);
+
+  res.status(200).json({
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    hospitals,
+  });
 });
 
-// @desc add new hospital
-// @route POST /hospitals
+/**
+ * @desc    Add new hospital
+ * @route   POST /hospitals
+ * @access  Public (Verified) / Private (Unverified)
+ */
 const addHospital = asyncHandler(async (req, res) => {
   const cleanBody = sanitizeInput(req.body);
 
@@ -522,8 +588,11 @@ const addHospital = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc update hospital
-// @route PATCH /hospitals/:id
+/**
+ * @desc    Update hospital
+ * @route   PATCH /hospitals/:id
+ * @access  Public (Verified) / Private (Unverified)
+ */
 const updateHospital = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
@@ -562,8 +631,11 @@ const updateHospital = asyncHandler(async (req, res) => {
 /* =====================================================
     SHARING & EXPORT
 ===================================================== */
-// @desc share hospitals (Verified Only)
-// @route POST /hospitals/share
+/**
+ * @desc    Share hospitals (Verified Only)
+ * @route   POST /hospitals/share
+ * @access  Public
+ */
 const shareHospitals = asyncHandler(async (req, res) => {
   const { address, city, state } = req.body?.searchParams || {};
 
@@ -583,12 +655,14 @@ const shareHospitals = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: 'No verified hospitals found to share.' });
   }
 
-  // Generate unique ID for the shareable link
+  const truncated = searchedHospitals.length > MAX_SHARE_HOSPITALS;
+  const hospitalsToShare = searchedHospitals.slice(0, MAX_SHARE_HOSPITALS);
+
   const linkId = crypto.randomUUID();
   const shareableLink = new ShareableLink({
     linkId,
     createdBy: req.userId ? req.userId : null,
-    hospitals: searchedHospitals.map((hospital) => ({
+    hospitals: hospitalsToShare.map((hospital) => ({
       hospitalId: hospital._id,
       name: hospital.name,
       slug: hospital.slug,
@@ -611,14 +685,18 @@ const shareHospitals = asyncHandler(async (req, res) => {
 
   await shareableLink.save();
   return res.status(201).json({
-    message: 'Shareable link created',
-    linkId: linkId,
+    message: `Shareable link created${truncated ? ` (limited to ${MAX_SHARE_HOSPITALS} hospitals)` : ''}`,
+    linkId,
+    totalFound: searchedHospitals.length,
+    truncated,
   });
 });
 
-// @desc Get shared link
-// @route GET /hospitals/share/:linkId
-// @access Public
+/**
+ * @desc    Get shared link
+ * @route   GET /hospitals/share/:linkId
+ * @access  Public
+ */
 const getSharedHospitals = asyncHandler(async (req, res) => {
   const { linkId } = req.params;
 
@@ -632,8 +710,11 @@ const getSharedHospitals = asyncHandler(async (req, res) => {
   return res.status(200).json(link.hospitals);
 });
 
-// @dec export hospitals to CSV
-// @route GET /hospitals/export
+/**
+ * @desc    Export hospitals to CSV (Verified Only)
+ * @route   GET /hospitals/export
+ * @access  Public
+ */
 const exportHospitals = asyncHandler(async (req, res) => {
   const { address, city, state } = req.query;
   const query = { verified: true };
@@ -651,8 +732,12 @@ const exportHospitals = asyncHandler(async (req, res) => {
   if (!hospitals || hospitals.length === 0) {
     return res.status(404).json({ message: 'No verified records found to export.' });
   }
+
+  const truncated = hospitals.length > MAX_EXPORT_HOSPITALS;
+  const hospitalsToExport = hospitals.slice(0, MAX_EXPORT_HOSPITALS);
+
   // Map hospital data to CSV format
-  const csvData = hospitals.map((hospital) => ({
+  const csvData = hospitalsToExport.map((hospital) => ({
     name: hospital.name || '',
     street: hospital.address?.street || '',
     city: hospital.address?.city || '',
@@ -671,97 +756,24 @@ const exportHospitals = asyncHandler(async (req, res) => {
       : '',
   }));
 
-  // Convert to CSV string using papa parse library
+  // Convert to CSV string using papaparse
   const csv = papa.unparse(csvData, { header: true });
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', 'attachment; filename="verified_hospitals_export.csv"');
+  // Optionally include a custom header to indicate truncation
+  if (truncated) {
+    res.setHeader('X-Export-Truncated', 'true');
+    res.setHeader('X-Export-Total-Found', hospitals.length);
+  }
 
   return res.status(200).send(csv);
 });
 
-/* =====================================================
-    ADMIN OPERATIONS
-===================================================== */
-// @desc Admin Pending List
-// @route GET /hospitals/admin/pending
-const getPendingHospitals = asyncHandler(async (req, res) => {
-  const pending = await Hospital.find({ verified: false }).sort({ createdAt: -1 }).lean();
-
-  return res.json(pending);
-});
-
-// @desc Admin Approve
-// @route PATCH /hospitals/:id/approve
-const approveHospital = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const hospital = await Hospital.findById(id);
-  if (!hospital) {
-    return res.status(404).json({ message: 'Hospital not found' });
-  }
-
-  hospital.verified = true;
-  await hospital.save();
-  return res.json({
-    message: `${hospital.name} is now verified and live!`,
-    hospital,
-  });
-});
-
-// @desc Admin Delete
-// @route DELETE /hospitals/:id
-// @access Private (Admin)
-const deleteHospital = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const hospital = await Hospital.findById(id).exec();
-
-  if (!hospital) {
-    return res.status(404).json({ message: 'Hospital not found' });
-  }
-  if (req.role !== 'admin') {
-    return res.status(403).json({ message: 'Unauthorized. Only admins can delete records.' });
-  }
-
-  const hospitalName = hospital.name;
-  await hospital.deleteOne();
-  res.json({
-    message: `Hospital "${hospitalName}" has been permanently removed.`,
-  });
-});
-
-// @desc Get admin dashboard stats
-const getAdminStats = asyncHandler(async (req, res) => {
-  try {
-    const [totalHospitals, pendingHospitals, liveHospitals, totalUsers] = await Promise.all([
-      Hospital.countDocuments(),
-      Hospital.countDocuments({ verified: false }),
-      Hospital.countDocuments({ verified: true }),
-      User.countDocuments(),
-    ]);
-
-    res.status(200).json({
-      totalHospitals,
-      pendingHospitals,
-      liveHospitals,
-      totalUsers,
-    });
-  } catch {
-    res.status(500).json({ message: 'Error fetching dashboard statistics' });
-  }
-});
-// @desc Get unverified hospitals(Get sandbox)
-// @route GET /hospitals/sandbox
-const getUnverifiedHospitals = asyncHandler(async (req, res) => {
-  const hospitals = await Hospital.find({ verified: false }).lean();
-
-  if (!hospitals || hospitals.length === 0) {
-    return res.status(200).json([]);
-  }
-  return res.json(hospitals);
-});
-
-// @desc Autocomplete hospital names & cities
-// @route GET /hospitals/autocomplete?q=...
-// @access Public
+/**
+ * @desc    Autocomplete hospital names & cities
+ * @route   GET /hospitals/autocomplete?q=...
+ * @access  Public
+ */
 const autocompleteHospitals = asyncHandler(async (req, res) => {
   const { q } = req.query;
 
@@ -813,10 +825,5 @@ export default {
   shareHospitals,
   getSharedHospitals,
   exportHospitals,
-  getPendingHospitals,
-  approveHospital,
-  deleteHospital,
-  getAdminStats,
-  getUnverifiedHospitals,
   autocompleteHospitals,
 };

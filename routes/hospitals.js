@@ -1,6 +1,6 @@
 import express from 'express';
 import hospitalController from '../controllers/hospital.js';
-import { verifyJWT, verifyAdmin } from '../middleware/verifyRoles.js';
+import { verifyJWT } from '../middleware/verifyRoles.js';
 import { ensureMongoUser } from '../middleware/ensureMongoUser.js';
 import { hospitalSubmissionLimiter } from '../middleware/rateLimiter.js';
 import validate from '../middleware/validate.js';
@@ -32,7 +32,6 @@ hospitalRouter.get('/export', hospitalController.exportHospitals);
 hospitalRouter.get('/id/:id', hospitalController.getHospitalById);
 hospitalRouter.get('/name/:name', hospitalController.getHospitalByName);
 
-hospitalRouter.get('/sandbox', hospitalController.getUnverifiedHospitals);
 hospitalRouter.get('/autocomplete', hospitalController.autocompleteHospitals);
 
 // --- PROTECTED USER ACTIONS (Require JWT) ---
@@ -51,36 +50,6 @@ hospitalRouter.patch(
   ensureMongoUser,
   validate(updateHospitalSchema),
   hospitalController.updateHospital,
-);
-
-// --- RESTRICTED ADMIN ACTIONS (Require JWT + Admin Role) ---
-hospitalRouter.get(
-  '/admin/stats',
-  verifyJWT,
-  ensureMongoUser,
-  verifyAdmin,
-  hospitalController.getAdminStats,
-);
-hospitalRouter.get(
-  '/admin/pending',
-  verifyJWT,
-  ensureMongoUser,
-  verifyAdmin,
-  hospitalController.getPendingHospitals,
-);
-hospitalRouter.patch(
-  '/approve/:id',
-  verifyJWT,
-  ensureMongoUser,
-  verifyAdmin,
-  hospitalController.approveHospital,
-);
-hospitalRouter.delete(
-  '/:id',
-  verifyJWT,
-  ensureMongoUser,
-  verifyAdmin,
-  hospitalController.deleteHospital,
 );
 
 export default hospitalRouter;

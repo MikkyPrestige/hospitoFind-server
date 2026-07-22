@@ -8,20 +8,63 @@ import { formatHours, getPhotoUrl, formatHospitalData } from '../utils/hospitalH
 import { getUserContinent } from '../utils/matchingEngine.js';
 import { scheduleRebuild } from '../utils/debouncedRebuild.js';
 
+// --- ADMIN DASHBOARD ---
+/**
+ * @desc    Get admin dashboard stats
+ * @route   GET /admin/stats
+ * @access  Admin Only
+ */
+const getAdminStats = asyncHandler(async (req, res) => {
+  try {
+    const [totalHospitals, pendingHospitals, liveHospitals, totalUsers] = await Promise.all([
+      Hospital.countDocuments(),
+      Hospital.countDocuments({ verified: false }),
+      Hospital.countDocuments({ verified: true }),
+      User.countDocuments(),
+    ]);
+
+    res.status(200).json({
+      totalHospitals,
+      pendingHospitals,
+      liveHospitals,
+      totalUsers,
+    });
+  } catch {
+    res.status(500).json({ message: 'Error fetching dashboard statistics' });
+  }
+});
+
 // --- USER MANAGEMENT ---
 /**
  * @desc    Get all users for management
  * @route   GET /admin/users
+ * @access  Admin Only
  */
 const getAllUsersAdmin = asyncHandler(async (req, res) => {
-  const users = await User.find({}).select('-password').sort({ createdAt: -1 });
-  if (!users) return res.status(404).json({ message: 'No users found' });
-  res.json(users);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  const filter = {};
+
+  const [users, total] = await Promise.all([
+    User.find(filter).select('-password').sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    User.countDocuments(filter),
+  ]);
+
+  return res.json({
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    users,
+  });
 });
 
 /**
  * @desc    Admin manually creates a user
  * @route   POST /admin/users
+ * @access  Admin Only
  */
 const createUserAdmin = asyncHandler(async (req, res) => {
   const { name, username, email, password, role } = req.body;
@@ -54,6 +97,7 @@ const createUserAdmin = asyncHandler(async (req, res) => {
 /**
  * @desc    Update any user's role
  * @route   PATCH /admin/users/role
+ * @access  Admin Only
  */
 const updateUserRoleAdmin = asyncHandler(async (req, res) => {
   const { userId, newRole } = req.body;
@@ -74,8 +118,11 @@ const updateUserRoleAdmin = asyncHandler(async (req, res) => {
   res.json({ message: `User ${user.username} is now a ${newRole}` });
 });
 
-// @desc    Toggle user active/suspended status
-// @route   PATCH /admin/users/status
+/**
+ * @desc    Toggle user active/suspended status
+ * @route   PATCH /admin/users/status
+ * @access  Admin Only
+ */
 const toggleUserStatus = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -97,6 +144,7 @@ const toggleUserStatus = asyncHandler(async (req, res) => {
 /**
  * @desc    Force delete any user
  * @route   DELETE /admin/users/:id
+ * @access  Admin Only
  */
 const deleteUserAdmin = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -113,25 +161,60 @@ const deleteUserAdmin = asyncHandler(async (req, res) => {
 });
 
 // --- HOSPITAL MANAGEMENT ---
-// @desc    Get all hospitals (admin view)
+// @desc    Get all hospitals
 // @route   GET /admin/hospitals
+// @access  Admin Only
 const getAllHospitalsAdmin = asyncHandler(async (req, res) => {
-  const hospitals = await Hospital.find({}).sort({ createdAt: -1 });
-  res.json(hospitals);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  const filter = {};
+
+  const [hospitals, total] = await Promise.all([
+    Hospital.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    Hospital.countDocuments(filter),
+  ]);
+
+  res.json({
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    hospitals,
+  });
 });
 
-// @desc    Get  hospitals pending (admin view)
-// @route   GET /admin/hospitals/pending
+/**
+ * @desc    Get  hospitals pending
+ * @route   GET /admin/hospitals/pending
+ * @access  Admin Only
+ */
 const getPendingHospitals = asyncHandler(async (req, res) => {
-  const hospitals = await Hospital.find({ verified: false }).sort({
-    createdAt: -1,
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  const filter = { verified: false };
+
+  const [hospitals, total] = await Promise.all([
+    Hospital.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    Hospital.countDocuments(filter),
+  ]);
+
+  return res.json({
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    hospitals,
   });
-  res.json(hospitals);
 });
 
 /**
  * @desc    Admin manually creates a verified hospital entry
  * @route   POST /admin/hospitals
+ * @access  Admin Only
  */
 const createHospitalAdmin = asyncHandler(async (req, res) => {
   const data = formatHospitalData(req.body);
@@ -152,6 +235,7 @@ const createHospitalAdmin = asyncHandler(async (req, res) => {
 /**
  * @desc    Admin update hospital details
  * @route   PATCH /admin/hospitals/:id
+ * @access  Admin Only
  */
 const updateHospitalAdmin = asyncHandler(async (req, res) => {
   const data = formatHospitalData(req.body);
@@ -174,6 +258,7 @@ const updateHospitalAdmin = asyncHandler(async (req, res) => {
 /**
  * @desc    Admin toggle hospital verification status
  * @route   PATCH /admin/hospitals/:id/toggle-status
+ * @access  Admin Only
  */
 const toggleHospitalStatus = asyncHandler(async (req, res) => {
   const hospital = await Hospital.findById(req.params.id);
@@ -196,6 +281,7 @@ const toggleHospitalStatus = asyncHandler(async (req, res) => {
 /**
  * @desc    Admin reviews, fixes, and approves a pending hospital
  * @route   PATCH /admin/hospitals/review-approve/:id
+ * @access  Admin Only
  */
 const reviewAndApproveHospital = asyncHandler(async (req, res) => {
   const data = formatHospitalData(req.body);
@@ -245,6 +331,8 @@ const batchApproveHospitals = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Check for duplicates
+ * @route   GET /admin/hospitals/check-duplicate
+ * @access  Admin Only
  */
 const checkDuplicateHospital = asyncHandler(async (req, res) => {
   const { name, city, currentId } = req.query;
@@ -277,6 +365,7 @@ const checkDuplicateHospital = asyncHandler(async (req, res) => {
 /**
  * @desc    Admin delete hospital
  * @route   DELETE /admin/hospitals/:id
+ * @access  Admin Only
  */
 const deleteHospitalAdmin = asyncHandler(async (req, res) => {
   const hospital = await Hospital.findByIdAndDelete(req.params.id);
@@ -521,6 +610,7 @@ const importFromOsm = asyncHandler(async (req, res) => {
 });
 
 export default {
+  getAdminStats,
   getAllUsersAdmin,
   createUserAdmin,
   updateUserRoleAdmin,

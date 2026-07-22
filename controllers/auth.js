@@ -15,8 +15,11 @@ import {
 } from '../utils/authHelpers.js';
 import { decryptSecret, verifyTotpCode, hashRecoveryCode } from '../utils/totpHelpers.js';
 
-// @desc Auth0 login callback
-// @route GET /auth/auth0-login
+/**
+ * @desc    Auth0 login
+ * @route   POST /auth/auth0-login
+ * @access  Public
+ */
 const auth0Login = asyncHandler(async (req, res) => {
   const { email, name, username, idToken } = req.body;
 
@@ -119,8 +122,11 @@ const auth0Login = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc Login
-// @route POST /auth
+/**
+ * @desc    Login
+ * @route   POST /auth
+ * @access  Public
+ */
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -183,8 +189,11 @@ const login = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc Register new user
-// @route POST /auth/register
+/**
+ * @desc    Register new user
+ * @route   POST /auth/register
+ * @access  Public
+ */
 export const register = asyncHandler(async (req, res) => {
   const { name, username, email, password } = req.body;
 
@@ -233,7 +242,11 @@ export const register = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Verify Email
+/**
+ * @desc    Verify Email
+ * @route   GET /auth/verify-email
+ * @access  Public
+ */
 const verifyEmail = asyncHandler(async (req, res) => {
   const { token } = req.query;
 
@@ -273,7 +286,11 @@ const verifyEmail = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc Resend Verification
+/**
+ * @desc    Resend verification email
+ * @route   POST /auth/resend-verification
+ * @access  Public
+ */
 const resendVerification = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
@@ -319,8 +336,11 @@ const resendVerification = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Refresh token
-// @route GET /auth/refresh
+/**
+ * @desc    Refresh Access Token
+ * @route   GET /auth/refresh
+ * @access  Public (requires refresh token cookie)
+ */
 const refresh = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
 
@@ -378,8 +398,11 @@ const refresh = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc Complete TOTP login
-// @route POST /auth/totp-login
+/**
+ * @desc    Complete TOTP login
+ * @route   POST /auth/totp-login
+ * @access  Public
+ */
 const totpLogin = asyncHandler(async (req, res) => {
   const { totpToken, code, recoveryCode } = req.body;
 
@@ -441,8 +464,11 @@ const totpLogin = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc Forgot Password
-// @route   POST /auth/forgot-password
+/**
+ * @desc    Forgot Password
+ * @route   POST /auth/forgot-password
+ * @access  Public
+ */
 const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
@@ -470,8 +496,11 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Reset Password
-// @route   PUT /auth/reset-password/:resetToken
+/**
+ * @desc    Reset Password
+ * @route   PUT /auth/reset-password/:resetToken
+ * @access  Public
+ */
 const resetPassword = asyncHandler(async (req, res) => {
   const resetPasswordToken = crypto
     .createHash('sha256')
@@ -497,8 +526,11 @@ const resetPassword = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Password updated successfully! Please login.' });
 });
 
-// @desc Logout
-// @route POST /auth/logout
+/**
+ * @desc    Logout
+ * @route   POST /auth/logout
+ * @access  Public
+ */
 const logout = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(204);

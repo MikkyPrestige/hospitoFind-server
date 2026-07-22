@@ -6,7 +6,10 @@ import { matchSchema } from '../utils/validation.js';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-//  System prompt
+/**
+ * @desc    System prompt for the AI agent
+ * @type {string}
+ */
 const SYSTEM_PROMPT = `You are HospitoFind's intelligent hospital matchmaking assistant.
 Your job is to gently interview a patient to understand their needs, then trigger a hospital match.
 
@@ -27,6 +30,11 @@ CONVERSATION RULES:
 
 TONE: Friendly, concise, professional. Like a knowledgeable healthcare receptionist.`;
 
+/**
+ * @desc    Extract match trigger from AI response
+ * @param   {string} text - The AI response text
+ * @returns {object|null} - The match trigger object or null
+ */
 const extractMatchTrigger = (text) => {
   try {
     const trimmed = text.trim();
@@ -55,6 +63,11 @@ const extractMatchTrigger = (text) => {
   return null;
 };
 
+/**
+ * @desc    Detect patterns in user health history
+ * @param   {Array} healthHistory - The user's health history
+ * @returns {string|null} - The pattern alert message or null
+ */
 const detectPatterns = (healthHistory) => {
   if (!healthHistory || healthHistory.length < 3) return null;
 
@@ -76,7 +89,11 @@ const detectPatterns = (healthHistory) => {
   return null;
 };
 
-// POST /agent/chat
+/**
+ * @desc    Chat with the AI agent to collect user info and trigger hospital match
+ * @route   POST /agent/chat
+ * @access  Public (optional JWT for user history)
+ */
 export const chat = async (req, res) => {
   const { messages = [], userLocation } = req.body;
 
@@ -150,7 +167,11 @@ export const chat = async (req, res) => {
   }
 };
 
-// POST /agent/match
+/**
+ * @desc    Match user with nearby hospitals
+ * @route   POST /agent/match
+ * @access  Public
+ */
 export const match = async (req, res) => {
   let symptoms, location, additionalNeeds;
   try {
@@ -169,7 +190,7 @@ export const match = async (req, res) => {
     const continent = getUserContinent(location);
     const filter = { verified: true };
     if (continent) filter.continent = continent;
-    const hospitals = await Hospital.find(filter).lean();
+    const hospitals = await Hospital.find(filter).limit(100).lean();
 
     if (!hospitals.length) {
       return res.status(404).json({ message: 'No hospitals found in your region' });
