@@ -2,7 +2,7 @@ import express from 'express';
 import hospitalController from '../controllers/hospital.js';
 import { verifyJWT } from '../middleware/verifyRoles.js';
 import { ensureMongoUser } from '../middleware/ensureMongoUser.js';
-import { hospitalSubmissionLimiter } from '../middleware/rateLimiter.js';
+import { hospitalSubmissionLimiter, publicApiLimiter } from '../middleware/rateLimiter.js';
 import validate from '../middleware/validate.js';
 import {
   addHospitalSchema,
@@ -13,21 +13,34 @@ import {
 const hospitalRouter = express.Router();
 
 // --- PUBLIC READ-ONLY ROUTES ---
-hospitalRouter.get('/', hospitalController.getHospitals);
+hospitalRouter.get('/', publicApiLimiter, hospitalController.getHospitals);
 hospitalRouter.get('/count', hospitalController.getHospitalCount);
 hospitalRouter.get('/random', hospitalController.getRandomHospitals);
-hospitalRouter.get('/find', hospitalController.findHospitals);
-hospitalRouter.get('/nearby', hospitalController.getNearbyHospitals);
+hospitalRouter.get('/find', publicApiLimiter, hospitalController.findHospitals);
+hospitalRouter.get('/nearby', publicApiLimiter, hospitalController.getNearbyHospitals);
 hospitalRouter.get('/top', hospitalController.getTopHospitals);
-hospitalRouter.get('/explore', hospitalController.getHospitalsGroupedByCountry);
-hospitalRouter.get('/explore/top', hospitalController.getHospitalsGroupedByCountryTop);
-hospitalRouter.get('/country/:country', hospitalController.getHospitalsForCountry);
+hospitalRouter.get('/explore', publicApiLimiter, hospitalController.getHospitalsGroupedByCountry);
+hospitalRouter.get(
+  '/explore/top',
+  publicApiLimiter,
+  hospitalController.getHospitalsGroupedByCountryTop,
+);
+hospitalRouter.get(
+  '/country/:country',
+  publicApiLimiter,
+  hospitalController.getHospitalsForCountry,
+);
 hospitalRouter.get('/:country/:city/:slug', hospitalController.getHospitalBySlug);
 hospitalRouter.get('/stats/countries', hospitalController.getCountryStats);
 
-hospitalRouter.post('/share', validate(shareHospitalsSchema), hospitalController.shareHospitals);
+hospitalRouter.post(
+  '/share',
+  publicApiLimiter,
+  validate(shareHospitalsSchema),
+  hospitalController.shareHospitals,
+);
 hospitalRouter.get('/share/:linkId', hospitalController.getSharedHospitals);
-hospitalRouter.get('/export', hospitalController.exportHospitals);
+hospitalRouter.get('/export', publicApiLimiter, hospitalController.exportHospitals);
 
 hospitalRouter.get('/id/:id', hospitalController.getHospitalById);
 hospitalRouter.get('/name/:name', hospitalController.getHospitalByName);

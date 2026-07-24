@@ -22,3 +22,16 @@ export const osmImportLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+export const publicApiLimiter =
+  process.env.NODE_ENV === 'test'
+    ? (req, res, next) => next()
+    : rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 50,
+        message: {
+          message: 'Too many requests from this IP, please try again later.',
+        },
+        standardHeaders: true,
+        legacyHeaders: false,
+      });
