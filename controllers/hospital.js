@@ -187,8 +187,11 @@ const getHospitalBySlug = asyncHandler(async (req, res) => {
  */
 const findHospitals = asyncHandler(async (req, res) => {
   let { term, city, state } = req.query;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 15;
+  const skip = (page - 1) * limit;
 
-  // Dropdown Click (Precision Search)
+  // City/State search
   if (city && state) {
     const query = {
       verified: true,
@@ -200,11 +203,21 @@ const findHospitals = asyncHandler(async (req, res) => {
       },
     };
 
-    const hospitals = await Hospital.find(query).lean().limit(100);
-    return res.status(200).json(hospitals || []);
+    const [results, total] = await Promise.all([
+      Hospital.find(query).skip(skip).limit(limit).lean(),
+      Hospital.countDocuments(query),
+    ]);
+
+    return res.status(200).json({
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      results,
+    });
   }
 
-  // Manual Typing (Smart Text Search)
+  // Text search
   if (!term || typeof term !== 'string' || term.trim().length < 2) {
     return res.status(400).json({ message: 'Please enter at least 2 characters' });
   }
@@ -220,36 +233,31 @@ const findHospitals = asyncHandler(async (req, res) => {
     { 'address.state': { $regex: new RegExp(safe, 'i') } },
   ];
 
-  // Logic: "City Country" splitting
-  orConditions.push({ 'address.city': { $regex: new RegExp(safe, 'i') } });
-
+  // "City Country" splitting
   const lastSpaceIndex = cleanTerm.lastIndexOf(' ');
   if (lastSpaceIndex !== -1) {
     const cityPart = cleanTerm.substring(0, lastSpaceIndex).trim();
     const countryPart = cleanTerm.substring(lastSpaceIndex + 1).trim();
-
     if (cityPart.length > 1 && countryPart.length > 1) {
       orConditions.push({
         $and: [
-          {
-            'address.city': { $regex: new RegExp(escapeRegex(cityPart), 'i') },
-          },
-          {
-            'address.state': {
-              $regex: new RegExp(escapeRegex(countryPart), 'i'),
-            },
-          },
+          { 'address.city': { $regex: new RegExp(escapeRegex(cityPart), 'i') } },
+          { 'address.state': { $regex: new RegExp(escapeRegex(countryPart), 'i') } },
         ],
       });
     }
   }
 
   const query = { verified: true, $or: orConditions };
-  let hospitals = await Hospital.find(query).lean().limit(100);
+
+  const [results, total] = await Promise.all([
+    Hospital.find(query).skip(skip).limit(limit).lean(),
+    Hospital.countDocuments(query),
+  ]);
 
   // Sorting: Best Match First
   const lowerTerm = cleanTerm.toLowerCase();
-  hospitals.sort((a, b) => {
+  results.sort((a, b) => {
     const nameA = a.name.toLowerCase();
     const nameB = b.name.toLowerCase();
     // Priority 1: Exact Name Match
@@ -267,7 +275,13 @@ const findHospitals = asyncHandler(async (req, res) => {
     return 0;
   });
 
-  return res.status(200).json(hospitals || []);
+  return res.status(200).json({
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    results,
+  });
 });
 
 /**
