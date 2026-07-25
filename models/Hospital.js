@@ -54,6 +54,18 @@ const hospitalSchema = new Schema(
 
 hospitalSchema.index({ 'address.state': 1, 'address.city': 1, slug: 1 });
 
+hospitalSchema.index(
+  {
+    name: 'text',
+    'address.street': 'text',
+    'address.city': 'text',
+    'address.state': 'text',
+    services: 'text',
+    type: 'text',
+  },
+  { name: 'hospital_search_text' },
+);
+
 // Pre-save: auto-generate slug from name if not present
 hospitalSchema.pre('save', async function (next) {
   if (this.latitude && this.longitude) {
