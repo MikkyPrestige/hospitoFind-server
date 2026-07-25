@@ -217,63 +217,49 @@ const findHospitals = asyncHandler(async (req, res) => {
     });
   }
 
-  // Text search
+  // Free‑text search – use MongoDB text index with phrase matching
   if (!term || typeof term !== 'string' || term.trim().length < 2) {
     return res.status(400).json({ message: 'Please enter at least 2 characters' });
   }
 
   const cleanTerm = term.trim();
-  const safe = escapeRegex(cleanTerm);
+  const escapedTerm = cleanTerm.replace(/"/g, '\\"'); // escape double quotes only
 
-  // Base OR Conditions: Search Name, Street, City, or Country (State field)
-  const orConditions = [
-    { name: { $regex: new RegExp(safe, 'i') } },
-    { 'address.street': { $regex: new RegExp(safe, 'i') } },
-    { 'address.city': { $regex: new RegExp(safe, 'i') } },
-    { 'address.state': { $regex: new RegExp(safe, 'i') } },
-  ];
+  // Build two query variants: phrase + words, and words only as fallback
+  const textQueryPhrase = `"${escapedTerm}" ${escapedTerm}`;
+  const textQueryWords = escapedTerm;
 
-  // "City Country" splitting
-  const lastSpaceIndex = cleanTerm.lastIndexOf(' ');
-  if (lastSpaceIndex !== -1) {
-    const cityPart = cleanTerm.substring(0, lastSpaceIndex).trim();
-    const countryPart = cleanTerm.substring(lastSpaceIndex + 1).trim();
-    if (cityPart.length > 1 && countryPart.length > 1) {
-      orConditions.push({
-        $and: [
-          { 'address.city': { $regex: new RegExp(escapeRegex(cityPart), 'i') } },
-          { 'address.state': { $regex: new RegExp(escapeRegex(countryPart), 'i') } },
-        ],
-      });
-    }
-  }
+  // Try phrase + words first
+  let query = {
+    verified: true,
+    $text: { $search: textQueryPhrase },
+  };
 
-  const query = { verified: true, $or: orConditions };
-
-  const [results, total] = await Promise.all([
-    Hospital.find(query).skip(skip).limit(limit).lean(),
+  let [results, total] = await Promise.all([
+    Hospital.find(query)
+      .sort({ score: { $meta: 'textScore' } })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
     Hospital.countDocuments(query),
   ]);
 
-  // Sorting: Best Match First
-  const lowerTerm = cleanTerm.toLowerCase();
-  results.sort((a, b) => {
-    const nameA = a.name.toLowerCase();
-    const nameB = b.name.toLowerCase();
-    // Priority 1: Exact Name Match
-    if (nameA === lowerTerm) return -1;
-    if (nameB === lowerTerm) return 1;
-    // Priority 2: Name Starts With Term
-    if (nameA.startsWith(lowerTerm) && !nameB.startsWith(lowerTerm)) return -1;
-    if (!nameA.startsWith(lowerTerm) && nameB.startsWith(lowerTerm)) return 1;
-    // Priority 3: Name Contains Term
-    const hasNameA = nameA.includes(lowerTerm);
-    const hasNameB = nameB.includes(lowerTerm);
-    if (hasNameA && !hasNameB) return -1;
-    if (!hasNameA && hasNameB) return 1;
+  // If no results with phrase, fall back to words only
+  if (total === 0) {
+    query = {
+      verified: true,
+      $text: { $search: textQueryWords },
+    };
 
-    return 0;
-  });
+    [results, total] = await Promise.all([
+      Hospital.find(query)
+        .sort({ score: { $meta: 'textScore' } })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Hospital.countDocuments(query),
+    ]);
+  }
 
   return res.status(200).json({
     page,
