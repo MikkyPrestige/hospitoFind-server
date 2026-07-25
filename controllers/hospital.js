@@ -28,25 +28,31 @@ const MAX_EXPORT_HOSPITALS = 100;
  */
 const getHospitals = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 20;
+  const limit = parseInt(req.query.limit) || 21;
   const skip = (page - 1) * limit;
 
-  const [hospitals, total] = await Promise.all([
-    Hospital.find({ verified: true }).skip(skip).limit(limit).lean(),
-    Hospital.countDocuments({ verified: true }),
-  ]);
-
-  if (!hospitals.length) {
-    return res.status(404).json({ message: 'No verified hospitals found' });
+  const cacheKey = `hospitals:list:page=${page}&limit=${limit}`;
+  const cached = await cacheGet(cacheKey);
+  if (cached) {
+    return res.json(cached);
   }
 
-  return res.json({
+  const filter = { verified: true };
+  const [hospitals, total] = await Promise.all([
+    Hospital.find(filter).skip(skip).limit(limit).lean(),
+    Hospital.countDocuments(filter),
+  ]);
+
+  const response = {
     page,
     limit,
     total,
     totalPages: Math.ceil(total / limit),
     hospitals,
-  });
+  };
+
+  await cacheSet(cacheKey, response, 5 * 60 * 1000); // 5 minutes
+  return res.json(response);
 });
 
 /**
@@ -55,8 +61,16 @@ const getHospitals = asyncHandler(async (req, res) => {
  * @access  Public
  */
 const getHospitalCount = asyncHandler(async (req, res) => {
+  const cacheKey = 'hospitals:count';
+  const cached = await cacheGet(cacheKey);
+  if (cached) {
+    return res.json(cached);
+  }
   const count = await Hospital.countDocuments({ verified: true });
-  res.json({ total: count });
+  const result = { total: count };
+
+  await cacheSet(cacheKey, result, 10 * 60 * 1000); // 10 minutes
+  res.json(result);
 });
 
 /**
@@ -65,6 +79,12 @@ const getHospitalCount = asyncHandler(async (req, res) => {
  * @access  Public
  */
 const getCountryStats = asyncHandler(async (req, res) => {
+  const cacheKey = 'hospitals:stats:countries';
+  const cached = await cacheGet(cacheKey);
+  if (cached) {
+    return res.json(cached);
+  }
+
   const hospitals = await Hospital.find({ verified: true }, { 'address.state': 1 }).lean();
   const stats = {};
 
@@ -80,6 +100,7 @@ const getCountryStats = asyncHandler(async (req, res) => {
     }))
     .sort((a, b) => b.count - a.count);
 
+  await cacheSet(cacheKey, result, 10 * 60 * 1000); // 10 minutes
   res.json(result);
 });
 
@@ -425,6 +446,11 @@ const getTopHospitals = async (req, res) => {
  */
 const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 50; // hospitals per country
+  const cacheKey = 'hospitals:explore';
+  const cached = await cacheGet(cacheKey);
+  if (cached) {
+    return res.json(cached);
+  }
 
   const hospitals = await Hospital.find({ verified: true }).lean();
   const grouped = {};
@@ -449,6 +475,7 @@ const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
       hospitals: grouped[country].slice(0, limit),
     }));
 
+  await cacheSet(cacheKey, result, 5 * 60 * 1000); // 5 minutes
   res.json(result);
 });
 
@@ -460,7 +487,7 @@ const getHospitalsGroupedByCountry = asyncHandler(async (req, res) => {
 const getHospitalsForCountry = asyncHandler(async (req, res) => {
   const rawParam = (req.params.country || '').trim();
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 9;
+  const limit = parseInt(req.query.limit) || 15;
   const skip = (page - 1) * limit;
 
   const query = {
@@ -491,7 +518,12 @@ const getHospitalsForCountry = asyncHandler(async (req, res) => {
  * @access  Public
  */
 const getHospitalsGroupedByCountryTop = asyncHandler(async (req, res) => {
-  const limit = parseInt(req.query.limit) || 50; // hospitals per country
+  const limit = parseInt(req.query.limit) || 12; // hospitals per country
+  const cacheKey = 'hospitals:explore:top';
+  const cached = await cacheGet(cacheKey);
+  if (cached) {
+    return res.json(cached);
+  }
 
   const hospitals = await Hospital.find({ verified: true }).lean();
   const grouped = {};
@@ -512,6 +544,7 @@ const getHospitalsGroupedByCountryTop = asyncHandler(async (req, res) => {
       hospitals: grouped[country].slice(0, limit),
     }));
 
+  await cacheSet(cacheKey, result, 5 * 60 * 1000); // 5 minutes
   res.json(result);
 });
 
