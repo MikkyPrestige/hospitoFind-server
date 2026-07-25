@@ -7,6 +7,7 @@ import Hospital from '../models/Hospital.js';
 import { formatHours, getPhotoUrl, formatHospitalData } from '../utils/hospitalHelpers.js';
 import { getUserContinent } from '../utils/matchingEngine.js';
 import { scheduleRebuild } from '../utils/debouncedRebuild.js';
+import { buildDictionary } from '../utils/spellCorrector.js';
 
 // --- ADMIN DASHBOARD ---
 /**
@@ -609,6 +610,16 @@ const importFromOsm = asyncHandler(async (req, res) => {
   });
 });
 
+const rebuildSpellDictionary = asyncHandler(async (req, res) => {
+  try {
+    const count = await buildDictionary(Hospital);
+    res.json({ message: `Spelling dictionary rebuilt with ${count} terms.` });
+  } catch (err) {
+    console.error('Spell dictionary rebuild error:', err);
+    res.status(500).json({ message: 'Failed to rebuild spelling dictionary.' });
+  }
+});
+
 export default {
   getAdminStats,
   getAllUsersAdmin,
@@ -627,4 +638,5 @@ export default {
   deleteHospitalAdmin,
   importFromGoogle,
   importFromOsm,
+  rebuildSpellDictionary,
 };
