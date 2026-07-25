@@ -85,4 +85,6 @@ adminRouter
   .put(validate(updateSymptomMappingSchema), symptomController.updateSymptomMapping)
   .delete(symptomController.deleteSymptomMapping);
 
+adminRouter.route('/rebuild-spell-dictionary').post(adminController.rebuildSpellDictionary);
+
 export default adminRouter;

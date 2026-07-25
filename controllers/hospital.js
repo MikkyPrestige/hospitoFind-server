@@ -6,6 +6,7 @@ import Hospital from '../models/Hospital.js';
 import ShareableLink from '../models/Share.js';
 import { getCoordinates } from '../utils/geocode.js';
 import { normalizeCountry, getDistance } from '../utils/locationHelper.js';
+import { correctSpelling } from '../utils/spellCorrector.js';
 import { escapeRegex } from '../utils/stringUtils.js';
 import { sanitizeInput } from '../utils/sanitizer.js';
 import { cacheGet, cacheSet } from '../utils/cache.js';
@@ -187,6 +188,14 @@ const getHospitalBySlug = asyncHandler(async (req, res) => {
  */
 const findHospitals = asyncHandler(async (req, res) => {
   let { term, city, state } = req.query;
+  let originalTerm = term;
+  // Apply spelling correction to each word in the term
+  if (term && typeof term === 'string' && term.trim().length >= 2) {
+    const original = term.trim();
+    term = original.split(/\s+/).map(correctSpelling).join(' ');
+    // use the corrected 'term' for the search below
+  }
+
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 15;
   const skip = (page - 1) * limit;
@@ -214,6 +223,7 @@ const findHospitals = asyncHandler(async (req, res) => {
       total,
       totalPages: Math.ceil(total / limit),
       results,
+      correctedTerm: originalTerm && term !== originalTerm ? term : undefined,
     });
   }
 
@@ -223,16 +233,13 @@ const findHospitals = asyncHandler(async (req, res) => {
   }
 
   const cleanTerm = term.trim();
-  const escapedTerm = cleanTerm.replace(/"/g, '\\"'); // escape double quotes only
+  const escapedTerm = cleanTerm.replace(/"/g, '\\"');
 
-  // Build two query variants: phrase + words, and words only as fallback
-  const textQueryPhrase = `"${escapedTerm}" ${escapedTerm}`;
-  const textQueryWords = escapedTerm;
-
-  // Try phrase + words first
+  // Text search with phrase + words
+  let textQuery = `"${escapedTerm}" ${escapedTerm}`;
   let query = {
     verified: true,
-    $text: { $search: textQueryPhrase },
+    $text: { $search: textQuery },
   };
 
   let [results, total] = await Promise.all([
@@ -244,13 +251,9 @@ const findHospitals = asyncHandler(async (req, res) => {
     Hospital.countDocuments(query),
   ]);
 
-  // If no results with phrase, fall back to words only
-  if (total === 0) {
-    query = {
-      verified: true,
-      $text: { $search: textQueryWords },
-    };
-
+  // If few results, try words-only text query
+  if (total < 3) {
+    query.$text.$search = escapedTerm;
     [results, total] = await Promise.all([
       Hospital.find(query)
         .sort({ score: { $meta: 'textScore' } })
@@ -261,12 +264,34 @@ const findHospitals = asyncHandler(async (req, res) => {
     ]);
   }
 
+  // Regex fallback for prefix/partial matching
+  if (total < 3) {
+    const regex = new RegExp(escapeRegex(cleanTerm), 'i');
+    query = {
+      verified: true,
+      $or: [
+        { name: regex },
+        { 'address.street': regex },
+        { 'address.city': regex },
+        { 'address.state': regex },
+        { services: regex }, // array field matches if any element matches
+        { type: regex },
+      ],
+    };
+
+    [results, total] = await Promise.all([
+      Hospital.find(query).skip(skip).limit(limit).lean(),
+      Hospital.countDocuments(query),
+    ]);
+  }
+
   return res.status(200).json({
     page,
     limit,
     total,
     totalPages: Math.ceil(total / limit),
     results,
+    correctedTerm: originalTerm && term !== originalTerm ? term : undefined,
   });
 });
 
@@ -787,19 +812,25 @@ const autocompleteHospitals = asyncHandler(async (req, res) => {
     verified: true,
     $or: [
       { name: { $regex: safe, $options: 'i' } },
+      { 'address.street': { $regex: safe, $options: 'i' } },
       { 'address.city': { $regex: safe, $options: 'i' } },
+      { 'address.state': { $regex: safe, $options: 'i' } },
+      { type: { $regex: safe, $options: 'i' } },
+      { services: { $regex: safe, $options: 'i' } },
     ],
   })
-    .select('name address.city address.state slug type')
+    .select('name address.street address.city address.state slug type services')
     .limit(8)
     .lean();
 
   const suggestions = results.map((h) => ({
     name: h.name,
+    street: h.street?.street || '',
     city: h.address?.city || '',
     state: h.address?.state || '',
     slug: h.slug,
     type: h.type,
+    services: h.services,
   }));
 
   res.json(suggestions);
