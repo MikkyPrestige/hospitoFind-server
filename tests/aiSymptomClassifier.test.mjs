@@ -5,13 +5,13 @@ import { jest } from '@jest/globals';
 // Mock the groq client before importing the classifier
 const mockCreate = jest.fn();
 jest.unstable_mockModule('../utils/groqClient.js', () => ({
-  default: {
+  default: jest.fn(() => ({
     chat: {
       completions: {
         create: mockCreate,
       },
     },
-  },
+  })),
 }));
 
 // Mock allowedServices to return a fixed list
