@@ -1,10 +1,8 @@
-import Groq from 'groq-sdk';
 import Hospital from '../models/Hospital.js';
 import User from '../models/User.js';
 import { matchHospitals, getUserContinent } from '../utils/matchingEngine.js';
 import { matchSchema } from '../utils/validation.js';
-
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+import getGroq from '../utils/groqClient.js';
 
 /**
  * @desc    System prompt for the AI agent
@@ -129,7 +127,7 @@ export const chat = async (req, res) => {
       historyContext += `\n\nUSER LOCATION (already known — DO NOT ask for location): The user's location is "${userLocation}". Use this location directly when triggering the match. Never ask the user where they are located.`;
     }
 
-    const completion = await groq.chat.completions.create({
+    const completion = await getGroq().chat.completions.create({
       model: 'llama-3.3-70b-versatile',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT + historyContext },

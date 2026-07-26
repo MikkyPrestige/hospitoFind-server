@@ -87,4 +87,9 @@ adminRouter
 
 adminRouter.route('/rebuild-spell-dictionary').post(adminController.rebuildSpellDictionary);
 
+adminRouter
+  .route('/ai-classifier/refresh-allowed-services')
+  .post(adminController.refreshAllowedServices);
+adminRouter.route('/ai-classifier/clear-cache').post(adminController.clearClassifierCache);
+
 export default adminRouter;

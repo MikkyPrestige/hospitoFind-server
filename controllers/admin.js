@@ -8,6 +8,8 @@ import { formatHours, getPhotoUrl, formatHospitalData } from '../utils/hospitalH
 import { getUserContinent } from '../utils/matchingEngine.js';
 import { scheduleRebuild } from '../utils/debouncedRebuild.js';
 import { buildDictionary } from '../utils/spellCorrector.js';
+import { refreshAllowedServices } from '../utils/allowedServices.js';
+import { clearByPrefix } from '../utils/cache.js';
 
 // --- ADMIN DASHBOARD ---
 /**
@@ -620,6 +622,30 @@ const rebuildSpellDictionary = asyncHandler(async (req, res) => {
   }
 });
 
+const refreshAllowedServicesHandler = asyncHandler(async (req, res) => {
+  try {
+    const services = await refreshAllowedServices();
+    res.json({
+      message: `Allowed services list refreshed.`,
+      count: services.length,
+      services,
+    });
+  } catch (err) {
+    console.error('Refresh allowed services error:', err);
+    res.status(500).json({ message: 'Failed to refresh allowed services list.' });
+  }
+});
+
+const clearClassifierCache = asyncHandler(async (req, res) => {
+  try {
+    await clearByPrefix('ai:symptom:');
+    res.json({ message: 'Classifier cache cleared.' });
+  } catch (err) {
+    console.error('Clear classifier cache error:', err);
+    res.status(500).json({ message: 'Failed to clear classifier cache.' });
+  }
+});
+
 export default {
   getAdminStats,
   getAllUsersAdmin,
@@ -639,4 +665,6 @@ export default {
   importFromGoogle,
   importFromOsm,
   rebuildSpellDictionary,
+  refreshAllowedServices: refreshAllowedServicesHandler,
+  clearClassifierCache,
 };
