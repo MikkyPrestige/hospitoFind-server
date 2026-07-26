@@ -1,14 +1,14 @@
 import express from 'express';
 import userController from '../controllers/user.js';
-import { verifyJWT, verifyAdmin } from '../middleware/verifyRoles.js';
+import { verifyJWT } from '../middleware/verifyRoles.js';
 import { ensureMongoUser } from '../middleware/ensureMongoUser.js';
 import validate from '../middleware/validate.js';
 import {
   updateUserProfileSchema,
   updatePasswordSchema,
   recordViewSchema,
-  updateUserRoleSchema,
   deleteUserSchema,
+  matchFeedbackSchema,
   totpSetupVerifySchema,
   totpDisableSchema,
   totpRecoveryCodesSchema,
@@ -18,11 +18,6 @@ const userRouter = express.Router();
 
 userRouter.use(verifyJWT);
 userRouter.use(ensureMongoUser);
-
-// admin-only
-userRouter
-  .route('/role')
-  .patch(verifyAdmin, validate(updateUserRoleSchema), userController.updateUserRole);
 
 // authenticated user routes
 userRouter
@@ -51,5 +46,9 @@ userRouter.route('/history/:hospitalId').delete(userController.removeHistoryItem
 userRouter.route('/history').delete(userController.clearAllHistory);
 userRouter.route('/favorites-status/:hospitalId').post(userController.toggleFavoriteStatus);
 userRouter.route('/favorites/:hospitalId').delete(userController.removeFavorite);
+
+userRouter
+  .route('/match-feedback')
+  .post(validate(matchFeedbackSchema), userController.submitMatchFeedback);
 
 export default userRouter;

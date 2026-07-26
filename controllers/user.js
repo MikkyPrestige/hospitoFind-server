@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import Hospital from '../models/Hospital.js';
+import MatchFeedback from '../models/MatchFeedback.js';
 import {
   generateTotpSecret,
   generateQRCode,
@@ -37,27 +38,6 @@ const getUserStats = asyncHandler(async (req, res) => {
     pendingSubmissions: total - verified,
     contributorLevel: level,
   });
-});
-
-/**
- * @desc    Update user role
- * @route   PATCH /api/user/role
- * @access  Private
- */
-const updateUserRole = asyncHandler(async (req, res) => {
-  const { userId, newRole } = req.body;
-
-  if (!['user', 'admin'].includes(newRole)) {
-    return res.status(400).json({ message: 'Invalid role type' });
-  }
-
-  const user = await User.findById(userId);
-  if (!user) return res.status(404).json({ message: 'User not found' });
-
-  user.role = newRole;
-  await user.save();
-
-  res.json({ message: `User role updated to ${newRole}` });
 });
 
 /**
@@ -499,9 +479,38 @@ const regenerateRecoveryCodes = asyncHandler(async (req, res) => {
   });
 });
 
+/**
+ * @desc    Submit match feedback (thumbs up/down)
+ * @route   POST /api/v1/user/match-feedback
+ * @access  Private
+ */
+const submitMatchFeedback = asyncHandler(async (req, res) => {
+  const { hospitalId, rating, matchId } = req.body;
+
+  const hospitalExists = await Hospital.exists({ _id: hospitalId });
+  if (!hospitalExists) {
+    return res.status(404).json({ message: 'Hospital not found' });
+  }
+
+  // Upsert: if user already gave feedback for this hospital, update; otherwise insert
+  const feedback = await MatchFeedback.findOneAndUpdate(
+    { userId: req.userId, hospitalId },
+    { rating, matchId: matchId || null },
+    { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true },
+  );
+
+  res.status(200).json({
+    message: `Feedback recorded: ${rating}`,
+    feedback: {
+      id: feedback._id,
+      hospitalId: feedback.hospitalId,
+      rating: feedback.rating,
+    },
+  });
+});
+
 export default {
   getUserStats,
-  updateUserRole,
   updateUser,
   updatePassword,
   deleteUser,
@@ -515,4 +524,5 @@ export default {
   verifyTotpSetup,
   disableTotp,
   regenerateRecoveryCodes,
+  submitMatchFeedback,
 };
