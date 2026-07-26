@@ -8,6 +8,7 @@ import {
   addHospitalSchema,
   updateHospitalSchema,
   shareHospitalsSchema,
+  submitReviewSchema,
 } from '../utils/validation.js';
 
 const hospitalRouter = express.Router();
@@ -63,6 +64,17 @@ hospitalRouter.patch(
   ensureMongoUser,
   validate(updateHospitalSchema),
   hospitalController.updateHospital,
+);
+
+// --- REVIEWS ---
+hospitalRouter.get('/:id/reviews', hospitalController.getHospitalReviews);
+hospitalRouter.get('/:id/review-stats', hospitalController.getReviewStats);
+hospitalRouter.post(
+  '/:id/reviews',
+  verifyJWT,
+  ensureMongoUser,
+  validate(submitReviewSchema),
+  hospitalController.submitReview,
 );
 
 export default hospitalRouter;

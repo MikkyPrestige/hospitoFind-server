@@ -485,17 +485,36 @@ const regenerateRecoveryCodes = asyncHandler(async (req, res) => {
  * @access  Private
  */
 const submitMatchFeedback = asyncHandler(async (req, res) => {
-  const { hospitalId, rating, matchId } = req.body;
+  const { hospitalId, messageId, rating, matchId } = req.body;
 
-  const hospitalExists = await Hospital.exists({ _id: hospitalId });
-  if (!hospitalExists) {
-    return res.status(404).json({ message: 'Hospital not found' });
+  // If hospitalId provided, check it exists
+  if (hospitalId) {
+    const hospitalExists = await Hospital.exists({ _id: hospitalId });
+    if (!hospitalExists) {
+      return res.status(404).json({ message: 'Hospital not found' });
+    }
   }
 
-  // Upsert: if user already gave feedback for this hospital, update; otherwise insert
+  if (!hospitalId && !messageId) {
+    return res.status(400).json({ message: 'hospitalId or messageId is required' });
+  }
+
+  // Build filter based on provided identifiers
+  const filter = { userId: req.userId };
+  if (messageId) {
+    filter.messageId = messageId; // chat feedback uses userId+messageId
+  } else {
+    filter.hospitalId = hospitalId; // legacy hospital feedback uses userId+hospitalId
+  }
+
   const feedback = await MatchFeedback.findOneAndUpdate(
-    { userId: req.userId, hospitalId },
-    { rating, matchId: matchId || null },
+    filter,
+    {
+      rating,
+      hospitalId: hospitalId || null,
+      messageId: messageId || null,
+      matchId: matchId || null,
+    },
     { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true },
   );
 
@@ -504,6 +523,7 @@ const submitMatchFeedback = asyncHandler(async (req, res) => {
     feedback: {
       id: feedback._id,
       hospitalId: feedback.hospitalId,
+      messageId: feedback.messageId,
       rating: feedback.rating,
     },
   });
