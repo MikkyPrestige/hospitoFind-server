@@ -1,6 +1,7 @@
 import SymptomMapping from '../models/SymptomMapping.js';
 import { cacheGet, cacheSet } from './cache.js';
 import { semanticMatch } from './ragMatcher.js';
+import { classifySymptoms } from './aiSymptomClassifier.js';
 
 const COUNTRY_CONTINENT = {
   // ── Africa
@@ -441,12 +442,11 @@ const shapeResult = (hospital, serviceScore, serviceReason, locationLabel) => {
 };
 
 export const matchHospitals = async (profile, hospitals, topN = 5, symptomMap = null) => {
-  // 1. Keyword-based service extraction (fallback)
-  const serviceKeywords = await symptomsToServices(profile.symptoms || [], symptomMap);
+  // Location extraction
   const locationTerms = parseLocationTerms(profile.location);
   const userContinent = getUserContinent(profile.location);
 
-  // 2. RAG semantic matching
+  // RAG semantic matching
   const semanticMap = new Map();
   if (!symptomMap) {
     const queryText = (profile.symptoms || []).join(' ') + ' ' + (profile.additionalNeeds || '');
@@ -460,6 +460,37 @@ export const matchHospitals = async (profile, hospitals, topN = 5, symptomMap = 
     }
   }
 
+  // Keyword-based service extraction (now possibly enriched by AI)
+  let serviceKeywords = await symptomsToServices(profile.symptoms || [], symptomMap);
+
+  // --- AI symptom classifier fallback for weak keyword/RAG matches ---
+  if (!symptomMap) {
+    // First pass: compute max service score across all hospitals
+    let maxServiceScore = 0;
+    for (const hospital of hospitals) {
+      const { score: svcScore } = scoreServices(hospital, serviceKeywords);
+      const semScore = semanticMap.get(hospital._id.toString());
+      const semanticBoost = semScore ? Math.min(20, Math.round(semScore * 20)) : 0;
+      const total = svcScore + semanticBoost;
+      if (total > maxServiceScore) maxServiceScore = total;
+    }
+
+    // If no hospital reached even a modest service-match score, ask Groq for better service mapping
+    if (maxServiceScore <= 30) {
+      try {
+        const aiServices = await classifySymptoms((profile.symptoms || []).join(' '));
+        if (aiServices?.length) {
+          const enriched = new Set([...serviceKeywords, ...aiServices.map((s) => s.toLowerCase())]);
+          serviceKeywords = [...enriched];
+        }
+      } catch (e) {
+        console.error('AI classifier fallback failed:', e.message);
+        // continue with original serviceKeywords
+      }
+    }
+  }
+
+  // Tier-based scoring and grouping
   const tier1 = [];
   const tier2 = [];
   const tier3 = [];

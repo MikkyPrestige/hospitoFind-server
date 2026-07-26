@@ -43,3 +43,30 @@ export const cacheSet = async (key, value, ttlMs = 600000) => {
     expiry: Date.now() + ttlMs,
   });
 };
+
+export const clearByPrefix = async (prefix) => {
+  // Clear in-memory fallback
+  for (const key of fallback.keys()) {
+    if (key.startsWith(prefix)) {
+      fallback.delete(key);
+    }
+  }
+
+  // Clear Redis keys
+  try {
+    if (await isRedisAvailable()) {
+      let cursor = '0';
+      do {
+        const reply = await redis.scan(cursor, 'MATCH', `${prefix}*`, 'COUNT', 100);
+        cursor = reply[0];
+        const keys = reply[1];
+        if (keys.length > 0) {
+          await redis.del(keys);
+        }
+      } while (cursor !== '0');
+    }
+  } catch (err) {
+    console.error('Redis clearByPrefix error:', err);
+    // fall through, in-memory already cleared
+  }
+};
