@@ -6,13 +6,15 @@ const matchFeedbackSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      index: true,
     },
     hospitalId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Hospital',
-      required: true,
-      index: true,
+      default: null,
+    },
+    messageId: {
+      type: String,
+      default: null,
     },
     rating: {
       type: String,
@@ -20,15 +22,24 @@ const matchFeedbackSchema = new mongoose.Schema(
       required: true,
     },
     matchId: {
-      type: String, // optional reference to a specific match session
+      type: String,
       default: null,
     },
   },
   { timestamps: true },
 );
 
-// compound index to prevent duplicate feedback for the same user-hospital pair (one feedback per pair)
-matchFeedbackSchema.index({ userId: 1, hospitalId: 1 }, { unique: true });
+// Unique index for userId + messageId (for chat feedback)
+matchFeedbackSchema.index(
+  { userId: 1, messageId: 1 },
+  { unique: true, partialFilterExpression: { messageId: { $type: 'string' } } },
+);
+
+// For legacy hospital feedback (no messageId), ensure uniqueness per userId+hospitalId
+matchFeedbackSchema.index(
+  { userId: 1, hospitalId: 1 },
+  { unique: true, partialFilterExpression: { hospitalId: { $type: 'objectId' } } },
+);
 
 const MatchFeedback = mongoose.model('MatchFeedback', matchFeedbackSchema);
 export default MatchFeedback;

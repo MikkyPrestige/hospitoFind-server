@@ -4,6 +4,8 @@ import papa from 'papaparse';
 import mongoose from 'mongoose';
 import Hospital from '../models/Hospital.js';
 import ShareableLink from '../models/Share.js';
+import User from '../models/User.js';
+import Review from '../models/Review.js';
 import { getCoordinates } from '../utils/geocode.js';
 import { normalizeCountry, getDistance } from '../utils/locationHelper.js';
 import { correctSpelling } from '../utils/spellCorrector.js';
@@ -144,17 +146,47 @@ const getHospitalById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const hospital = await Hospital.findOne({ _id: id, verified: true }).lean();
-    if (hospital) {
-      const { street, city, state } = hospital.address || {};
-      const locationString = [street, city, state].filter(Boolean).join(', ');
-      return res.json({
-        ...hospital,
-        location: locationString || 'Location unavailable',
-      });
+    if (!hospital) {
+      return res.status(404).json({ message: 'Hospital not found' });
     }
-    res.status(404).json({ message: 'Hospital not found' });
+
+    const locationString = [
+      hospital.address?.street,
+      hospital.address?.city,
+      hospital.address?.state,
+    ]
+      .filter(Boolean)
+      .join(', ');
+
+    const [stats, recentReviews] = await Promise.all([
+      Review.aggregate([
+        { $match: { hospitalId: hospital._id } },
+        {
+          $group: {
+            _id: null,
+            averageRating: { $avg: '$rating' },
+            totalReviews: { $sum: 1 },
+          },
+        },
+      ]),
+      Review.find({ hospitalId: hospital._id }).sort({ createdAt: -1 }).limit(3).lean(),
+    ]);
+
+    const reviewStats = stats[0]
+      ? {
+          averageRating: Math.round(stats[0].averageRating * 10) / 10,
+          totalReviews: stats[0].totalReviews,
+        }
+      : { averageRating: 0, totalReviews: 0 };
+
+    return res.json({
+      ...hospital,
+      location: locationString || 'Location unavailable',
+      reviewStats,
+      recentReviews,
+    });
   } catch {
-    res.status(500).json({ message: 'Server error fetching hospital' });
+    return res.status(500).json({ message: 'Server error fetching hospital' });
   }
 });
 
@@ -193,7 +225,33 @@ const getHospitalBySlug = asyncHandler(async (req, res) => {
 
     if (!hospital) return res.status(404).json({ message: 'Hospital not found' });
 
-    return res.json(hospital);
+    // Attach review stats and recent reviews
+    const [stats, recentReviews] = await Promise.all([
+      Review.aggregate([
+        { $match: { hospitalId: hospital._id } },
+        {
+          $group: {
+            _id: null,
+            averageRating: { $avg: '$rating' },
+            totalReviews: { $sum: 1 },
+          },
+        },
+      ]),
+      Review.find({ hospitalId: hospital._id }).sort({ createdAt: -1 }).limit(3).lean(),
+    ]);
+
+    const reviewStats = stats[0]
+      ? {
+          averageRating: Math.round(stats[0].averageRating * 10) / 10,
+          totalReviews: stats[0].totalReviews,
+        }
+      : { averageRating: 0, totalReviews: 0 };
+
+    return res.json({
+      ...hospital,
+      reviewStats,
+      recentReviews,
+    });
   } catch {
     return res.status(500).json({ message: 'Server error fetching hospital' });
   }
@@ -869,6 +927,83 @@ const autocompleteHospitals = asyncHandler(async (req, res) => {
   res.json(suggestions);
 });
 
+/**
+ * @desc    Submit or update a review (authenticated)
+ * @route   POST /hospitals/:id/reviews
+ * @access  Private
+ */
+const submitReview = asyncHandler(async (req, res) => {
+  const { rating, text } = req.body;
+  const hospitalId = req.params.id;
+  const userId = req.userId;
+
+  // Check hospital exists
+  const hospital = await Hospital.findById(hospitalId);
+  if (!hospital) return res.status(404).json({ message: 'Hospital not found' });
+
+  const user = await User.findById(userId).select('name').lean();
+  const name = user?.name || 'Anonymous';
+  // Upsert: one review per user per hospital
+  const review = await Review.findOneAndUpdate(
+    { userId, hospitalId },
+    { rating, text: text || '', name },
+    { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true },
+  ).lean();
+
+  return res.status(200).json({ message: 'Review saved', review });
+});
+
+/**
+ * @desc    Get reviews for a hospital (paginated)
+ * @route   GET /hospitals/:id/reviews
+ * @access  Public
+ */
+const getHospitalReviews = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const skip = (page - 1) * limit;
+
+  const [reviews, total] = await Promise.all([
+    Review.find({ hospitalId: id }).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    Review.countDocuments({ hospitalId: id }),
+  ]);
+
+  return res.json({
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    reviews,
+  });
+});
+
+/**
+ * @desc    Get aggregated review stats for a hospital
+ * @route   GET /hospitals/:id/review-stats
+ * @access  Public
+ */
+const getReviewStats = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const stats = await Review.aggregate([
+    { $match: { hospitalId: new mongoose.Types.ObjectId(id) } },
+    {
+      $group: {
+        _id: null,
+        averageRating: { $avg: '$rating' },
+        totalReviews: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const result = stats[0] || { averageRating: 0, totalReviews: 0 };
+  return res.json({
+    hospitalId: id,
+    averageRating: Math.round(result.averageRating * 10) / 10, // one decimal
+    totalReviews: result.totalReviews,
+  });
+});
+
 export default {
   getHospitals,
   getHospitalCount,
@@ -890,4 +1025,7 @@ export default {
   getSharedHospitals,
   exportHospitals,
   autocompleteHospitals,
+  submitReview,
+  getHospitalReviews,
+  getReviewStats,
 };

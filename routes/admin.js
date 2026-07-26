@@ -92,4 +92,7 @@ adminRouter
   .post(adminController.refreshAllowedServices);
 adminRouter.route('/ai-classifier/clear-cache').post(adminController.clearClassifierCache);
 
+adminRouter.route('/reviews').get(adminController.getAllReviews);
+adminRouter.route('/reviews/:reviewId').delete(adminController.deleteReview);
+
 export default adminRouter;

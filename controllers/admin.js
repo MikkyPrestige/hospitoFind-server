@@ -4,6 +4,7 @@ import asyncHandler from 'express-async-handler';
 import mongoose from 'mongoose';
 import User from '../models/User.js';
 import Hospital from '../models/Hospital.js';
+import Review from '../models/Review.js';
 import { formatHours, getPhotoUrl, formatHospitalData } from '../utils/hospitalHelpers.js';
 import { getUserContinent } from '../utils/matchingEngine.js';
 import { scheduleRebuild } from '../utils/debouncedRebuild.js';
@@ -646,6 +647,47 @@ const clearClassifierCache = asyncHandler(async (req, res) => {
   }
 });
 
+const getAllReviews = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  const [reviews, total] = await Promise.all([
+    Review.find({})
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('userId', 'name')
+      .populate('hospitalId', 'name address.city address.state')
+      .lean(),
+    Review.countDocuments({}),
+  ]);
+
+  // Map to always provide a username
+  const formatted = reviews.map((r) => ({
+    ...r,
+    username: r.username || r.userId?.name || 'Anonymous',
+  }));
+
+  return res.json({
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    reviews: formatted,
+  });
+});
+
+const deleteReview = asyncHandler(async (req, res) => {
+  const { reviewId } = req.params;
+  const review = await Review.findById(reviewId);
+  if (!review) {
+    return res.status(404).json({ message: 'Review not found' });
+  }
+  await review.deleteOne();
+  res.json({ message: 'Review deleted' });
+});
+
 export default {
   getAdminStats,
   getAllUsersAdmin,
@@ -667,4 +709,6 @@ export default {
   rebuildSpellDictionary,
   refreshAllowedServices: refreshAllowedServicesHandler,
   clearClassifierCache,
+  getAllReviews,
+  deleteReview,
 };

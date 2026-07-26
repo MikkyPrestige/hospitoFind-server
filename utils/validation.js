@@ -191,7 +191,8 @@ export const deleteUserSchema = z.object({
 });
 
 export const matchFeedbackSchema = z.object({
-  hospitalId: mongoId,
+  hospitalId: mongoId.optional(),
+  messageId: z.string().optional(),
   rating: z.enum(['up', 'down']),
   matchId: z.string().optional(),
 });
@@ -220,4 +221,9 @@ export const matchSchema = z.object({
   symptoms: z.array(z.string().min(1)).min(1, 'At least one symptom is required'),
   location: z.string().min(1, 'Location is required'),
   additionalNeeds: z.string().optional().default(''),
+});
+
+export const submitReviewSchema = z.object({
+  rating: z.number().int().min(1).max(5),
+  text: z.string().max(1000).optional().default(''),
 });
