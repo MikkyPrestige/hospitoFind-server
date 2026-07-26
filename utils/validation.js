@@ -190,6 +190,12 @@ export const deleteUserSchema = z.object({
   password: z.string().optional(),
 });
 
+export const matchFeedbackSchema = z.object({
+  hospitalId: mongoId,
+  rating: z.enum(['up', 'down']),
+  matchId: z.string().optional(),
+});
+
 // ─── HEALTH HISTORY SCHEMAS ────────────────────────────────────────────────
 export const updateSessionFeedbackSchema = z.object({
   hospitalVisited: z.string().optional(),
