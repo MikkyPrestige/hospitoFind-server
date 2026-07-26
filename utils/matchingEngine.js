@@ -363,9 +363,12 @@ export const symptomsToServices = async (symptoms, providedMap = null) => {
   const map = providedMap || (await loadSymptomMap());
   const services = new Set();
   const lower = symptoms.map((s) => s.toLowerCase());
-  for (const [keyword, list] of Object.entries(map)) {
+  // Sort keywords by length descending (longest first) so multi‑word phrases get priority
+  const sortedKeywords = Object.keys(map).sort((a, b) => b.length - a.length);
+
+  for (const keyword of sortedKeywords) {
     if (lower.some((s) => s.includes(keyword))) {
-      list.forEach((svc) => services.add(svc.toLowerCase()));
+      map[keyword].forEach((svc) => services.add(svc.toLowerCase()));
     }
   }
   services.add('general');
