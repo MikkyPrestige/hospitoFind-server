@@ -344,7 +344,7 @@ const findHospitals = asyncHandler(async (req, res) => {
   }
 
   // Regex fallback for prefix/partial matching
-  if (total < 3) {
+  if (total < 10) {
     const regex = new RegExp(escapeRegex(cleanTerm), 'i');
     query = {
       verified: true,
@@ -899,32 +899,94 @@ const autocompleteHospitals = asyncHandler(async (req, res) => {
 
   const safe = escapeRegex(q.trim());
 
-  const results = await Hospital.find({
+  // 1. Hospital name / city / address suggestions (limit to 3)
+  const hospitalResults = await Hospital.find({
     verified: true,
     $or: [
       { name: { $regex: safe, $options: 'i' } },
-      { 'address.street': { $regex: safe, $options: 'i' } },
       { 'address.city': { $regex: safe, $options: 'i' } },
       { 'address.state': { $regex: safe, $options: 'i' } },
-      { type: { $regex: safe, $options: 'i' } },
-      { services: { $regex: safe, $options: 'i' } },
+      { 'address.street': { $regex: safe, $options: 'i' } },
     ],
   })
-    .select('name address.street address.city address.state slug type services')
-    .limit(8)
+    .select('name address.city address.state slug type')
+    .limit(3)
     .lean();
 
-  const suggestions = results.map((h) => ({
+  const suggestions = hospitalResults.map((h) => ({
     name: h.name,
-    street: h.street?.street || '',
     city: h.address?.city || '',
     state: h.address?.state || '',
-    slug: h.slug,
-    type: h.type,
-    services: h.services,
+    slug: h.slug || '',
+    type: h.type || '',
   }));
 
-  res.json(suggestions);
+  // 2. Matching services (distinct values)
+  const serviceDocs = await Hospital.find(
+    { verified: true, services: { $regex: safe, $options: 'i' } },
+    { services: 1 },
+  )
+    .limit(10)
+    .lean();
+
+  const serviceSet = new Set();
+  serviceDocs.forEach((doc) => {
+    (doc.services || []).forEach((svc) => {
+      if (svc.toLowerCase().includes(q.trim().toLowerCase())) {
+        serviceSet.add(svc);
+      }
+    });
+  });
+
+  serviceSet.forEach((svc) => {
+    if (suggestions.length >= 5) return;
+    suggestions.push({
+      name: svc,
+      city: '',
+      state: '',
+      slug: '',
+      type: 'service', // optional hint
+    });
+  });
+
+  // 3. Matching hospital types
+  const typeDocs = await Hospital.find(
+    { verified: true, type: { $regex: safe, $options: 'i' } },
+    { type: 1 },
+  )
+    .limit(10)
+    .lean();
+
+  const typeSet = new Set();
+  typeDocs.forEach((doc) => {
+    if (doc.type && doc.type.toLowerCase().includes(q.trim().toLowerCase())) {
+      typeSet.add(doc.type);
+    }
+  });
+
+  typeSet.forEach((type) => {
+    if (suggestions.length >= 5) return;
+    suggestions.push({
+      name: type,
+      city: '',
+      state: '',
+      slug: '',
+      type: 'type', // optional hint
+    });
+  });
+
+  // 4. Deduplicate by name (case‑insensitive) and trim to 5
+  const seen = new Set();
+  const final = [];
+  for (const s of suggestions) {
+    const key = s.name.toLowerCase();
+    if (!seen.has(key) && final.length < 5) {
+      seen.add(key);
+      final.push(s);
+    }
+  }
+
+  res.json(final);
 });
 
 /**
