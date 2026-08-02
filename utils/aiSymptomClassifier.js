@@ -38,17 +38,18 @@ export async function classifySymptoms(symptomText) {
     if (!allowedServices.length) return [];
 
     const prompt = `
-You are a medical triage assistant. Given a patient's symptom description, return a JSON array of the most relevant medical specialties from the list below.
+You are a medical triage assistant. A patient described their symptoms, possibly in a language other than English. Your task is to map those symptoms to the most relevant medical specialties from the list below.
 
-Allowed services (only these exactly as written):
+Allowed services (only these exactly as written, in English):
 ${allowedServices.join(', ')}
 
-Symptom description: "${symptomText}"
+Patient's symptom description: "${symptomText}"
 
 Instructions:
+- If the symptom description is not in English, first mentally translate it to English.
+- Based on the meaning, return a JSON array of 1-3 English service names from the allowed list.
 - Return ONLY a JSON array of strings, no additional text.
-- Choose 1-3 most relevant services.
-- If no service fits, return an empty array [].
+- If no service clearly fits, return an empty array [].
 - Do not invent new services.
 `.trim();
 
